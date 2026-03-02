@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import api from "@/services/api";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const name = ref("");
 const isMenuOpen = ref(false);
+
+const showSidebar = computed(() => {
+  const isPublicPage = route.meta.hideSidebar === true;
+  const hasToken = !!localStorage.getItem("token");
+
+  // Só mostra se NÃO for página pública E tiver token
+  return !isPublicPage && hasToken;
+});
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -31,6 +41,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <div v-if="showSidebar">
+
   <button
     @click="toggleMenu"
     type="button"
@@ -146,12 +158,12 @@ onMounted(() => {
           <li class="mt-4">
             <RouterLink
               to="/faq"
-              class="flex items-center p-3 text-gray-400 rounded-xl hover:bg-indigo-500/10 hover:text-indigo-300 group transition-all"
+              class="flex items-center p-3 text-gray-200 rounded-xl hover:bg-indigo-500/10 hover:text-indigo-300 group transition-all"
             >
               <i
                 class="pi pi-question-circle text-lg group-hover:animate-pulse"
               ></i>
-              <span class="ms-4 text-sm">Perguntas Frequentes</span>
+              <span class="ms-4">Central de Ajuda</span>
             </RouterLink>
           </li>
         </ul>
@@ -186,6 +198,7 @@ onMounted(() => {
       </div>
     </div>
   </aside>
+  </div>
 </template>
 
 <style scoped>

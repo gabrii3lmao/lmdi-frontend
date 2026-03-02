@@ -13,11 +13,13 @@ const routes = [
     path: "/signin",
     name: "login",
     component: Login,
+    meta: { hideSidebar: true },
   },
   {
     path: "/signup",
     name: "register",
     component: Cadastro,
+    meta: { hideSidebar: true },
   },
   {
     path: "/",
@@ -39,16 +41,19 @@ const routes = [
     path: "/classes",
     name: "showclasses",
     component: Turmas,
+    meta: { requiresAuth: true },
   },
   {
     path: "/faq",
     name: "duvidas-frequentes",
     component: Duvidas,
+    meta: { requiresAuth: true },
   },
   {
     path: "/templates",
     name: "modelo-provas",
     component: ModeloProva,
+    meta: { requiresAuth: true },
   },
 ];
 

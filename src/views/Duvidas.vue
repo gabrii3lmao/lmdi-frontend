@@ -38,10 +38,28 @@ const faqs = ref<FAQItem[]>([
       "Sim. Na página de 'Relatórios' ou dentro de cada Turma, existe um botão 'Exportar CSV' que gera uma planilha compatível com Excel e Google Sheets.",
     open: false,
   },
+  {
+    question: "Existe limite de alunos por turma?",
+    answer:
+      "Sim, no plano gratuito, há um limite de até 30 alunos por turma. Assine o plano profissional para obter um limite de até 50 alunos.",
+    open: false,
+  },
+  {
+    question: "O que acontece se a imagem estiver inclinada?",
+    answer:
+      "O sistema aplica correção automática de perspectiva sempre que possível. No entanto, inclinações muito acentuadas ou cortes nas bordas podem comprometer a leitura. Sempre tente manter a câmera alinhada ao papel.",
+    open: false,
+  },
+  {
+    question: "É possível revisar manualmente uma correção?",
+    answer:
+      "Sim. Após o processamento automático, você pode acessar a prova do aluno e visualizar as marcações detectadas. Caso necessário, é possível ajustar o resultado manualmente.",
+    open: false,
+  },
 ]);
 
 const toggleFaq = (index: number) => {
-  faqs.value[index].open = !faqs.value[index].open;
+  faqs.value[index]!.open = !faqs.value[index]!.open;
 };
 </script>
 
