@@ -1,64 +1,67 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import api from "@/services/api";
+import { turmaService } from "@/services/turmas";
+import { RouterLink } from "vue-router";
+
+interface Turma {
+  _id: string;
+  name: string;
+}
 
 const loading = ref(true);
 const name = ref("");
+const recentExams = ref<Turma[]>([]); // Renomeado para coincidir com o template
 
-// Simulação de estatísticas (Você buscará isso do seu novo schema Exam/Submission)
 const stats = ref([
   { label: "Turmas Ativas", value: "4", icon: "🏫" },
   { label: "Provas Corrigidas", value: "128", icon: "📝" },
   { label: "Média de Acertos", value: "74%", icon: "📊" },
 ]);
 
-// Simulação de atividades recentes (tirar depois)
-const recentExams = ref([
-  {
-    _id: "1",
-    title: "Simulado Matemática",
-    className: "1º Ano A",
-    date: "Hoje",
-    status: "graded",
-  },
-  {
-    _id: "2",
-    title: "Prova de História",
-    className: "2º Ano B",
-    date: "Ontem",
-    status: "processing",
-  },
-]);
+async function carregarTurmas() {
+  try {
+    loading.value = true;
+    const response = await turmaService.getAll();
+    recentExams.value = response.data;
+  } catch (error) {
+    console.error("Erro ao carregar turmas:", error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 onMounted(() => {
   const savedName = localStorage.getItem("username");
   if (savedName) {
-    const firstName = savedName.split(" ")[0];
-    name.value = firstName!.charAt(0).toUpperCase() + firstName!.slice(1);
+    const firstName = savedName.trim().split(" ")[0];
+    name.value =
+      firstName!.charAt(0).toUpperCase() + firstName!.slice(1).toLowerCase();
   } else {
     name.value = "Professor";
   }
 
-  // Simular carregamento
-  setTimeout(() => (loading.value = false), 800);
+  carregarTurmas();
 });
 </script>
 
 <template>
-  <div class="sm:ml-64 min-h-screen bg-gray-900 text-white p-8">
+  <div class="sm:ml-64 min-h-screen bg-gray-900 text-white p-4 md:p-8">
     <div class="max-w-5xl mx-auto">
-      <header class="mb-10 flex justify-between items-end">
+      <header
+        class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4"
+      >
         <div>
           <h1 class="text-3xl font-bold text-indigo-400">Dashboard</h1>
           <p class="text-gray-400">
-            Bem-vindo de volta, {{ name }}. O que vamos corrigir hoje?
+            Bem-vindo de volta, <span class="text-indigo-200">{{ name }}</span
+            >. O que vamos corrigir hoje?
           </p>
         </div>
         <RouterLink
-        to="/classes"
-          class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2"
+          to="/classes"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-2 active:scale-95"
         >
-          <span>+</span> Nova Correção
+          <i class="pi pi-plus"></i> Nova Correção
         </RouterLink>
       </header>
 
@@ -66,7 +69,7 @@ onMounted(() => {
         <div
           v-for="stat in stats"
           :key="stat.label"
-          class="bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-xl"
+          class="bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-xl hover:border-indigo-500/30 transition-colors"
         >
           <div class="text-2xl mb-2">{{ stat.icon }}</div>
           <div
@@ -84,101 +87,65 @@ onMounted(() => {
             <h3 class="text-xl font-semibold text-gray-100">
               Atividades Recentes
             </h3>
-            <router-link
-              to="/turmas"
-              class="text-indigo-400 text-sm hover:underline"
-              >Ver todas</router-link
+            <RouterLink
+              to="/classes"
+              class="text-indigo-400 text-sm hover:text-indigo-300 transition-colors"
             >
+              Ver todas
+            </RouterLink>
           </div>
 
           <div v-if="loading" class="space-y-4">
             <div
-              v-for="i in 2"
+              v-for="i in 3"
               :key="i"
-              class="h-24 bg-gray-800 rounded-2xl animate-pulse"
+              class="h-24 bg-gray-800 rounded-2xl animate-pulse border border-gray-700"
             ></div>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else-if="recentExams.length > 0" class="space-y-4">
             <div
               v-for="exam in recentExams"
               :key="exam._id"
-              class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center hover:border-indigo-500/50 transition-all cursor-pointer group"
+              class="card-item bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center hover:border-indigo-500/50 transition-all cursor-pointer group"
             >
               <div class="flex items-center gap-4">
                 <div
-                  class="w-12 h-12 bg-gray-700 rounded-xl flex items-center justify-center text-xl group-hover:bg-indigo-900/30 transition-colors"
+                  class="w-12 h-12 bg-gray-700 rounded-xl flex items-center justify-center text-xl group-hover:bg-indigo-900/40 transition-colors"
                 >
-                  📄
+                  <i class="pi pi-users" style="font-size: 1.5rem"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-100">{{ exam.title }}</h4>
-                  <p class="text-sm text-gray-400">
-                    {{ exam.className }} • {{ exam.date }}
-                  </p>
+                  <h4
+                    class="font-bold text-gray-100 group-hover:text-indigo-400 transition-colors"
+                  >
+                    {{ exam.name || "Sem título" }}
+                  </h4>
                 </div>
               </div>
+
               <div class="text-right">
-                <span
-                  v-if="exam.status === 'graded'"
-                  class="bg-green-900/30 text-green-400 text-xs px-3 py-1 rounded-full border border-green-800/50"
-                  >Concluído</span
+                <RouterLink
+                  :to="`/classes/${exam._id}`"
+                  class="inline-flex items-center gap-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all border border-indigo-500/20 hover:border-indigo-500 active:scale-95"
                 >
-                <span
-                  v-else
-                  class="bg-yellow-900/30 text-yellow-400 text-xs px-3 py-1 rounded-full border border-yellow-800/50"
-                  >Processando</span
-                >
+                  Ir para a turma
+                  <i class="pi pi-arrow-right text-xs"></i>
+                </RouterLink>
               </div>
             </div>
           </div>
+
+          <div
+            v-else
+            class="bg-gray-800/50 border border-dashed border-gray-700 p-10 rounded-2xl text-center"
+          >
+            <p class="text-gray-500">Nenhuma atividade encontrada.</p>
+          </div>
         </section>
 
-        <aside class="space-y-6">
-          <div
-            class="bg-gradient-to-br from-indigo-900/40 to-gray-800 p-6 rounded-2xl border border-indigo-500/20"
-          >
-            <h4 class="font-bold mb-2">Dica de mestre 💡</h4>
-            <p class="text-sm text-indigo-200/70 leading-relaxed">
-              Para fotos melhores, coloque o gabarito em superfícies escuras.
-              Isso ajuda nosso motor de IA a detectar as bordas rapidamente!
-            </p>
-          </div>
-
-          <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
-            <h4 class="font-bold mb-4 text-gray-100 text-sm uppercase">
-              Links Rápidos
-            </h4>
-            <nav class="space-y-3">
-              <a
-                href="#"
-                class="block text-gray-400 hover:text-indigo-400 text-sm transition-colors"
-                >📥 Baixar Modelo PDF</a
-              >
-              <a
-                href="#"
-                class="block text-gray-400 hover:text-indigo-400 text-sm transition-colors"
-                >📑 Gerar Relatórios</a
-              >
-              <a
-                href="#"
-                class="block text-gray-400 hover:text-indigo-400 text-sm transition-colors"
-                >⚙️ Configurações</a
-              >
-            </nav>
-          </div>
-        </aside>
+        <aside class="space-y-6"></aside>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Adicione transições suaves para os cards */
-.bg-gray-800 {
-  transition: transform 0.2s ease-in-out;
-}
-.bg-gray-800:hover {
-  transform: translateY(-2px);
-}
-</style>

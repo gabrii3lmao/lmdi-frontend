@@ -4,9 +4,10 @@ import Cadastro from "@/views/auth/Cadastro.vue";
 import Home from "@/views/Home.vue";
 import SendEmailReset from "@/views/auth/SendEmailReset.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
-import Turmas from "@/views/Turmas.vue";
+import TurmasDashboard from "@/views/TurmasDashboard.vue";
 import Duvidas from "@/views/Duvidas.vue";
 import ModeloProva from "@/views/ModeloProva.vue";
+import Turma from "@/views/Turma.vue";
 
 const routes = [
   {
@@ -40,7 +41,7 @@ const routes = [
   {
     path: "/classes",
     name: "showclasses",
-    component: Turmas,
+    component: TurmasDashboard,
     meta: { requiresAuth: true },
   },
   {
@@ -53,6 +54,12 @@ const routes = [
     path: "/templates",
     name: "modelo-provas",
     component: ModeloProva,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: `/classes/:id`,
+    name: "provas-turma",
+    component: Turma,
     meta: { requiresAuth: true },
   },
 ];

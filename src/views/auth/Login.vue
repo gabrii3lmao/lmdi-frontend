@@ -14,10 +14,12 @@ async function handleLogin() {
       password: password.value,
     });
 
-    const { token, username } = response.data;
+    const { token, username, userId } = response.data;
 
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
+    localStorage.setItem("userId", userId);
+    
     router.push("/");
     console.log("Logado com sucesso");
   } catch (error) {
