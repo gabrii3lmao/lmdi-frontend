@@ -4,6 +4,7 @@ import { ref } from "vue";
 const props = defineProps<{ isOpen: boolean; enviando: boolean }>();
 const emit = defineEmits(["close", "confirm"]);
 
+const fileInput = ref<HTMLInputElement | null>(null);
 const nomeAluno = ref("");
 const imagemSelecionada = ref<File | null>(null);
 const previewUrl = ref<string | null>(null);
@@ -72,7 +73,7 @@ function handleSubmit() {
             >Foto do Gabarito</label
           >
           <div
-            @click="$refs.fileInput.click()"
+            @click="fileInput?.click()"
             class="group relative border-2 border-dashed border-gray-700 hover:border-indigo-500 rounded-2xl p-4 transition-all cursor-pointer bg-gray-900/30 text-center"
           >
             <input

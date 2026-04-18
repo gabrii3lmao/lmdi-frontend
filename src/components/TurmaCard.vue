@@ -13,7 +13,7 @@ const emit = defineEmits(["delete", "edit"]);
 const avatarInitials = computed(() => {
   const name = props.turma.name.trim();
   const words = name.split(" ");
-  if (words.length >= 2) {
+  if (words.length >= 2 && words[0]?.[0] && words[1]?.[0]) {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
   return name.substring(0, 2).toUpperCase();

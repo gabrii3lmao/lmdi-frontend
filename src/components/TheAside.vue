@@ -35,7 +35,7 @@ const updateUsername = () => {
   if (savedName) {
     const firstName = savedName.split(" ")[0];
     name.value =
-      firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+      (firstName as string).charAt(0).toUpperCase() + (firstName as string).slice(1).toLowerCase();
   } else {
     name.value = "";
   }
