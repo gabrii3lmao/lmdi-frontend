@@ -38,7 +38,6 @@ const handleSalvarGabarito = async (dados) => {
       dados.answerKey,
     );
 
-    // O backend retorna { message, exam: { ... } }
     const novoExame = response.data.exam;
     provasDaTurma.value.push(novoExame);
 
@@ -63,15 +62,9 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
   enviando.value = true;
   try {
-    // Prepara o arquivo com o nome do aluno para o backend identificar
-    const extensao = dados.arquivo.name.split(".").pop();
-    const arquivoFinal = new File(
-      [dados.arquivo],
-      `${dados.nome}.${extensao}`,
-      { type: dados.arquivo.type },
-    );
-
-    await examService.criarSubmissao(examIdSelecionado.value, [arquivoFinal]);
+    // CORREÇÃO: Passamos os "dados" (que contém { nome, arquivo }) DIRETO pro Service!
+    // O Service (api.ts) é quem vai fazer a mágica de renomear o arquivo que combinamos antes.
+    await examService.criarSubmissao(examIdSelecionado.value, dados);
 
     // Recarrega a lista de submissões para mostrar o novo aluno e a nota da IA
     await buscarSubmissoes();
@@ -93,8 +86,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="sm:ml-64 min-h-screen bg-gray-900 text-white p-4 md:p-8">
-    <div class="max-w-6xl mx-auto">
+  <div
+    class="sm:ml-64 min-h-screen bg-[#0B0F19] text-gray-200 p-6 md:p-10 font-sans"
+  >
+    <div class="max-w-6xl mx-auto space-y-8">
       <ExamHeader
         v-model="examIdSelecionado"
         :class-id="classIdAtual"

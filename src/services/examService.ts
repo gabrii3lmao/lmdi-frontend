@@ -30,13 +30,15 @@ export const examService = {
     const formData = new FormData();
     formData.append("examId", examId);
 
-    const extensao = dados.arquivo.name.split(".").pop() || "jpg";
+    // O Service é quem renomeia!
+    const extensao = dados.arquivo.name.split('.').pop() || "jpg";
     const arquivoRenomeado = new File(
-      [dados.arquivo],
-      `${dados.nome}.${extensao}`,
-      { type: dados.arquivo.type },
+      [dados.arquivo], 
+      `${dados.nome}.${extensao}`, 
+      { type: dados.arquivo.type }
     );
-    formData.append("file", arquivoRenomeado);
+
+    formData.append("files", arquivoRenomeado);
 
     return api.post("/submissions", formData);
   },
