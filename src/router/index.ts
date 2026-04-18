@@ -7,7 +7,8 @@ import ResetPassword from "@/views/auth/ResetPassword.vue";
 import TurmasDashboard from "@/views/TurmasDashboard.vue";
 import Duvidas from "@/views/Duvidas.vue";
 import ModeloProva from "@/views/ModeloProva.vue";
-import Turma from "@/views/Turma.vue";
+// @ts-ignore
+import Turma from "../views/Turma.vue";
 
 const routes = [
   {
