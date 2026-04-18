@@ -43,8 +43,6 @@ const carregarDados = async () => {
     const resTurmas = await turmaService.getAll();
     turmas.value = resTurmas.data;
 
-    // OTIMIZAÇÃO: Promise.all busca as notas de todas as turmas em paralelo,
-    // em vez de uma por vez, deixando a tela absurdamente mais rápida.
     const promisesGabaritos = turmas.value.map(async (turma) => {
       const res = await examService.listarGabaritosMestre(turma._id);
       return res.data || [];
