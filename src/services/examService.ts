@@ -26,14 +26,17 @@ export const examService = {
 
   listarSubmissao: (id: string) => api.get(`/submissions/${id}`),
 
-  criarSubmissao: (examId: string, imagens: File[]) => {
+  criarSubmissao: (examId: string, dados: { nome: string; arquivo: File }) => {
     const formData = new FormData();
-
     formData.append("examId", examId);
 
-    imagens.forEach((imagem) => {
-      formData.append("files", imagem);
-    });
+    const extensao = dados.arquivo.name.split(".").pop() || "jpg";
+    const arquivoRenomeado = new File(
+      [dados.arquivo],
+      `${dados.nome}.${extensao}`,
+      { type: dados.arquivo.type },
+    );
+    formData.append("file", arquivoRenomeado);
 
     return api.post("/submissions", formData);
   },

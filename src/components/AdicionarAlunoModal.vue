@@ -9,8 +9,6 @@ const nomeAluno = ref("");
 const imagemSelecionada = ref<File | null>(null);
 const previewUrl = ref<string | null>(null);
 
-// O SEGREDO ESTÁ AQUI: Limpamos o modal apenas quando ele abre ou fecha,
-// e nunca no meio do envio!
 watch(
   () => props.isOpen,
   (aberto) => {
@@ -35,8 +33,6 @@ function handleSubmit() {
     alert("Preencha o nome e selecione a imagem do gabarito.");
     return;
   }
-
-  // Apenas emite a ação. Quem decide quando fechar (e limpar) é o componente pai!
   emit("confirm", {
     nome: nomeAluno.value,
     arquivo: imagemSelecionada.value,
