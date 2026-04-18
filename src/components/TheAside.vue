@@ -11,7 +11,6 @@ const showSidebar = computed(() => {
   const isPublicPage = route.meta.hideSidebar === true;
   const hasToken = !!localStorage.getItem("token");
 
-  // Só mostra se NÃO for página pública E tiver token
   return !isPublicPage && hasToken;
 });
 
@@ -36,7 +35,7 @@ const updateUsername = () => {
   if (savedName) {
     const firstName = savedName.split(" ")[0];
     name.value =
-      firstName!.charAt(0).toUpperCase() + firstName!.slice(1).toLowerCase();
+      firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   } else {
     name.value = "";
   }
@@ -52,171 +51,192 @@ watch(
 onMounted(() => {
   updateUsername();
 });
+
+const navItemClass =
+  "flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-white/5 hover:text-gray-200 group transition-all duration-200 border-l-2 border-transparent";
+
+const activeNavClass = "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500";
 </script>
 
 <template>
   <div v-if="showSidebar">
+    <!-- botão mobile -->
     <button
       @click="toggleMenu"
       type="button"
-      class="fixed top-4 left-4 z-50 inline-flex items-center p-2 text-sm text-gray-400 rounded-lg sm:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 transition-all shadow-lg bg-gray-800"
+      class="fixed top-4 left-4 z-50 inline-flex items-center p-2.5 text-sm text-gray-300 rounded-xl sm:hidden hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all bg-[#111827] border border-white/10 shadow-xl"
       v-show="!isMenuOpen"
     >
-      <i class="pi pi-bars" style="font-size: 1.2rem"></i>
+      <i class="pi pi-bars text-lg"></i>
     </button>
 
+    <!-- overlay -->
     <div
       v-if="isMenuOpen"
       @click="toggleMenu"
-      class="fixed inset-0 bg-black/50 z-30 sm:hidden transition-opacity"
+      class="fixed inset-0 bg-[#0B0F19]/80 backdrop-blur-sm z-30 sm:hidden"
     ></div>
 
+    <!-- sidebar -->
     <aside
-      id="logo-sidebar"
       :class="[
-        'fixed top-0 left-0 z-40 w-64 h-screen transition-transform duration-300 ease-in-out border-r border-gray-700 shadow-2xl sm:shadow-none',
+        'fixed top-0 left-0 z-40 w-64 h-screen bg-[#111827] border-r border-white/5 shadow-2xl flex flex-col transition-transform duration-300',
         isMenuOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
       ]"
-      aria-label="Sidebar"
     >
-      <div class="flex flex-col h-full px-3 py-4 overflow-y-auto bg-gray-800">
-        <div class="flex items-center justify-between mb-10 px-2">
-          <div class="flex items-center">
-            <div
-              class="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-500/20 mr-3"
-            >
-              <i
-                class="pi pi-pencil text-white text-lg"
-                style="font-size: 1.5rem"
-              ></i>
-            </div>
-            <span class="text-xl font-bold tracking-tight text-white italic">
-              Let me <span class="text-indigo-400">do it</span>
-            </span>
-          </div>
-
-          <button
-            @click="toggleMenu"
-            class="sm:hidden text-gray-400 hover:text-white p-2"
+      <!-- header -->
+      <div
+        class="h-20 flex items-center justify-between px-6 border-b border-white/5 shrink-0"
+      >
+        <RouterLink to="/" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center"
           >
-            <i class="pi pi-times text-xl"></i>
-          </button>
-        </div>
+            <i class="pi pi-check text-white text-sm"></i>
+          </div>
+          <span class="text-white font-bold">
+            LetMe<span class="text-indigo-400">DoIt</span>
+          </span>
+        </RouterLink>
 
-        <nav class="flex-1">
-          <ul class="space-y-2 font-medium">
+        <button @click="toggleMenu" class="sm:hidden text-gray-400">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <!-- conteúdo -->
+      <div class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+        <!-- principal -->
+        <div class="mb-6">
+          <h3 class="px-4 text-xs text-gray-500 uppercase mb-3">Principal</h3>
+          <ul class="space-y-1">
             <li>
               <RouterLink
                 to="/"
-                class="flex items-center p-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white group transition-all"
+                :class="navItemClass"
+                :active-class="activeNavClass"
               >
-                <i
-                  class="pi pi-home text-lg group-hover:text-indigo-400 transition-colors"
-                ></i>
-                <span class="ms-4">Dashboard</span>
+                <i class="pi pi-desktop w-6"></i>
+                <span>Dashboard</span>
               </RouterLink>
             </li>
             <li>
               <RouterLink
                 to="/classes"
-                class="flex items-center p-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white group transition-all"
+                :class="navItemClass"
+                :active-class="activeNavClass"
               >
-                <i
-                  class="pi pi-users text-lg group-hover:text-indigo-400 transition-colors"
-                ></i>
-                <span class="ms-4">Turmas</span>
+                <i class="pi pi-users w-6"></i>
+                <span>Suas Turmas</span>
               </RouterLink>
             </li>
+          </ul>
+        </div>
 
-            <li
-              class="pt-4 pb-2 px-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest"
-            >
-              Processamento
-            </li>
-
+        <!-- provas -->
+        <div class="mb-6">
+          <h3 class="px-4 text-xs text-gray-500 uppercase mb-3">
+            Gestão de Provas
+          </h3>
+          <ul class="space-y-1">
             <li>
               <RouterLink
                 to="/templates"
-                class="flex items-center p-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white group transition-all"
+                :class="navItemClass"
+                :active-class="activeNavClass"
               >
-                <i
-                  class="pi pi-file-edit text-lg group-hover:text-indigo-400 transition-colors"
-                ></i>
-                <span class="ms-4">Modelos de Prova</span>
+                <i class="pi pi-file-check w-6"></i>
+                <span>Gabaritos</span>
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink
+                to="/submissions"
+                :class="navItemClass"
+                :active-class="activeNavClass"
+              >
+                <i class="pi pi-images w-6"></i>
+                <span>Submissões</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
+
+        <!-- análise -->
+        <div class="mb-6">
+          <h3 class="px-4 text-xs text-gray-500 uppercase mb-3">Análise</h3>
+          <ul class="space-y-1">
+            <li>
+              <RouterLink
+                to="/reports"
+                :class="navItemClass"
+                :active-class="activeNavClass"
+              >
+                <i class="pi pi-chart-pie w-6"></i>
+                <span>Desempenho</span>
               </RouterLink>
             </li>
             <li>
               <RouterLink
                 to="/history"
-                class="flex items-center p-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white group transition-all"
+                :class="navItemClass"
+                :active-class="activeNavClass"
               >
-                <i
-                  class="pi pi-history text-lg group-hover:text-indigo-400 transition-colors"
-                ></i>
-                <span class="ms-4">Histórico</span>
-              </RouterLink>
-            </li>
-            <li>
-              <RouterLink
-                to="/reports"
-                class="flex items-center p-3 text-gray-300 rounded-xl hover:bg-gray-700/50 hover:text-white group transition-all"
-              >
-                <i
-                  class="pi pi-chart-bar text-lg group-hover:text-indigo-400 transition-colors"
-                ></i>
-                <span class="ms-4">Relatórios</span>
-              </RouterLink>
-            </li>
-
-            <li class="mt-4">
-              <RouterLink
-                to="/faq"
-                class="flex items-center p-3 text-gray-200 rounded-xl hover:bg-indigo-500/10 hover:text-indigo-300 group transition-all"
-              >
-                <i
-                  class="pi pi-question-circle text-lg group-hover:animate-pulse"
-                ></i>
-                <span class="ms-4">Central de Ajuda</span>
+                <i class="pi pi-history w-6"></i>
+                <span>Histórico</span>
               </RouterLink>
             </li>
           </ul>
-        </nav>
-
-        <div class="mt-auto pt-4 border-t border-gray-700/50">
-          <div class="flex items-center p-3 mb-2 bg-gray-900/30 rounded-2xl">
-            <div
-              class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-sm font-bold shadow-inner"
-            >
-              {{ name.charAt(0) }}
-            </div>
-            <div class="ms-3 overflow-hidden">
-              <p class="text-sm font-semibold text-gray-100 truncate">
-                {{ name }}
-              </p>
-              <p class="text-xs text-gray-500 uppercase tracking-wider">
-                Usuário
-              </p>
-            </div>
-          </div>
-
-          <button
-            @click="handleSignout"
-            class="w-full flex items-center p-3 text-gray-400 rounded-xl hover:bg-red-500/10 hover:text-red-400 group transition-all duration-200"
-          >
-            <i
-              class="pi pi-sign-out text-lg group-hover:translate-x-1 transition-transform"
-            ></i>
-            <span class="ms-4 text-sm font-medium">Sair do Sistema</span>
-          </button>
         </div>
+
+        <!-- outros -->
+        <div class="mb-6">
+          <h3 class="px-4 text-xs text-gray-500 uppercase mb-3">Outros</h3>
+          <ul class="space-y-1">
+            <li>
+              <RouterLink
+                to="/faq"
+                :class="navItemClass"
+                :active-class="activeNavClass"
+              >
+                <i class="pi pi-question-circle w-6"></i>
+                <span>FAQ</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div class="p-4 border-t border-white/5">
+        <div class="flex items-center gap-3 mb-3">
+          <div
+            class="w-9 h-9 rounded-full bg-indigo-500/20 flex items-center justify-center"
+          >
+            {{ name.charAt(0) }}
+          </div>
+          <span class="text-gray-200 text-sm">
+            {{ name || "Professor" }}
+          </span>
+        </div>
+
+        <button
+          @click="handleSignout"
+          class="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-red-400"
+        >
+          <i class="pi pi-sign-out"></i>
+          <span>Sair</span>
+        </button>
       </div>
     </aside>
   </div>
 </template>
 
 <style scoped>
-/* Estilização extra para o logo parecer uma "marca" */
-.tracking-tight {
-  letter-spacing: -0.025em;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>

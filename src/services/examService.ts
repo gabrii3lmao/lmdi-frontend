@@ -1,12 +1,14 @@
 import api from "./api";
 
 export const examService = {
+  // CORRIGIDO: Rota mudada de /exams para /submissions
   getAllSubmission: (examId: string) =>
-    api.get("/exams/submission", {
+    api.get("/submissions", {
       params: {
         examId: examId,
       },
     }),
+
   createExam: (
     title: string,
     classId: string,
@@ -14,7 +16,7 @@ export const examService = {
     choicesCount: number,
     answerKey: string[],
   ) =>
-    api.post("/exams/create-exam", {
+    api.post("/exams/", {
       title,
       classId,
       questionsCount,
@@ -22,7 +24,7 @@ export const examService = {
       answerKey,
     }),
 
-  listarSubmissao: (id: string) => api.get(`/exams/${id}`),
+  listarSubmissao: (id: string) => api.get(`/submissions/${id}`),
 
   criarSubmissao: (examId: string, imagens: File[]) => {
     const formData = new FormData();
@@ -33,11 +35,12 @@ export const examService = {
       formData.append("files", imagem);
     });
 
-    return api.post("/exams/submission", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    // CORRIGIDO: Removido o header manual de Content-Type.
+    // Deixe o Axios cuidar disso magicamente!
+    return api.post("/submissions", formData);
   },
-  listarGabaritosMestre: (classId: string) => api.get(`/exams/${classId}`),
+
+  // CORRIGIDO: Adicionado o "/class/" no caminho da URL
+  listarGabaritosMestre: (classId: string) =>
+    api.get(`/exams/class/${classId}`),
 };
