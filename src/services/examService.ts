@@ -35,8 +35,6 @@ export const examService = {
       formData.append("files", imagem);
     });
 
-    // CORRIGIDO: Removido o header manual de Content-Type.
-    // Deixe o Axios cuidar disso magicamente!
     return api.post("/submissions", formData);
   },
 
