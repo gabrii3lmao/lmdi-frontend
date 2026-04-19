@@ -1,3 +1,4 @@
+// Login.vue
 <script setup lang="ts">
 import { ref } from "vue";
 import api from "@/services/api";
@@ -6,10 +7,13 @@ import { useRouter } from "vue-router";
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
+const errorMessage = ref(""); // Estado para a flash message
 const router = useRouter();
 
 async function handleLogin() {
   isLoading.value = true;
+  errorMessage.value = ""; // Limpa erros anteriores
+
   try {
     const response = await api.post("/auth/signin", {
       email: email.value,
@@ -18,14 +22,27 @@ async function handleLogin() {
 
     const { id, name, token } = response.data.user;
 
-    // Salvando os dados corretamente (corrigido o bug do userId)
     localStorage.setItem("token", token);
     localStorage.setItem("username", name);
     localStorage.setItem("userId", id);
 
     router.push("/");
-  } catch (error) {
-    alert("Falha no login: Verifique suas credenciais.");
+  } catch (error: any) {
+    console.error("Falha no login: ", error);
+
+    // Tratamento de erro do backend (Zod ou credenciais inválidas)
+    if (error.response?.data) {
+      const data = error.response.data;
+      if (data.details) {
+        errorMessage.value =
+          data.error || "Dados inválidos. Verifique seu e-mail e senha.";
+      } else {
+        errorMessage.value =
+          data.error || data.message || "Credenciais incorretas.";
+      }
+    } else {
+      errorMessage.value = "Não foi possível conectar ao servidor.";
+    }
   } finally {
     isLoading.value = false;
   }
@@ -61,14 +78,21 @@ async function handleLogin() {
         </p>
       </div>
 
+      <div
+        v-if="errorMessage"
+        class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 animate-in fade-in slide-in-from-top-2"
+      >
+        <i class="pi pi-exclamation-circle mt-0.5"></i>
+        <p class="text-sm font-medium">{{ errorMessage }}</p>
+      </div>
+
       <form class="space-y-5" @submit.prevent="handleLogin">
         <div>
           <label
             for="email"
             class="block text-sm font-medium text-gray-300 mb-1.5"
+            >E-mail profissional</label
           >
-            E-mail profissional
-          </label>
           <div class="relative">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
@@ -91,9 +115,8 @@ async function handleLogin() {
             <label
               for="password"
               class="block text-sm font-medium text-gray-300"
+              >Sua Senha</label
             >
-              Sua Senha
-            </label>
             <RouterLink
               to="/forgot-password"
               class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"

@@ -1,3 +1,4 @@
+// Cadastro.vue
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -7,11 +8,13 @@ const name = ref("");
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
+const errorMessage = ref(""); // Estado para a flash message
 
 const router = useRouter();
 
 async function handleSignup() {
   loading.value = true;
+  errorMessage.value = ""; // Limpa erros anteriores
 
   try {
     await api.post("/auth/signup", {
@@ -20,9 +23,25 @@ async function handleSignup() {
       password: password.value,
     });
     router.push("/signin");
-  } catch (error) {
-    console.log("Erro no cadastro: ", error);
-    alert("Erro ao realizar o cadastro. Tente novamente.");
+  } catch (error: any) {
+    console.error("Erro no cadastro: ", error);
+
+    // Tratamento de erro do backend (incluindo Zod)
+    if (error.response?.data) {
+      const data = error.response.data;
+
+      // Se houver detalhes do Zod, podemos formatar ou exibir a mensagem principal
+      if (data.details) {
+        errorMessage.value =
+          data.error || "Verifique os dados preenchidos e tente novamente.";
+        console.log("Detalhes de validação:", data.details); // Útil para debugar os campos exatos
+      } else {
+        errorMessage.value =
+          data.error || data.message || "Erro ao realizar o cadastro.";
+      }
+    } else {
+      errorMessage.value = "Erro de conexão. Tente novamente mais tarde.";
+    }
   } finally {
     loading.value = false;
   }
@@ -52,14 +71,21 @@ async function handleSignup() {
         </p>
       </div>
 
+      <div
+        v-if="errorMessage"
+        class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 animate-in fade-in slide-in-from-top-2"
+      >
+        <i class="pi pi-exclamation-circle mt-0.5"></i>
+        <p class="text-sm font-medium">{{ errorMessage }}</p>
+      </div>
+
       <form class="space-y-5" @submit.prevent="handleSignup">
         <div>
           <label
             for="name"
             class="block text-sm font-medium text-gray-300 mb-1.5"
+            >Seu Nome</label
           >
-            Seu Nome
-          </label>
           <div class="relative">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
@@ -81,9 +107,8 @@ async function handleSignup() {
           <label
             for="email"
             class="block text-sm font-medium text-gray-300 mb-1.5"
+            >Endereço de E-mail</label
           >
-            Endereço de E-mail
-          </label>
           <div class="relative">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
@@ -105,9 +130,8 @@ async function handleSignup() {
           <label
             for="password"
             class="block text-sm font-medium text-gray-300 mb-1.5"
+            >Sua Senha</label
           >
-            Sua Senha
-          </label>
           <div class="relative">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
