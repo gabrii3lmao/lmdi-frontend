@@ -2,8 +2,8 @@
 import { ref, onMounted } from "vue";
 import { useGabaritos } from "@/composables/useGabaritos";
 import { examService } from "@/services/examService";
-import GabaritoOficialModal from "@/components/GabaritoOficialModal.vue";
-import TemplateCard from "@/components/TemplateCard.vue";
+import GabaritoOficialModal from "@/components/Exams/GabaritoOficialModal.vue";
+import TemplateCard from "@/components/Exams/TemplateCard.vue";
 
 const { templates, turmas, loading, carregarDados, getTurmaName } =
   useGabaritos();

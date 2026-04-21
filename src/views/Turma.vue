@@ -6,11 +6,11 @@ import { useExams } from "@/composables/useExams";
 import { submissionService } from "@/services/submissionService";
 
 // Componentes Modularizados
-import ExamHeader from "@/components/ExamHeader.vue";
-import ExamActionCards from "@/components/ExamActionCards.vue";
-import SubmissionsList from "@/components/SubmissionsList.vue";
-import GabaritoOficialModal from "@/components/GabaritoOficialModal.vue";
-import AdicionarAlunoModal from "@/components/AdicionarAlunoModal.vue";
+import ExamHeader from "@/components/Exams/ExamHeader.vue";
+import ExamActionCards from "@/components/Exams/ExamActionCards.vue";
+import SubmissionsList from "@/components/Submissions/SubmissionsList.vue";
+import GabaritoOficialModal from "@/components/Exams/GabaritoOficialModal.vue";
+import AdicionarAlunoModal from "@/components/Submissions/AdicionarAlunoModal.vue";
 
 const route = useRoute();
 const classIdAtual = ref(route.params.id);
@@ -63,7 +63,6 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
   enviando.value = true;
   try {
-
     await submissionService.criarSubmissao(examIdSelecionado.value, dados);
 
     // Recarrega a lista de submissões para mostrar o novo aluno e a nota da IA

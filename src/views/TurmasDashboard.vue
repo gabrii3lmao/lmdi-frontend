@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { turmaService } from "@/services/turmas";
-import TurmaCard from "@/components/TurmaCard.vue";
-import TurmaModal from "@/components/TurmaModal.vue";
+import TurmaCard from "@/components/Classes/TurmaCard.vue";
+import TurmaModal from "@/components/Classes/TurmaModal.vue";
 
 const turmas = ref<any[]>([]);
 const loading = ref(true);

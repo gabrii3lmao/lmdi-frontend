@@ -1,5 +1,5 @@
 export type Exam = {
-    id: string;
+    _id: string;
     title: string;
     classId: string;
     questionsCount: number;

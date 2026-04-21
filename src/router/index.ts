@@ -1,3 +1,4 @@
+// router/index.ts (ou router.js)
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/auth/Login.vue";
 import Cadastro from "@/views/auth/Cadastro.vue";
@@ -5,10 +6,12 @@ import Home from "@/views/Home.vue";
 import SendEmailReset from "@/views/auth/SendEmailReset.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
 import TurmasDashboard from "@/views/TurmasDashboard.vue";
-import Duvidas from "@/views/Duvidas.vue";
+import Duvidas from "@/views/utils/Duvidas.vue";
 import ModeloProva from "@/views/ModeloProva.vue";
 // @ts-ignore
 import Turma from "../views/Turma.vue";
+import NotFound from "@/views/utils/NotFound.vue"; // <-- Nova importação
+import Submissoes from "@/views/Submissoes.vue";
 
 const routes = [
   {
@@ -33,11 +36,13 @@ const routes = [
     path: "/forgot-password",
     name: "forgot-password",
     component: SendEmailReset,
+    meta: { hideSidebar: true }, // Sugestão: esconder sidebar nessas também
   },
   {
     path: "/reset-password/:token",
     name: "reset-password",
     component: ResetPassword,
+    meta: { hideSidebar: true }, // Sugestão: esconder sidebar nessas também
   },
   {
     path: "/classes",
@@ -62,6 +67,19 @@ const routes = [
     name: "provas-turma",
     component: Turma,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/submissions",
+    name: "submissoes",
+    component: Submissoes,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFound,
+    meta: { hideSidebar: true }, // Esconde a sidebar para a tela de erro ficar limpa
   },
 ];
 
