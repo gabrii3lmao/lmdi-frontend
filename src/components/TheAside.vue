@@ -35,7 +35,8 @@ const updateUsername = () => {
   if (savedName) {
     const firstName = savedName.split(" ")[0];
     name.value =
-      (firstName as string).charAt(0).toUpperCase() + (firstName as string).slice(1).toLowerCase();
+      (firstName as string).charAt(0).toUpperCase() +
+      (firstName as string).slice(1).toLowerCase();
   } else {
     name.value = "";
   }
@@ -88,14 +89,25 @@ const activeNavClass = "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500";
       <div
         class="h-20 flex items-center justify-between px-6 border-b border-white/5 shrink-0"
       >
-        <RouterLink to="/" class="flex items-center gap-3">
-          <div
-            class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center"
-          >
-            <i class="pi pi-check text-white text-sm"></i>
+        <RouterLink
+          to="/"
+          class="flex flex-col justify-center group outline-none"
+        >
+          <div class="flex items-baseline gap-1">
+            <span
+              class="text-2xl font-extrabold tracking-tighter text-gray-100 transition-colors group-hover:text-white"
+            >
+              LetMe<span class="text-indigo-500">DoIt</span>
+            </span>
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-indigo-500 group-hover:bg-indigo-400 group-hover:scale-125 transition-all duration-200"
+            ></span>
           </div>
-          <span class="text-white font-bold">
-            LetMe<span class="text-indigo-400">DoIt</span>
+
+          <span
+            class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-0.5 font-bold"
+          >
+            Painel Docente
           </span>
         </RouterLink>
 

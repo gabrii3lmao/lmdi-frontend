@@ -8,13 +8,13 @@ const name = ref("");
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
-const errorMessage = ref(""); // Estado para a flash message
+const errorMessage = ref("");
 
 const router = useRouter();
 
 async function handleSignup() {
   loading.value = true;
-  errorMessage.value = ""; // Limpa erros anteriores
+  errorMessage.value = "";
 
   try {
     await api.post("/auth/signup", {
@@ -24,23 +24,16 @@ async function handleSignup() {
     });
     router.push("/signin");
   } catch (error: any) {
-    console.error("Erro no cadastro: ", error);
-
-    // Tratamento de erro do backend (incluindo Zod)
     if (error.response?.data) {
       const data = error.response.data;
 
-      // Se houver detalhes do Zod, podemos formatar ou exibir a mensagem principal
       if (data.details) {
-        errorMessage.value =
-          data.error || "Verifique os dados preenchidos e tente novamente.";
-        console.log("Detalhes de validação:", data.details); // Útil para debugar os campos exatos
+        errorMessage.value = data.error || "Verifique os dados preenchidos.";
       } else {
-        errorMessage.value =
-          data.error || data.message || "Erro ao realizar o cadastro.";
+        errorMessage.value = data.error || data.message || "Erro ao cadastrar.";
       }
     } else {
-      errorMessage.value = "Erro de conexão. Tente novamente mais tarde.";
+      errorMessage.value = "Erro de conexão.";
     }
   } finally {
     loading.value = false;
@@ -50,125 +43,154 @@ async function handleSignup() {
 
 <template>
   <div
-    class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans"
+    class="min-h-screen flex w-full font-sans bg-[#0B0F19] overflow-x-hidden"
   >
-    <img
-      src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
-      alt="Background tech"
-      class="absolute inset-0 w-full h-full object-cover z-0"
-    />
-    <div class="absolute inset-0 bg-[#0B0F19]/80 backdrop-blur-md z-10"></div>
-
+    <!-- LADO ESQUERDO -->
     <div
-      class="relative z-20 w-full max-w-md bg-[#111827]/80 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl animate-in fade-in zoom-in duration-500"
+      class="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 xl:p-16"
     >
-      <div class="flex flex-col items-center justify-center mb-8">
-        <h2 class="text-2xl font-extrabold tracking-tight text-white">
-          Crie sua conta
-        </h2>
-        <p class="text-sm text-gray-400 mt-1">
-          Junte-se ao <span class="font-bold text-indigo-400">LetMeDoIt</span>
+      <!-- Background -->
+      <img
+        src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070&auto=format&fit=crop"
+        alt="Sala de aula"
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      />
+
+      <!-- Overlay mais leve -->
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-[#0B0F19]/80 via-[#0B0F19]/60 to-indigo-900/30 z-10"
+      ></div>
+
+      <!-- Logo + Nome -->
+      <div class="relative z-20 flex items-center gap-5">
+        <div
+          class="w-24 h-24 xl:w-28 xl:h-28 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center p-4 shadow-[0_0_60px_rgba(99,102,241,0.4)]"
+        >
+          <img
+            src="../../../public/logo.png"
+            alt="Logo"
+            class="w-full h-full object-contain"
+          />
+        </div>
+
+        <span
+          class="text-5xl xl:text-6xl font-extrabold text-white leading-none"
+        >
+          Let Me<span class="text-indigo-400">Do It!</span>
+        </span>
+      </div>
+
+      <!-- Conteúdo -->
+      <div class="relative z-20 mt-auto max-w-lg">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-100 text-sm mb-6 opacity-70"
+        >
+          <i class="pi pi-sparkles text-xs"></i>
+          <span>Painel Docente</span>
+        </div>
+
+        <h1
+          class="text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight"
+        >
+          Automatize a correção das suas provas.
+        </h1>
+
+        <p class="text-base xl:text-lg text-gray-100 mb-8 max-w-md">
+          Gestão de gabaritos, análise de submissões e acompanhamento em tempo
+          real.
         </p>
       </div>
+    </div>
 
+    <!-- LADO DIREITO -->
+    <div
+      class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative"
+    >
+      <!-- círculo decorativo corrigido -->
       <div
-        v-if="errorMessage"
-        class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 animate-in fade-in slide-in-from-top-2"
-      >
-        <i class="pi pi-exclamation-circle mt-0.5"></i>
-        <p class="text-sm font-medium">{{ errorMessage }}</p>
-      </div>
+        class="absolute top-0 right-0 w-72 h-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"
+      ></div>
 
-      <form class="space-y-5" @submit.prevent="handleSignup">
-        <div>
-          <label
-            for="name"
-            class="block text-sm font-medium text-gray-300 mb-1.5"
-            >Seu Nome</label
+      <div class="w-full max-w-md relative z-10">
+        <!-- Mobile Logo -->
+        <div class="lg:hidden flex flex-col items-center mb-8 gap-4">
+          <div
+            class="w-20 h-20 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center p-3 shadow-[0_0_30px_rgba(99,102,241,0.3)]"
           >
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
-            >
-              <i class="pi pi-user"></i>
-            </div>
-            <input
-              v-model="name"
-              type="text"
-              id="name"
-              placeholder="Professor João"
-              required
-              class="block w-full pl-10 pr-3 py-2.5 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all sm:text-sm"
+            <img
+              src="../../../public/logo.png"
+              alt="Logo"
+              class="w-full h-full object-contain"
             />
           </div>
+
+          <h1 class="text-2xl font-bold text-white text-center">
+            LetMe<span class="text-indigo-400">DoIt</span>
+          </h1>
         </div>
 
-        <div>
-          <label
-            for="email"
-            class="block text-sm font-medium text-gray-300 mb-1.5"
-            >Endereço de E-mail</label
-          >
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
-            >
-              <i class="pi pi-envelope"></i>
-            </div>
-            <input
-              v-model="email"
-              type="email"
-              id="email"
-              placeholder="exemplo@escola.com"
-              required
-              class="block w-full pl-10 pr-3 py-2.5 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all sm:text-sm"
-            />
-          </div>
+        <!-- Título -->
+        <div class="mb-8 text-center lg:text-left">
+          <h2 class="text-3xl font-extrabold text-white">Crie sua conta</h2>
+          <p class="text-gray-400 mt-2">Preencha seus dados.</p>
         </div>
 
-        <div>
-          <label
-            for="password"
-            class="block text-sm font-medium text-gray-300 mb-1.5"
-            >Sua Senha</label
-          >
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500"
-            >
-              <i class="pi pi-lock"></i>
-            </div>
-            <input
-              v-model="password"
-              type="password"
-              id="password"
-              placeholder="••••••••"
-              required
-              class="block w-full pl-10 pr-3 py-2.5 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all sm:text-sm"
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          :disabled="loading"
-          class="w-full flex justify-center items-center gap-2 py-3 px-4 mt-2 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111827] focus:ring-indigo-500 disabled:opacity-50 transition-all active:scale-95"
+        <!-- Erro -->
+        <div
+          v-if="errorMessage"
+          class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400"
         >
-          <i v-if="loading" class="pi pi-spin pi-spinner"></i>
-          {{ loading ? "Registrando..." : "Criar Conta" }}
-        </button>
-      </form>
+          <i class="pi pi-exclamation-circle mt-0.5"></i>
+          <p class="text-sm">{{ errorMessage }}</p>
+        </div>
 
-      <div
-        class="mt-8 pt-6 border-t border-white/10 text-center text-sm text-gray-400"
-      >
-        Já possui uma conta?
-        <RouterLink
-          to="/signin"
-          class="font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+        <!-- Form -->
+        <form class="space-y-5" @submit.prevent="handleSignup">
+          <input
+            v-model="name"
+            type="text"
+            placeholder="Seu nome"
+            required
+            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          />
+
+          <input
+            v-model="email"
+            type="email"
+            placeholder="email@exemplo.com"
+            required
+            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          />
+
+          <input
+            v-model="password"
+            type="password"
+            placeholder="••••••••"
+            required
+            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          />
+
+          <button
+            type="submit"
+            :disabled="loading"
+            class="w-full py-3.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+          >
+            {{ loading ? "Registrando..." : "Criar Conta" }}
+          </button>
+        </form>
+
+        <!-- Footer -->
+        <div
+          class="mt-10 pt-6 border-t border-white/5 text-center text-sm text-gray-400"
         >
-          Faça login
-        </RouterLink>
+          Já possui uma conta?
+          <RouterLink
+            to="/signin"
+            class="text-indigo-400 hover:text-indigo-300"
+          >
+            Entrar
+          </RouterLink>
+        </div>
       </div>
     </div>
   </div>

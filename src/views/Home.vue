@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { turmaService } from "@/services/turmas";
 import { RouterLink } from "vue-router";
+import { turmaService } from "@/services/turmas";
+import { submissionService } from "@/services/submissionService";
 
 interface Turma {
   _id: string;
   name: string;
 }
 
+// Estados
 const loading = ref(true);
-const name = ref("");
+const name = ref("Professor");
 const turmas = ref<Turma[]>([]);
+const totalSubmissoes = ref(0); 
 
-// Única estatística real com base nos dados que temos da API
 const stats = computed(() => [
   {
     label: "Turmas Cadastradas",
@@ -20,32 +22,53 @@ const stats = computed(() => [
     icon: "pi-users",
     color: "text-indigo-400",
   },
+  {
+    label: "Correções Feitas",
+    value: totalSubmissoes.value.toString(),
+    icon: "pi-book",
+    color: "text-indigo-400",
+  },
 ]);
 
-async function carregarTurmas() {
-  try {
-    loading.value = true;
-    const response = await turmaService.getAll();
-    turmas.value = response.data;
-    turmas.value.reverse();
-  } catch (error) {
-    console.error("Erro ao carregar turmas:", error);
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
+// Funções Auxiliares
+function carregarNomeUsuario() {
   const savedName = localStorage.getItem("username");
   if (savedName) {
     const firstName = savedName.trim().split(" ")[0];
     name.value =
       (firstName as string).charAt(0).toUpperCase() + (firstName as string).slice(1).toLowerCase();
-  } else {
-    name.value = "Professor";
   }
+}
 
-  carregarTurmas();
+async function carregarDadosDashboard() {
+  loading.value = true;
+
+  try {
+    const responseTurmas = await turmaService.getAll();
+    turmas.value = responseTurmas.data.reverse();
+
+    if (turmas.value.length > 0) {
+      const promisesSubmissoes = turmas.value.map((turma) =>
+        submissionService.getSubmissionsByClass(turma._id),
+      );
+
+      const responses = await Promise.all(promisesSubmissoes);
+      totalSubmissoes.value = responses.reduce(
+        (acumulador, response) => acumulador + (response.data?.length || 0),
+        0,
+      );
+    }
+  } catch (error) {
+    console.error("Erro ao carregar dados do dashboard:", error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Ciclo de Vida
+onMounted(() => {
+  carregarNomeUsuario();
+  carregarDadosDashboard(); // Uma única chamada limpa que cuida de tudo
 });
 </script>
 
@@ -119,7 +142,6 @@ onMounted(() => {
                 :to="`/classes/${turma._id}`"
                 class="p-2 text-gray-500 hover:text-indigo-400 transition-colors"
               >
-
                 <i class="pi pi-arrow-right"></i>
               </RouterLink>
             </div>

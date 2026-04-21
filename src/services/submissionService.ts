@@ -7,6 +7,8 @@ export const submissionService = {
         examId: examId,
       },
     }),
+  getSubmissionsByClass: (classId: string) => api.get(`/submissions/class/${classId}`),
+
   listarSubmissao: (id: string) => api.get(`/submissions/${id}`),
   criarSubmissao: (examId: string, dados: { nome: string; arquivo: File }) => {
     const formData = new FormData();
