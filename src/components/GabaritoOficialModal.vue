@@ -1,7 +1,20 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-const props = defineProps<{ isOpen: boolean; enviando: boolean }>();
+interface InitialData {
+  _id?: string;
+  title: string;
+  questionsCount: number;
+  choicesCount: number;
+  answerKey?: string[];
+}
+
+const props = defineProps<{
+  isOpen: boolean;
+  enviando: boolean;
+  initialData?: InitialData | null;
+}>();
+
 const emit = defineEmits(["close", "confirm"]);
 
 const nomeProva = ref("");
@@ -15,6 +28,36 @@ const alternativas = computed(() =>
   ),
 );
 
+// 2. Este watch reage quando o Modal abre ou fecha.
+watch(
+  () => props.isOpen,
+  (modalAberto) => {
+    if (modalAberto) {
+      if (props.initialData) {
+        // MODO EDIÇÃO: Preenche os dados recebidos do componente pai
+        nomeProva.value = props.initialData.title;
+        qtdAlternativas.value = props.initialData.choicesCount;
+        qtdQuestoes.value = props.initialData.questionsCount;
+
+        // Garante que se a API já tiver as respostas, a gente as copia pro ref
+        if (
+          props.initialData.answerKey &&
+          props.initialData.answerKey.length > 0
+        ) {
+          respostas.value = [...props.initialData.answerKey];
+        }
+      } else {
+        // MODO CRIAÇÃO: Reseta o formulário
+        nomeProva.value = "";
+        qtdAlternativas.value = 5;
+        qtdQuestoes.value = 10;
+        respostas.value = Array(10).fill("");
+      }
+    }
+  },
+);
+
+// Mantemos esse watch para ajustar o array de respostas quando o usuário muda o input numérico
 watch(
   qtdQuestoes,
   (novaQtd) => {
@@ -27,7 +70,8 @@ watch(
 
 function handleSubmit() {
   if (respostas.value.some((r) => r === ""))
-    return alert("Preencha todas as questões.");
+    return alert("Preencha o gabarito de todas as questões.");
+
   emit("confirm", {
     name: nomeProva.value,
     questionCount: qtdQuestoes.value,
@@ -46,9 +90,14 @@ function handleSubmit() {
       class="bg-gray-900 border border-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl p-6 max-h-[90vh] flex flex-col"
     >
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold">Gabarito Oficial</h2>
-        <button @click="emit('close')" class="text-gray-500 hover:text-white">
-          &times;
+        <h2 class="text-xl font-bold">
+          {{ props.initialData ? "Editar Gabarito" : "Novo Gabarito Oficial" }}
+        </h2>
+        <button
+          @click="emit('close')"
+          class="text-gray-500 hover:text-white transition-colors"
+        >
+          <i class="pi pi-times"></i>
         </button>
       </div>
 
@@ -59,8 +108,8 @@ function handleSubmit() {
           >
           <input
             v-model="nomeProva"
-            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none focus:border-indigo-500"
-            placeholder="Simulado A"
+            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none focus:border-indigo-500 transition-colors"
+            placeholder="Ex: Simulado A"
           />
         </div>
         <div class="flex flex-col gap-1">
@@ -70,7 +119,8 @@ function handleSubmit() {
           <input
             v-model.number="qtdQuestoes"
             type="number"
-            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none"
+            min="1"
+            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
         <div class="flex flex-col gap-1">
@@ -83,8 +133,10 @@ function handleSubmit() {
               :key="n"
               @click="qtdAlternativas = n"
               :class="[
-                'flex-1 text-xs py-1 rounded',
-                qtdAlternativas === n ? 'bg-indigo-600' : 'text-gray-400',
+                'flex-1 text-xs py-1 rounded transition-all',
+                qtdAlternativas === n
+                  ? 'bg-indigo-600 text-white font-bold'
+                  : 'text-gray-400 hover:text-gray-200',
               ]"
             >
               {{ n }}
@@ -113,8 +165,8 @@ function handleSubmit() {
                 :class="[
                   'w-7 h-7 rounded text-[10px] font-bold border transition-all',
                   respostas[i - 1] === alt
-                    ? 'bg-indigo-600 border-indigo-400'
-                    : 'bg-gray-900 border-gray-700 text-gray-500',
+                    ? 'bg-indigo-600 border-indigo-400 text-white'
+                    : 'bg-gray-900 border-gray-700 text-gray-500 hover:bg-gray-800',
                 ]"
               >
                 {{ alt }}
@@ -127,16 +179,18 @@ function handleSubmit() {
       <div class="flex gap-3 mt-6 pt-6 border-t border-gray-800">
         <button
           @click="emit('close')"
-          class="flex-1 py-2 text-sm font-bold text-gray-400"
+          class="flex-1 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors"
         >
           Cancelar
         </button>
         <button
           @click="handleSubmit"
-          :disabled="enviando"
-          class="flex-[2] py-2 bg-indigo-600 rounded-lg font-bold text-sm disabled:opacity-50"
+          :disabled="enviando || nomeProva.trim() === ''"
+          class="flex-[2] py-2 bg-indigo-600 hover:bg-indigo-500 transition-colors rounded-lg font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ enviando ? "Salvando..." : "Confirmar Gabarito" }}
+          <span v-if="enviando">Salvando...</span>
+          <span v-else-if="props.initialData">Atualizar Gabarito</span>
+          <span v-else>Confirmar Gabarito</span>
         </button>
       </div>
     </div>

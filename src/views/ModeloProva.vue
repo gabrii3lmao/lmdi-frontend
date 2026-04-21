@@ -1,70 +1,57 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
+import { useGabaritos } from "@/composables/useGabaritos";
 import { examService } from "@/services/examService";
-import { turmaService } from "@/services/turmas";
 import GabaritoOficialModal from "@/components/GabaritoOficialModal.vue";
+import TemplateCard from "@/components/TemplateCard.vue";
 
-interface Template {
-  _id: string;
-  title: string;
-  questionsCount: number;
-  choicesCount: number;
-  createdAt: string;
-  classId: string;
-}
+const { templates, turmas, loading, carregarDados, getTurmaName } =
+  useGabaritos();
 
-interface Turma {
-  _id: string;
-  name: string;
-}
-
-const templates = ref<Template[]>([]);
-const turmas = ref<Turma[]>([]);
-const loading = ref(false);
 const enviando = ref(false);
-
-// Controle do Modal e Turma Selecionada
 const isModalOpen = ref(false);
 const classIdSelecionadaParaNovoGabarito = ref("");
 
-const openModal = () => {
+// NOVO: Controle de estado para edição
+const templateEmEdicao = ref<any>(null);
+
+const openModalParaCriar = () => {
   if (turmas.value.length === 0) return alert("Cadastre uma turma primeiro!");
+  templateEmEdicao.value = null; // Limpa edição anterior
+  isModalOpen.value = true;
+};
+
+// NOVO: Função para abrir modal em modo de edição
+const handleEdit = (template: any) => {
+  templateEmEdicao.value = template;
+  classIdSelecionadaParaNovoGabarito.value = template.classId; // Já seleciona a turma correta no select
   isModalOpen.value = true;
 };
 
 const closeModal = () => {
   isModalOpen.value = false;
+  templateEmEdicao.value = null;
   classIdSelecionadaParaNovoGabarito.value = "";
 };
 
-const carregarDados = async () => {
-  loading.value = true;
+// NOVO: Função para deletar
+const handleDelete = async (id: string) => {
+  const confirmacao = window.confirm(
+    "Tem certeza que deseja excluir este gabarito? Esta ação não pode ser desfeita.",
+  );
+  if (!confirmacao) return;
+
   try {
-    const resTurmas = await turmaService.getAll();
-    turmas.value = resTurmas.data;
-
-    const promisesGabaritos = turmas.value.map(async (turma) => {
-      const res = await examService.listarGabaritosMestre(turma._id);
-      return res.data || [];
-    });
-
-    const resultadosArray = await Promise.all(promisesGabaritos);
-
-    // Junta todos os arrays que voltaram em uma lista única
-    templates.value = resultadosArray.flat();
+    await examService.deletarGabarito(id);
+    alert("Gabarito deletado com sucesso!");
+    await carregarDados(); // Atualiza a tela
   } catch (error) {
-    console.error("Erro ao carregar dados:", error);
-  } finally {
-    loading.value = false;
+    console.error("Erro ao deletar:", error);
+    alert("Falha ao deletar o gabarito.");
   }
 };
 
-const handleSalvarGabaritoOficial = async (dados: {
-  name: string;
-  questionCount: number;
-  choicesCount: number;
-  answerKey: string[];
-}) => {
+const handleSalvarGabaritoOficial = async (dados: any) => {
   if (!classIdSelecionadaParaNovoGabarito.value) {
     return alert(
       "Por favor, selecione uma turma antes de confirmar o gabarito.",
@@ -73,17 +60,30 @@ const handleSalvarGabaritoOficial = async (dados: {
 
   enviando.value = true;
   try {
-    await examService.createExam(
-      dados.name,
-      classIdSelecionadaParaNovoGabarito.value,
-      dados.questionCount,
-      dados.choicesCount,
-      dados.answerKey,
-    );
+    // Se temos um template em edição, atualizamos. Se não, criamos.
+    if (templateEmEdicao.value) {
+      await examService.atualizarGabarito({
+        _id: templateEmEdicao.value._id,
+        title: dados.name,
+        classId: classIdSelecionadaParaNovoGabarito.value,
+        questionsCount: dados.questionCount,
+        choicesCount: dados.choicesCount,
+        answerKey: dados.answerKey,
+      });
+      alert("Gabarito mestre atualizado com sucesso!");
+    } else {
+      await examService.createExam(
+        dados.name,
+        classIdSelecionadaParaNovoGabarito.value,
+        dados.questionCount,
+        dados.choicesCount,
+        dados.answerKey,
+      );
+      alert("Gabarito mestre criado com sucesso!");
+    }
 
-    alert("Gabarito mestre criado com sucesso!");
     closeModal();
-    await carregarDados(); // Atualiza a lista da tela
+    await carregarDados();
   } catch (error) {
     console.error("Erro ao salvar:", error);
     alert("Falha ao salvar gabarito oficial.");
@@ -93,12 +93,6 @@ const handleSalvarGabaritoOficial = async (dados: {
 };
 
 onMounted(carregarDados);
-
-const getTurmaName = (classId: string) => {
-  return (
-    turmas.value.find((t) => t._id === classId)?.name || "Turma não encontrada"
-  );
-};
 </script>
 
 <template>
@@ -131,15 +125,13 @@ const getTurmaName = (classId: string) => {
                 {{ t.name }}
               </option>
             </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400"
-            >
-              <i class="pi pi-chevron-down text-xs"></i>
-            </div>
+            <i
+              class="pi pi-chevron-down text-xs absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            ></i>
           </div>
 
           <button
-            @click="openModal"
+            @click="openModalParaCriar"
             :disabled="!classIdSelecionadaParaNovoGabarito"
             class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-indigo-600 rounded-xl disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 disabled:shadow-none whitespace-nowrap"
           >
@@ -165,91 +157,24 @@ const getTurmaName = (classId: string) => {
       <div
         v-else-if="templates.length === 0"
         class="flex flex-col items-center justify-center py-24 bg-[#111827] ring-1 ring-white/5 rounded-3xl border-dashed border-gray-700/50"
-      >
-        <div
-          class="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center mb-6"
-        >
-          <i class="pi pi-file-excel text-indigo-400 text-3xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">
-          Nenhum gabarito configurado
-        </h3>
-        <p class="text-gray-400 text-sm max-w-md text-center">
-          Selecione uma turma no menu acima e crie o seu primeiro gabarito
-          oficial para que a inteligência artificial possa começar as correções.
-        </p>
-      </div>
+      ></div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
+        <TemplateCard
           v-for="temp in templates"
           :key="temp._id"
-          class="group bg-[#111827] ring-1 ring-white/5 p-6 rounded-2xl hover:ring-indigo-500/50 hover:bg-white/[0.02] transition-all duration-300 flex flex-col justify-between"
-        >
-          <div class="flex justify-between items-start mb-6">
-            <div
-              class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform"
-            >
-              <i class="pi pi-file-check text-xl"></i>
-            </div>
-
-            <div
-              class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg max-w-[150px]"
-            >
-              <p
-                class="text-xs font-semibold text-gray-300 truncate"
-                :title="getTurmaName(temp.classId)"
-              >
-                {{ getTurmaName(temp.classId) }}
-              </p>
-            </div>
-          </div>
-
-          <div class="mb-6">
-            <h3
-              class="text-lg font-bold text-white line-clamp-2 group-hover:text-indigo-400 transition-colors"
-            >
-              {{ temp.title }}
-            </h3>
-            <p
-              class="text-xs text-gray-500 mt-2 font-mono uppercase tracking-wider"
-            >
-              REF: #{{ temp._id.slice(-5) }}
-            </p>
-          </div>
-
-          <div class="flex gap-3">
-            <div
-              class="flex-1 bg-[#0B0F19] ring-1 ring-white/5 px-3 py-2.5 rounded-xl flex flex-col items-center justify-center"
-            >
-              <span
-                class="text-indigo-400 font-bold text-lg leading-none mb-1"
-                >{{ temp.questionsCount }}</span
-              >
-              <span
-                class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"
-                >Questões</span
-              >
-            </div>
-            <div
-              class="flex-1 bg-[#0B0F19] ring-1 ring-white/5 px-3 py-2.5 rounded-xl flex flex-col items-center justify-center"
-            >
-              <span class="text-indigo-400 font-bold text-lg leading-none mb-1"
-                >A-{{ String.fromCharCode(64 + temp.choicesCount) }}</span
-              >
-              <span
-                class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"
-                >Alternativas</span
-              >
-            </div>
-          </div>
-        </div>
+          :template="temp"
+          :turmaName="getTurmaName(temp.classId)"
+          @edit="handleEdit"
+          @delete="handleDelete"
+        />
       </div>
     </div>
 
     <GabaritoOficialModal
       :is-open="isModalOpen"
       :enviando="enviando"
+      :initial-data="templateEmEdicao"
       @close="closeModal"
       @confirm="handleSalvarGabaritoOficial"
     />
