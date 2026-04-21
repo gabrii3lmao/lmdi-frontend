@@ -94,7 +94,6 @@ const handleSalvarGabaritoOficial = async (dados: {
 
 onMounted(carregarDados);
 
-// Helper para formatar o nome da turma e gerar o "REF Code"
 const getTurmaName = (classId: string) => {
   return (
     turmas.value.find((t) => t._id === classId)?.name || "Turma não encontrada"

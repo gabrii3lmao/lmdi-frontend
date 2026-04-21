@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { examService } from "@/services/examService";
 import { useExams } from "@/composables/useExams";
+import { submissionService } from "@/services/submissionService";
 
 // Componentes Modularizados
 import ExamHeader from "@/components/ExamHeader.vue";
@@ -62,9 +63,8 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
   enviando.value = true;
   try {
-    // CORREÇÃO: Passamos os "dados" (que contém { nome, arquivo }) DIRETO pro Service!
-    // O Service (api.ts) é quem vai fazer a mágica de renomear o arquivo que combinamos antes.
-    await examService.criarSubmissao(examIdSelecionado.value, dados);
+
+    await submissionService.criarSubmissao(examIdSelecionado.value, dados);
 
     // Recarrega a lista de submissões para mostrar o novo aluno e a nota da IA
     await buscarSubmissoes();

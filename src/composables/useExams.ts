@@ -1,6 +1,7 @@
 // composables/useExams.js
 import { ref, watch } from "vue";
 import { examService } from "@/services/examService";
+import { submissionService } from "@/services/submissionService";
 
 export function useExams(classId: string) {
   const examIdSelecionado = ref("");
@@ -14,7 +15,7 @@ export function useExams(classId: string) {
       return;
     }
     try {
-      const response = await examService.getAllSubmission(
+      const response = await submissionService.getAllSubmission(
         examIdSelecionado.value,
       );
       submissoes.value = response.data || [];

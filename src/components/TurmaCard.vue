@@ -9,7 +9,6 @@ interface Turma {
 const props = defineProps<{ turma: Turma }>();
 const emit = defineEmits(["delete", "edit"]);
 
-// Gera uma sigla baseada no nome (Ex: "3º Ano" -> "3A", "Física" -> "FÍ")
 const avatarInitials = computed(() => {
   const name = props.turma.name.trim();
   const words = name.split(" ");
@@ -19,7 +18,6 @@ const avatarInitials = computed(() => {
   return name.substring(0, 2).toUpperCase();
 });
 
-// Pega os últimos 5 caracteres do ID do Mongo para usar como "Código"
 const shortCode = computed(() => {
   return props.turma._id.slice(-5).toUpperCase();
 });
