@@ -25,4 +25,6 @@ export const submissionService = {
 
     return api.post("/submissions", formData);
   },
+
+  getSubmissionAnswers: (submissionId: string) => api.get(`/submissions/${submissionId}/answers`),
 };

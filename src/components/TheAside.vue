@@ -227,7 +227,7 @@ const activeNavClass = "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500";
           >
             {{ name.charAt(0) }}
           </div>
-          <span class="text-gray-200 text-sm">
+          <span class="text-gray-200 text-sm font-medium">
             {{ name || "Professor" }}
           </span>
         </div>

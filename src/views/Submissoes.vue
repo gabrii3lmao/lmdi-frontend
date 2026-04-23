@@ -11,20 +11,13 @@ import { turmaService } from "@/services/turmas";
 import { examService } from "@/services/examService";
 
 import type { Exam } from "@/types/Exam";
+import type { Submission } from "@/types/Submission";
 
 interface Turma {
   _id: string;
   name: string;
 }
 
-interface Submission {
-  _id: string;
-  studentName: string;
-  score?: number;
-  status: "pending" | "graded" | "error";
-  createdAt: string;
-  studentAnswers?: string[];
-}
 
 // estados
 const turmas = ref<Turma[]>([]);
@@ -41,6 +34,7 @@ const isDrawerOpen = ref(false);
 const loadingTurmas = ref(true);
 const loadingExams = ref(false);
 const loadingSubmissions = ref(false);
+const loadingAnswers = ref(false);
 
 // NOVA FEATURE: Cálculo dinâmico da nota média da turma
 const averageScore = computed(() => {
@@ -107,10 +101,23 @@ watch(selectedExamId, async (id) => {
   }
 });
 
-const openStudentDetails = (sub: Submission) => {
-  selectedSubmission.value = sub;
+const openStudentDetails = async (sub: Submission) => {
+  selectedSubmission.value = {...sub, answers: null};
   isDrawerOpen.value = true;
-};
+  loadingAnswers.value = true;
+
+  try {
+    const res = await submissionService.getSubmissionAnswers(sub._id);
+    selectedSubmission.value = {
+      ...selectedSubmission.value,
+      answers: res.data.answers,
+    };
+  } catch (error) {
+    console.error("Erro ao carregar respostas da submissão", error);
+  } finally {
+    loadingAnswers.value = false;
+  }
+};  
 </script>
 
 <template>
