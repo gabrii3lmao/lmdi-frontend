@@ -48,7 +48,7 @@ defineEmits(["close"]);
         <h3
           class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3"
         >
-          Respostas Lidas pela IA
+          Respostas Lidas
         </h3>
 
         <div v-if="!submission.answers" class="flex justify-center p-8">

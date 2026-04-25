@@ -103,26 +103,39 @@ async function handleLogin() {
             type="email"
             placeholder="E-mail"
             required
-            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
           />
         </div>
 
-        <div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-transparent">.</span>
+            <RouterLink
+              to="/forgot-password"
+              class="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Esqueci minha senha
+            </RouterLink>
+          </div>
+
           <input
             v-model="password"
             type="password"
             placeholder="Senha"
             required
-            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
           />
         </div>
 
         <button
           type="submit"
           :disabled="isLoading"
-          class="w-full py-3.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 transition-all"
+          class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-500/20"
         >
-          {{ isLoading ? "Entrando..." : "Entrar" }}
+          <span v-if="isLoading" class="flex items-center justify-center gap-2">
+            <i class="pi pi-spin pi-spinner text-sm"></i> Entrando...
+          </span>
+          <span v-else>Entrar</span>
         </button>
       </form>
 
