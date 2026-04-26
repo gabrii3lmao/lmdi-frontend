@@ -30,7 +30,7 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Home"},
   },
   {
     path: "/forgot-password",
@@ -60,7 +60,7 @@ const routes = [
     path: "/templates",
     name: "modelo-provas",
     component: ModeloProva,
-    meta: { requiresAuth: true, title: "Modelos" },
+    meta: { requiresAuth: true, title: "Gabaritos" },
   },
   {
     path: `/classes/:id`,
@@ -72,7 +72,7 @@ const routes = [
     path: "/submissions",
     name: "submissoes",
     component: Submissoes,
-    meta: { requiresAuth: true, title: "Alunos" },
+    meta: { requiresAuth: true, title: "Submissões" },
   },
 
   {
