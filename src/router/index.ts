@@ -18,13 +18,13 @@ const routes = [
     path: "/signin",
     name: "login",
     component: Login,
-    meta: { hideSidebar: true },
+    meta: { hideSidebar: true, title: "Login" },
   },
   {
     path: "/signup",
     name: "register",
     component: Cadastro,
-    meta: { hideSidebar: true },
+    meta: { hideSidebar: true, title: "Signup" },
   },
   {
     path: "/",
@@ -36,43 +36,43 @@ const routes = [
     path: "/forgot-password",
     name: "forgot-password",
     component: SendEmailReset,
-    meta: { hideSidebar: true }, // Sugestão: esconder sidebar nessas também
+    meta: { hideSidebar: true, title: "Forgot Password" }, // Sugestão: esconder sidebar nessas também
   },
   {
     path: "/reset-password/:token",
     name: "reset-password",
     component: ResetPassword,
-    meta: { hideSidebar: true }, // Sugestão: esconder sidebar nessas também
+    meta: { hideSidebar: true, title: "Reset Password" }, // Sugestão: esconder sidebar nessas também
   },
   {
     path: "/classes",
     name: "showclasses",
     component: TurmasDashboard,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Classes" },
   },
   {
     path: "/faq",
     name: "duvidas-frequentes",
     component: Duvidas,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Perguntas Frequentes" },
   },
   {
     path: "/templates",
     name: "modelo-provas",
     component: ModeloProva,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Modelos" },
   },
   {
     path: `/classes/:id`,
     name: "provas-turma",
     component: Turma,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Classes" },
   },
   {
     path: "/submissions",
     name: "submissoes",
     component: Submissoes,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Alunos" },
   },
 
   {
@@ -90,11 +90,17 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
+
   if (to.meta.requiresAuth && !token) {
-    next("/signin");
-  } else {
-    next();
+    return next("/signin");
   }
+
+  const baseTitle = 'Meu App';
+  const pageTitle = to.meta.title as string;
+  
+  document.title = pageTitle ? pageTitle : baseTitle;
+
+  next();
 });
 
 export default router;
