@@ -36,13 +36,13 @@ const routes = [
     path: "/forgot-password",
     name: "forgot-password",
     component: SendEmailReset,
-    meta: { hideSidebar: true, title: "Forgot Password" }, // Sugestão: esconder sidebar nessas também
+    meta: { hideSidebar: true, title: "Forgot Password" }, 
   },
   {
     path: "/reset-password/:token",
     name: "reset-password",
     component: ResetPassword,
-    meta: { hideSidebar: true, title: "Reset Password" }, // Sugestão: esconder sidebar nessas também
+    meta: { hideSidebar: true, title: "Reset Password" }, 
   },
   {
     path: "/classes",
