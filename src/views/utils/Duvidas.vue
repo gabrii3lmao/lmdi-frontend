@@ -12,7 +12,7 @@ const faqs = ref<FAQItem[]>([
     question: "Como devo fotografar o gabarito para evitar erros?",
     answer:
       "A foto deve ser tirada de cima para baixo (paralela ao papel), em um ambiente bem iluminado e, preferencialmente, sobre uma superfície escura. Certifique-se de que os quatro cantos da folha estão visíveis na imagem.",
-    open: true,
+    open: false,
   },
   {
     question: "O sistema aceita caneta azul ou apenas preta?",
@@ -62,40 +62,44 @@ const toggleFaq = (index: number) => {
   faqs.value[index]!.open = !faqs.value[index]!.open;
 };
 </script>
-
 <template>
-  <div class="sm:ml-64 min-h-screen bg-gray-900 text-white p-8">
+  <div class="sm:ml-64 min-h-screen bg-white text-slate-800 p-8">
     <div class="max-w-3xl mx-auto">
+      <!-- HEADER ATUALIZADO -->
       <header class="text-center mb-12">
-        <div class="inline-block p-3 bg-indigo-600/10 rounded-2xl mb-4">
-          <i class="pi pi-question-circle text-indigo-400 text-3xl"></i>
+        <!-- Contêiner maior e ícone com text-8xl -->
+        <div
+          class="inline-flex items-center justify-center p-6 bg-indigo-50 rounded-full mb-6 shadow-sm border border-indigo-100"
+        >
+          <i class="pi pi-question-circle text-indigo-500" style="font-size: 4rem;"></i>
         </div>
 
         <h1 class="text-3xl font-bold">
           Central de <span class="text-indigo-400">Ajuda</span>
         </h1>
 
-        <p class="text-gray-400 mt-2">
+        <p class="text-gray-500 mt-2">
           Tudo o que você precisa saber para dominar o Let me do it.
         </p>
       </header>
+      <!-- FIM DO HEADER ATUALIZADO -->
 
       <div class="space-y-4">
         <div
           v-for="(faq, index) in faqs"
           :key="index"
           :class="[
-            'bg-gray-800 border rounded-2xl overflow-hidden transition-all duration-300',
+            'bg-slate-50 border rounded-2xl overflow-hidden transition-all duration-300 border-l-4 border-l-indigo-500',
             faq.open
               ? 'border-indigo-500/40 shadow-lg shadow-indigo-500/5'
-              : 'border-gray-700',
+              : 'border-slate-200/80',
           ]"
         >
           <button
             @click="toggleFaq(index)"
-            class="w-full p-5 text-left flex justify-between items-center hover:bg-gray-750 transition-colors"
+            class="w-full p-5 text-left flex justify-between items-center hover:bg-slate-50 transition-colors"
           >
-            <span class="font-semibold text-gray-200">
+            <span class="font-semibold text-slate-800">
               {{ faq.question }}
             </span>
 
@@ -108,9 +112,9 @@ const toggleFaq = (index: number) => {
           <Transition name="accordion">
             <div
               v-if="faq.open"
-              class="px-5 text-gray-100 text-sm leading-relaxed overflow-hidden"
+              class="px-5 text-slate-600 text-sm leading-relaxed overflow-hidden"
             >
-              <div class="pt-4 pb-5 border-t border-gray-700">
+              <div class="pt-4 pb-5 border-t border-slate-200/80">
                 {{ faq.answer }}
               </div>
             </div>
@@ -123,13 +127,15 @@ const toggleFaq = (index: number) => {
       >
         <h3 class="font-bold text-lg mb-2">Ainda precisa de suporte?</h3>
 
-        <p class="text-gray-100 text-sm mb-6">
+        <p
+          class="bg-slate-100 text-gray-750 text-sm mb-6 inline-block px-4 py-1 rounded-lg mt-2"
+        >
           Se sua dúvida não foi respondida, nossa equipe técnica pode te ajudar.
         </p>
-
+        <br />
         <a
           href="mailto:suporte@exemplo.com"
-          class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold transition-all"
+          class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold text-white transition-all"
         >
           <i class="pi pi-envelope"></i>
           Falar com Suporte

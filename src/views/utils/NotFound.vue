@@ -1,46 +1,73 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+// Se estiver usando PrimeIcons, certifique-se de que está importado no main.ts
 </script>
 
 <template>
-  <div
-    class="relative min-h-screen flex items-center justify-center bg-[#0B0F19] overflow-hidden font-sans px-4"
-  >
-    <div
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"
-    ></div>
+  <div class="min-h-screen flex items-center justify-center bg-slate-50 font-sans px-6 py-12">
+    <!-- Container Principal com borda sutil e fundo branco para ar de "galeria/estúdio" -->
+    <div class="z-10 w-full max-w-5xl bg-white p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100">
+      
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        
+        <!-- Coluna da Esquerda: Visual (Professora e Número) -->
+        <div class="relative flex flex-col items-center justify-center">
+          
+          <!-- AREA DA ILUSTRAÇÃO -->
+          <div class="w-full h-64 md:h-80 rounded-2xl flex items-center justify-center mb-8">
+            <div class="text-center p-6">
+              <img class="rounded-xl border-8 border-slate-200" src="/confused_dog.jpg" alt="cachorro confuso">
+            </div>
+          </div>
+        </div>
 
-    <div
-      class="relative z-10 text-center animate-in fade-in zoom-in-95 duration-500"
-    >
-      <div class="relative inline-block mb-4">
-        <h1
-          class="text-[150px] leading-none font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-600 tracking-tighter drop-shadow-2xl"
-        >
-          404
-        </h1>
-        <div
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.15)_0%,transparent_70%)] pointer-events-none"
-        ></div>
+        <!-- Coluna da Direita: Textos e Ação -->
+        <div class="text-center md:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-700 mb-6">
+            <i class="pi pi-question-circle text-sm"></i>
+            <span class="text-xs font-semibold uppercase tracking-wider">Erramos o traço</span>
+          </div>
+
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tighter text-slate-950 mb-4 leading-tight">
+            Ops! Essa página saiu de perspectiva.
+          </h2>
+          
+          <p class="text-lg text-slate-600 mb-12 leading-relaxed max-w-lg mx-auto md:mx-0">
+            Até o nosso doguinho ficou confuso com essa situação. O conteúdo que você busca não foi encontrado no caderno de esboços.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+            <RouterLink
+              to="/"
+              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
+            >
+              <i class="pi pi-arrow-left text-xs"></i>
+              Voltar para o Início
+            </RouterLink>
+            
+            <!-- Botão secundário opcional para profissionalizar (ex: reportar erro) -->
+            <button
+              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-slate-700 transition-all bg-slate-100 rounded-xl hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-300 active:scale-[0.98]"
+            >
+              <i class="pi pi-flag text-xs"></i>
+              Reportar Bug
+            </button>
+          </div>
+        </div>
       </div>
 
-      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
-        Página não encontrada 
-      </h2>
-      <p class="text-lg text-gray-400 max-w-md mx-auto mb-10 leading-relaxed">
-        Desculpe, a página que você está tentando acessar ainda não existe ou foi
-        movida para outro endereço.
-      </p>
-
-      <RouterLink
-        to="/"
-        class="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-bold text-white transition-all bg-indigo-600 rounded-xl hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0B0F19] focus:ring-indigo-500 shadow-lg shadow-indigo-500/25 active:scale-95 group"
-      >
-        <i
-          class="pi pi-home transition-transform group-hover:-translate-y-0.5"
-        ></i>
-        Voltar para o Painel
-      </RouterLink>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Adicionando uma fonte mono para o 404 parecer código/coordenada de desenho */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+
+h1 {
+  font-family: 'JetBrains Mono', monospace;
+  /* Efeito sutil de traço de lápis no número */
+  -webkit-text-stroke: 1px rgba(148, 163, 184, 0.5); 
+  color: transparent;
+}
+</style>

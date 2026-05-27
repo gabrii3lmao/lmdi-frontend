@@ -1,8 +1,9 @@
-// Login.vue
 <script setup lang="ts">
 import { ref } from "vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
+import logo1 from "@/assets/logo1.png"; // logo asset
+import lmdi_banner from "@/assets/lmdi-banner.jpeg"; // banner asset
 
 const email = ref("");
 const password = ref("");
@@ -46,107 +47,114 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div
-    class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans"
-  >
-    <!-- Background (tema escolar, mais neutro) -->
-    <img
-      src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2070&auto=format&fit=crop"
-      alt="Ambiente escolar"
-      class="absolute inset-0 w-full h-full object-cover z-0"
-    />
-
-    <!-- Overlay forte para legibilidade -->
-    <div class="absolute inset-0 bg-[#0B0F19]/85 z-10"></div>
-
-    <!-- Card -->
+  <div class="min-h-screen w-full flex font-sans bg-white overflow-hidden">
+    <!-- Lado do Formulário (Esquerda) -->
     <div
-      class="relative z-20 w-full max-w-md bg-[#111827]/80 backdrop-blur-xl ring-1 ring-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl"
+      class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative z-10"
     >
-      <!-- Logo + título -->
-      <div class="flex flex-col items-center justify-center mb-10 gap-4">
+      <div class="w-full max-w-sm mx-auto">
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-slate-900 mb-2 tracking-tight">
+            Bem-vindo de volta
+          </h1>
+          <p class="text-slate-500 text-sm">
+            Insira suas credenciais para acessar o seu painel de gestão.
+          </p>
+        </div>
+
         <div
-          class="w-24 h-24 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center p-4 shadow-[0_0_60px_rgba(99,102,241,0.4)]"
+          v-if="errorMessage"
+          class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50/50 border border-red-100 text-red-700 transition-all"
         >
-          <img
-            src="../../../public/logo.png"
-            alt="Logo"
-            class="w-full h-full object-contain"
-          />
+          <i class="pi pi-exclamation-circle mt-0.5 shrink-0 text-red-500"></i>
+          <p class="text-sm font-medium">{{ errorMessage }}</p>
         </div>
 
-        <h1
-          class="text-3xl font-extrabold text-white text-center leading-tight"
-        >
-          Bem-vindo de volta
-        </h1>
-
-        <p class="text-sm text-gray-400 text-center">
-          Acesse o <span class="font-semibold text-indigo-400">LetMeDoIt</span>
-        </p>
-      </div>
-
-      <!-- Erro -->
-      <div
-        v-if="errorMessage"
-        class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400"
-      >
-        <i class="pi pi-exclamation-circle mt-0.5"></i>
-        <p class="text-sm">{{ errorMessage }}</p>
-      </div>
-
-      <!-- Form -->
-      <form class="space-y-5" @submit.prevent="handleLogin">
-        <div>
-          <input
-            v-model="email"
-            type="email"
-            placeholder="E-mail"
-            required
-            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-          />
-        </div>
-
-        <div class="space-y-2">
-          <div class="flex items-center justify-between px-1">
-            <span class="text-transparent">.</span>
-            <RouterLink
-              to="/forgot-password"
-              class="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
-            >
-              Esqueci minha senha
-            </RouterLink>
+        <form class="space-y-5" @submit.prevent="handleLogin">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+              E-mail
+            </label>
+            <input
+              v-model="email"
+              type="email"
+              placeholder="seu@email.com"
+              required
+              class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+            />
           </div>
 
-          <input
-            v-model="password"
-            type="password"
-            placeholder="Senha"
-            required
-            class="w-full px-4 py-3 bg-[#0B0F19]/50 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium text-slate-700">
+                Senha
+              </label>
+              <RouterLink
+                to="/forgot-password"
+                class="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+              >
+                Esqueceu a senha?
+              </RouterLink>
+            </div>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+            />
+          </div>
+
+          <button
+            type="submit"
+            :disabled="isLoading"
+            class="w-full py-2.5 mt-2 rounded-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            <i v-if="isLoading" class="pi pi-spin pi-spinner text-sm"></i>
+            <span>{{ isLoading ? "Entrando..." : "Entrar na conta" }}</span>
+          </button>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-slate-500">
+          Ainda não tem uma conta?
+          <RouterLink
+            to="/signup"
+            class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+          >
+            Cadastre-se grátis
+          </RouterLink>
+        </p>
+      </div>
+    </div>
+
+    <!-- Lado da Imagem (Direita) -->
+    <div
+      class="hidden lg:flex lg:w-1/2 relative bg-slate-900 items-center justify-center p-12 lg:p-20 overflow-hidden"
+    >
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-900 z-0"
+      ></div>
+
+      <div class="relative z-10 w-full max-w-2xl flex flex-col items-center">
+        <h2
+          class="text-3xl font-bold text-white mb-4 text-center leading-tight"
+        >
+          Gestão inteligente, resultados reais.
+        </h2>
+        <p class="text-slate-400 text-center mb-10 text-lg max-w-lg">
+          Tudo o que você precisa para gerenciar seus processos em um único
+          lugar.
+        </p>
+
+        <div
+          class="w-full rounded-2xl bg-white/5 p-2 backdrop-blur-sm border border-white/10 shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
+        >
+          <img
+            src="/app-screenshot.png"
+            alt="Interface do LetMeDoIt"
+            class="w-full h-auto rounded-xl border border-white/10 shadow-inner"
           />
         </div>
-
-        <button
-          type="submit"
-          :disabled="isLoading"
-          class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-500/20"
-        >
-          <span v-if="isLoading" class="flex items-center justify-center gap-2">
-            <i class="pi pi-spin pi-spinner text-sm"></i> Entrando...
-          </span>
-          <span v-else>Entrar</span>
-        </button>
-      </form>
-
-      <!-- Footer -->
-      <div
-        class="mt-8 pt-6 border-t border-white/10 text-center text-sm text-gray-400"
-      >
-        Novo por aqui?
-        <RouterLink to="/signup" class="text-indigo-400 hover:text-indigo-300">
-          Criar conta
-        </RouterLink>
       </div>
     </div>
   </div>

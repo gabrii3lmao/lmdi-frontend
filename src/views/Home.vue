@@ -13,20 +13,20 @@ interface Turma {
 const loading = ref(true);
 const name = ref("Professor");
 const turmas = ref<Turma[]>([]);
-const totalSubmissoes = ref(0); 
+const totalSubmissoes = ref(0);
 
 const stats = computed(() => [
   {
     label: "Turmas Cadastradas",
     value: turmas.value.length.toString(),
     icon: "pi-users",
-    color: "text-indigo-400",
+    color: "text-emerald-500",
   },
   {
     label: "Correções Feitas",
     value: totalSubmissoes.value.toString(),
     icon: "pi-book",
-    color: "text-indigo-400",
+    color: "text-emerald-500",
   },
 ]);
 
@@ -36,9 +36,18 @@ function carregarNomeUsuario() {
   if (savedName) {
     const firstName = savedName.trim().split(" ")[0];
     name.value =
-      (firstName as string).charAt(0).toUpperCase() + (firstName as string).slice(1).toLowerCase();
+      (firstName as string).charAt(0).toUpperCase() +
+      (firstName as string).slice(1).toLowerCase();
   }
 }
+
+const dicas = [
+  "Organize seus alunos criando as turmas primeiro. Depois, basta criar um gabarito mestre vinculado a essa turma para iniciar a correção por IA.",
+  "Ao criar um gabarito, certifique-se de que o número de questões e o número de alternativas estejam corretos.",
+  "Para cada turma, você pode criar um gabarito mestre e diversos modelos de provas. Não há um limite de questões ou alternativas, nem de alunos!",
+  "Quando for tirar a foto de um modelo de prova, certifique-se de que a foto esteja bem iluminada e que as questões estejam legíveis.",
+  "Ao clicar em um dos botões de 'Ver Provas' você será redirecionado para a página de provas da turma"
+]
 
 async function carregarDadosDashboard() {
   loading.value = true;
@@ -74,25 +83,25 @@ onMounted(() => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-[#0B0F19] text-gray-200 p-6 md:p-10 font-sans"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans"
   >
     <div class="max-w-5xl mx-auto space-y-10">
       <header
         class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
       >
         <div class="space-y-1">
-          <h1 class="text-3xl font-extrabold text-white tracking-tight">
+          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
             Dashboard
           </h1>
-          <p class="text-gray-400 text-sm">
+          <p class="text-slate-500 text-sm">
             Bem-vindo de volta,
-            <span class="text-indigo-400 font-semibold">{{ name }}</span
+            <span class="text-emerald-600 font-semibold">{{ name }}</span
             >.
           </p>
         </div>
         <RouterLink
           to="/templates"
-          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-indigo-600 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg shadow-indigo-500/20 active:scale-95"
+          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg shadow-emerald-600/10 active:scale-95"
         >
           <i class="pi pi-plus text-xs"></i>
           Nova Correção
@@ -101,16 +110,18 @@ onMounted(() => {
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <section class="lg:col-span-2 space-y-6">
-          <div class="flex justify-between items-center">
+          <div
+            class="flex justify-between items-center border-b border-slate-400 py-2"
+          >
             <h3
-              class="text-lg font-semibold text-white flex items-center gap-2"
+              class="text-lg font-bold text-slate-800 flex items-center gap-2"
             >
-              <i class="pi pi-book text-indigo-400"></i>
+              <i class="pi pi-book text-emerald-500"></i>
               Suas Turmas
             </h3>
             <RouterLink
               to="/classes"
-              class="text-sm text-indigo-400 hover:text-indigo-300 font-medium"
+              class="text-sm text-emerald-600 hover:text-emerald-700 font-semibold transition-colors"
             >
               Gerenciar Turmas
             </RouterLink>
@@ -120,39 +131,46 @@ onMounted(() => {
             <div
               v-for="i in 3"
               :key="i"
-              class="h-16 bg-[#111827] ring-1 ring-white/5 rounded-xl animate-pulse"
+              class="h-16 bg-slate-200/50 ring-1 ring-slate-200/80 rounded-xl animate-pulse"
             ></div>
           </div>
 
           <div v-else-if="turmas.length > 0" class="space-y-3">
-            <div
+            <!-- O RouterLink agora é o card principal -->
+            <RouterLink
               v-for="turma in turmas"
               :key="turma._id"
-              class="bg-[#111827] ring-1 ring-white/5 p-4 rounded-xl flex justify-between items-center hover:ring-indigo-500/50 hover:bg-white/[0.02] transition-all group cursor-pointer"
+              :to="`/classes/${turma._id}`"
+              class="bg-white ring-1 ring-slate-100 p-4 rounded-xl flex justify-between items-center hover:ring-emerald-500/30 hover:border-emerald-300 hover:bg-slate-50 hover:shadow-md transition-all group cursor-pointer border border-slate-400 w-full"
             >
               <div class="flex items-center gap-4">
                 <div
-                  class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors"
+                  class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 group-hover:scale-105 transition-all"
                 >
-                  <i class="pi pi-users"></i>
+                  <i class="pi pi-users text-sm"></i>
                 </div>
-                <h4 class="font-medium text-gray-200">{{ turma.name }}</h4>
+                <h4
+                  class="font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors"
+                >
+                  {{ turma.name }}
+                </h4>
               </div>
-              <RouterLink
-                :to="`/classes/${turma._id}`"
-                class="p-2 text-gray-500 hover:text-indigo-400 transition-colors"
+              <div
+                class="text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all"
               >
                 <i class="pi pi-arrow-right"></i>
-              </RouterLink>
-            </div>
+              </div>
+            </RouterLink>
           </div>
 
           <div
             v-else
-            class="bg-[#111827] ring-1 ring-white/5 border-dashed border-gray-700 p-10 rounded-2xl text-center flex flex-col items-center justify-center gap-3"
+            class="bg-white ring-1 ring-slate-200/80 border-dashed border-slate-300 p-10 rounded-2xl text-center flex flex-col items-center justify-center gap-3 shadow-sm"
           >
-            <i class="pi pi-inbox text-3xl text-gray-600"></i>
-            <p class="text-gray-400 text-sm">Nenhuma turma cadastrada ainda.</p>
+            <i class="pi pi-inbox text-3xl text-slate-400"></i>
+            <p class="text-slate-500 text-sm font-medium">
+              Nenhuma turma cadastrada ainda.
+            </p>
           </div>
         </section>
 
@@ -160,34 +178,32 @@ onMounted(() => {
           <div
             v-for="stat in stats"
             :key="stat.label"
-            class="bg-[#111827] ring-1 ring-white/5 p-6 rounded-2xl flex items-center gap-5 hover:ring-white/10 transition-all"
+            class="bg-white ring-1 ring-slate-300 p-6 rounded-2xl flex items-center gap-5 hover:shadow-md transition-all"
           >
             <div
-              class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-indigo-500/10 text-indigo-400"
+              class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600"
             >
-              <i :class="['pi text-3xl', stat.icon]"></i>
-            </div>
+              <i :class="['pi text-3xl', stat.icon]" style="font-size: 1.8rem"></i>
+            </div>  
             <div>
-              <p class="text-lg font-medium text-gray-500 mb-1">
+              <p class="text-sm font-semibold text-slate-500 mb-1">
                 {{ stat.label }}
               </p>
-              <h3 class="text-3xl font-bold text-white tracking-tight">
+              <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight">
                 {{ loading ? "-" : stat.value }}
               </h3>
             </div>
           </div>
 
           <div
-            class="bg-gradient-to-br from-indigo-900/40 to-[#111827] p-6 rounded-2xl border border-indigo-500/20"
+            class="bg-gradient-to-br from-slate-50/50 to-slate-200 p-6 rounded-2xl border border-slate-900/10 shadow-sm"
           >
-            <h4 class="font-bold mb-2 flex items-center gap-2 text-white">
-              <i class="pi pi-lightbulb text-amber-400"></i>
+            <h4 class="font-bold mb-2 flex items-center gap-2 text-slate-800">
+              <i class="pi pi-lightbulb text-amber-500" style="font-size: 1.3rem" ></i>
               Dica de uso
             </h4>
-            <p class="text-sm text-gray-400 leading-relaxed">
-              Organize seus alunos criando as turmas primeiro. Depois, basta
-              criar um gabarito mestre vinculado a essa turma para iniciar a
-              correção por IA.
+            <p class="text-sm text-slate-600 leading-relaxed font-medium">
+              {{ dicas[Math.floor(Math.random() * dicas.length)] }}
             </p>
           </div>
         </aside>
