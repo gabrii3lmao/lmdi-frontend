@@ -34,6 +34,11 @@ export default {
           950: '#020617',
         },
       },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        display: ["Outfit", "sans-serif"],
+        serif: ["Lora", "serif"],
+      },
     },
   },
   plugins: [],

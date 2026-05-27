@@ -69,23 +69,23 @@ onMounted(carregarTurmas);
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-[#0B0F19] text-gray-200 p-6 md:p-10 font-sans"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans"
   >
     <div class="max-w-6xl mx-auto space-y-8">
       <header
         class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
       >
         <div class="space-y-1">
-          <h1 class="text-3xl font-extrabold text-white tracking-tight">
+          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
             Suas Turmas
           </h1>
-          <p class="text-gray-400 text-sm">
+          <p class="text-slate-500 text-sm">
             Gerencie suas classes e acompanhe os gabaritos processados.
           </p>
         </div>
         <button
           @click="abrirModalCriacao"
-          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-indigo-600 rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg shadow-indigo-500/20 active:scale-95"
+          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95"
         >
           <i
             class="pi pi-plus text-xs transition-transform group-hover:rotate-90"
@@ -101,29 +101,29 @@ onMounted(carregarTurmas);
         <div
           v-for="i in 6"
           :key="i"
-          class="h-44 bg-[#111827] ring-1 ring-white/5 rounded-2xl animate-pulse"
+          class="h-44 bg-slate-200/50 ring-1 ring-slate-200/80 rounded-2xl animate-pulse"
         ></div>
       </div>
 
       <div
         v-else-if="turmas.length === 0"
-        class="flex flex-col items-center justify-center py-20 bg-[#111827] ring-1 ring-white/5 rounded-3xl border-dashed border-gray-700/50"
+        class="flex flex-col items-center justify-center py-20 bg-white ring-1 ring-slate-200/80 rounded-3xl border border-dashed border-slate-300 shadow-sm"
       >
         <div
-          class="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center mb-6"
+          class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 text-emerald-600"
         >
-          <i class="pi pi-folder-open text-indigo-400 text-3xl"></i>
+          <i class="pi pi-folder-open text-3xl"></i>
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">
+        <h3 class="text-xl font-bold text-slate-800 mb-2">
           Nenhuma turma encontrada
         </h3>
-        <p class="text-gray-400 text-sm mb-6 max-w-sm text-center">
+        <p class="text-slate-500 text-sm mb-6 max-w-sm text-center font-medium">
           Você ainda não cadastrou nenhuma turma. Crie sua primeira turma para
           começar a corrigir gabaritos.
         </p>
         <button
           @click="abrirModalCriacao"
-          class="text-indigo-400 font-semibold hover:text-indigo-300 transition-colors flex items-center gap-2"
+          class="text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-2"
         >
           <i class="pi pi-plus-circle"></i> Criar primeira turma
         </button>

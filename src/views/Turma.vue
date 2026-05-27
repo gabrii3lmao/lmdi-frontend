@@ -94,7 +94,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-[#0B0F19] text-gray-200 p-6 md:p-10 font-sans relative overflow-hidden"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans relative overflow-hidden"
   >
     <div class="max-w-6xl mx-auto space-y-8">
       <ExamHeader
@@ -140,19 +140,19 @@ onMounted(() => {
         :class="[
           'fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border',
           toast.type === 'success'
-            ? 'bg-[#111827] border-emerald-500/20 text-emerald-400'
-            : 'bg-[#111827] border-red-500/20 text-red-400',
+            ? 'bg-white border-emerald-200 text-slate-800'
+            : 'bg-white border-red-200 text-slate-800',
         ]"
       >
         <i
           :class="[
-            'pi text-xl',
+            'pi text-xl shrink-0',
             toast.type === 'success'
-              ? 'pi-check-circle'
-              : 'pi-exclamation-triangle',
+              ? 'pi-check-circle text-emerald-600'
+              : 'pi-exclamation-triangle text-red-500',
           ]"
         ></i>
-        <span class="font-semibold text-gray-200">{{ toast.message }}</span>
+        <span class="font-semibold text-slate-700">{{ toast.message }}</span>
       </div>
     </Transition>
   </div>

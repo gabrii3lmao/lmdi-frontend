@@ -97,17 +97,17 @@ onMounted(carregarDados);
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-[#0B0F19] text-gray-200 p-6 md:p-10 font-sans"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans"
   >
     <div class="max-w-6xl mx-auto space-y-8">
       <header
         class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
       >
         <div class="space-y-1">
-          <h1 class="text-3xl font-extrabold text-white tracking-tight">
+          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
             Gabaritos Mestres
           </h1>
-          <p class="text-gray-400 text-sm">
+          <p class="text-slate-500 text-sm">
             Gerencie e crie as referências oficiais para a correção por IA.
           </p>
         </div>
@@ -118,7 +118,7 @@ onMounted(carregarDados);
           <div class="relative w-full sm:w-64">
             <select
               v-model="classIdSelecionadaParaNovoGabarito"
-              class="w-full appearance-none bg-[#111827] ring-1 ring-white/10 rounded-xl pl-4 pr-10 py-3 text-sm text-white outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
+              class="w-full appearance-none bg-white ring-1 ring-slate-200 border border-slate-100 rounded-xl pl-4 pr-10 py-3 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer shadow-sm"
             >
               <option value="" disabled>1. Selecione uma Turma</option>
               <option v-for="t in turmas" :key="t._id" :value="t._id">
@@ -126,14 +126,14 @@ onMounted(carregarDados);
               </option>
             </select>
             <i
-              class="pi pi-chevron-down text-xs absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              class="pi pi-chevron-down text-xs absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
             ></i>
           </div>
 
           <button
             @click="openModalParaCriar"
             :disabled="!classIdSelecionadaParaNovoGabarito"
-            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-indigo-600 rounded-xl disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 disabled:shadow-none whitespace-nowrap"
+            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed hover:bg-emerald-700 shadow-lg shadow-emerald-600/10 disabled:shadow-none whitespace-nowrap active:scale-95"
           >
             <i
               class="pi pi-plus text-xs transition-transform group-hover:rotate-90"
@@ -150,14 +150,20 @@ onMounted(carregarDados);
         <div
           v-for="i in 4"
           :key="i"
-          class="h-48 bg-[#111827] ring-1 ring-white/5 rounded-2xl animate-pulse"
+          class="h-48 bg-slate-200/50 ring-1 ring-slate-200/80 rounded-2xl animate-pulse"
         ></div>
       </div>
 
       <div
         v-else-if="templates.length === 0"
-        class="flex flex-col items-center justify-center py-24 bg-[#111827] ring-1 ring-white/5 rounded-3xl border-dashed border-gray-700/50"
-      ></div>
+        class="flex flex-col items-center justify-center py-20 bg-white ring-1 ring-slate-200/80 rounded-3xl border border-dashed border-slate-300 shadow-sm text-center px-4"
+      >
+        <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-4">
+          <i class="pi pi-file-check text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-1">Nenhum gabarito mestre</h3>
+        <p class="text-slate-500 text-sm max-w-xs font-medium">Selecione uma turma e clique em "Novo Modelo" para criar a prova de referência.</p>
+      </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <TemplateCard

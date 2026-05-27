@@ -25,13 +25,13 @@ const shortCode = computed(() => {
 
 <template>
   <div
-    class="group bg-[#111827] ring-1 ring-white/5 rounded-2xl p-6 hover:ring-indigo-500/50 hover:bg-white/[0.02] transition-all duration-300 flex flex-col justify-between"
+    class="group bg-white border border-slate-200/80 ring-1 ring-slate-100 rounded-2xl p-6 hover:ring-emerald-500/30 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
   >
     <div class="flex justify-between items-start mb-4">
       <div
-        class="w-20 h-12 bg-indigo-500/10 text-indigo-400 font-bold text-lg rounded-xl flex items-center gap-3 px-2"
+        class="w-20 h-12 bg-emerald-50 text-emerald-600 font-bold text-lg rounded-xl flex items-center gap-3 px-2"
       >
-        <i class="pi pi-users" style="font-size: 1.5rem;"></i>
+        <i class="pi pi-users text-emerald-500" style="font-size: 1.5rem;"></i>
         {{ avatarInitials }}
       </div>
 
@@ -40,7 +40,7 @@ const shortCode = computed(() => {
       >
         <button
           @click="emit('edit', turma)"
-          class="text-gray-500 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all p-2 rounded-lg"
+          class="text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all p-2 rounded-lg"
           title="Editar Turma"
         >
           <i class="pi pi-pencil text-sm"></i>
@@ -48,7 +48,7 @@ const shortCode = computed(() => {
 
         <button
           @click="emit('delete', turma._id)"
-          class="text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all p-2 rounded-lg"
+          class="text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all p-2 rounded-lg"
           title="Excluir Turma"
         >
           <i class="pi pi-trash text-sm"></i>
@@ -58,11 +58,11 @@ const shortCode = computed(() => {
 
     <div class="mb-6">
       <h3
-        class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors line-clamp-2"
+        class="text-xl font-bold text-slate-800 group-hover:text-emerald-600 transition-colors line-clamp-2"
       >
         {{ turma.name }}
       </h3>
-      <p class="text-xs text-gray-500 mt-1 font-mono uppercase tracking-wider">
+      <p class="text-xs text-slate-400 mt-1 font-mono uppercase tracking-wider">
         REF: #{{ shortCode }}
       </p>
     </div>
@@ -70,7 +70,7 @@ const shortCode = computed(() => {
     <div>
       <RouterLink :to="`/classes/${turma._id}`" class="block">
         <button
-          class="w-full bg-white/5 hover:bg-indigo-600 text-gray-300 hover:text-white text-sm font-semibold py-2.5 px-4 rounded-xl transition-all flex justify-center items-center gap-2"
+          class="w-full bg-slate-50 border border-slate-200 hover:bg-emerald-600 text-slate-600 hover:text-white text-sm font-semibold py-2.5 px-4 rounded-xl hover:border-transparent transition-all flex justify-center items-center gap-2"
         >
           Acessar Painel <i class="pi pi-arrow-right text-[10px]"></i>
         </button>

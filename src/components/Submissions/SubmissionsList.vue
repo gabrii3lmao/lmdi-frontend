@@ -9,21 +9,21 @@ defineProps({
 
 <template>
   <section>
-    <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
-      <i class="pi pi-users text-indigo-400"></i>
+    <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+      <i class="pi pi-users text-emerald-600"></i>
       Alunos Processados
     </h3>
 
     <div
       v-if="!examId"
-      class="bg-gray-800/50 border border-dashed border-gray-700 rounded-2xl p-12 text-center text-gray-500 italic"
+      class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
     >
       Selecione uma prova acima para visualizar o desempenho da turma.
     </div>
 
     <div
       v-else-if="submissoes.length === 0"
-      class="bg-gray-800/50 border border-dashed border-gray-700 rounded-2xl p-12 text-center text-gray-500"
+      class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
     >
       Nenhuma submissão encontrada para esta prova.
     </div>
