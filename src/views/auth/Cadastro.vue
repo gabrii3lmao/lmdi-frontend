@@ -43,28 +43,28 @@ async function handleSignup() {
 
 <template>
   <div
-    class="min-h-screen flex w-full font-sans bg-[#0B0F19] overflow-x-hidden"
+    class="min-h-screen flex w-full font-sans bg-slate-50 overflow-x-hidden"
   >
-    <!-- LADO ESQUERDO -->
+    <!-- LADO ESQUERDO (Imagens e Branding - Visível apenas em Telas Grandes) -->
     <div
       class="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 xl:p-16"
     >
-      <!-- Background -->
+      <!-- Background Escolar -->
       <img
         src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070&auto=format&fit=crop"
         alt="Sala de aula"
         class="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-      <!-- Overlay mais leve -->
+      <!-- Overlay Claro e Acadêmico -->
       <div
-        class="absolute inset-0 bg-gradient-to-br from-[#0B0F19]/80 via-[#0B0F19]/60 to-indigo-900/30 z-10"
+        class="absolute inset-0 bg-gradient-to-br from-white/95 via-white/85 to-emerald-50/50 backdrop-blur-[1px] z-10"
       ></div>
 
       <!-- Logo + Nome -->
-      <div class="relative z-20 flex items-center gap-5">
+      <div class="relative z-20 flex items-center gap-4">
         <div
-          class="w-24 h-24 xl:w-28 xl:h-28 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center p-4 shadow-[0_0_60px_rgba(99,102,241,0.4)]"
+          class="w-16 h-16 xl:w-20 xl:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-3 shadow-sm"
         >
           <img
             src="../../../public/logo.png"
@@ -74,48 +74,47 @@ async function handleSignup() {
         </div>
 
         <span
-          class="text-5xl xl:text-6xl font-extrabold text-white leading-none"
+          class="text-4xl xl:text-5xl font-extrabold text-slate-800 leading-none tracking-tight"
         >
-          Let Me<span class="text-indigo-400">Do It!</span>
+          Let Me<span class="text-emerald-600">Do It!</span>
         </span>
       </div>
 
-      <!-- Conteúdo -->
+      <!-- Conteúdo de Apoio -->
       <div class="relative z-20 mt-auto max-w-lg">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-100 text-sm mb-6 opacity-70"
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-200 text-emerald-700 text-xs font-semibold mb-6 shadow-sm"
         >
-          <i class="pi pi-sparkles text-xs"></i>
+          <i class="pi pi-sparkles text-[10px]"></i>
           <span>Painel Docente</span>
         </div>
 
         <h1
-          class="text-5xl xl:text-6xl font-extrabold text-white mb-6 leading-tight"
+          class="text-4xl xl:text-5xl font-extrabold text-slate-800 mb-6 leading-tight tracking-tight"
         >
           Automatize a correção das suas provas.
         </h1>
 
-        <p class="text-base xl:text-lg text-gray-100 mb-8 max-w-md">
-          Gestão de gabaritos, análise de submissões e acompanhamento em tempo
-          real.
+        <p class="text-base xl:text-lg text-slate-600 mb-8 max-w-md font-medium">
+          Gestão de gabaritos, análise de submissões e acompanhamento em tempo real para professores.
         </p>
       </div>
     </div>
 
-    <!-- LADO DIREITO -->
+    <!-- LADO DIREITO (Formulário de Cadastro) -->
     <div
-      class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative"
+      class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative bg-slate-50"
     >
-      <!-- círculo decorativo corrigido -->
+      <!-- Círculo decorativo escolar suave no fundo -->
       <div
-        class="absolute top-0 right-0 w-72 h-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"
+        class="absolute top-0 right-0 w-72 h-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"
       ></div>
 
       <div class="w-full max-w-md relative z-10">
-        <!-- Mobile Logo -->
+        <!-- Mobile Logo (Visível apenas em Mobile/Tablet) -->
         <div class="lg:hidden flex flex-col items-center mb-8 gap-4">
           <div
-            class="w-20 h-20 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center p-3 shadow-[0_0_30px_rgba(99,102,241,0.3)]"
+            class="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-3 shadow-sm"
           >
             <img
               src="../../../public/logo.png"
@@ -124,72 +123,93 @@ async function handleSignup() {
             />
           </div>
 
-          <h1 class="text-2xl font-bold text-white text-center">
-            LetMe<span class="text-indigo-400">DoIt</span>
+          <h1 class="text-2xl font-extrabold text-slate-800 text-center tracking-tight">
+            LetMe<span class="text-emerald-600">DoIt</span>
           </h1>
         </div>
 
-        <!-- Título -->
-        <div class="mb-8 text-center lg:text-left">
-          <h2 class="text-3xl font-extrabold text-white">Crie sua conta</h2>
-          <p class="text-gray-400 mt-2">Preencha seus dados.</p>
-        </div>
+        <!-- Card de Cadastro -->
+        <div class="bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-10 shadow-xl">
+          <!-- Título -->
+          <div class="mb-8 text-center sm:text-left">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">Crie sua conta</h2>
+            <p class="text-slate-500 text-sm mt-2">Preencha seus dados para começar.</p>
+          </div>
 
-        <!-- Erro -->
-        <div
-          v-if="errorMessage"
-          class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400"
-        >
-          <i class="pi pi-exclamation-circle mt-0.5"></i>
-          <p class="text-sm">{{ errorMessage }}</p>
-        </div>
-
-        <!-- Form -->
-        <form class="space-y-5" @submit.prevent="handleSignup">
-          <input
-            v-model="name"
-            type="text"
-            placeholder="Seu nome"
-            required
-            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-          />
-
-          <input
-            v-model="email"
-            type="email"
-            placeholder="email@exemplo.com"
-            required
-            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-          />
-
-          <input
-            v-model="password"
-            type="password"
-            placeholder="••••••••"
-            required
-            class="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-          />
-
-          <button
-            type="submit"
-            :disabled="loading"
-            class="w-full py-3.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+          <!-- Mensagem de Erro -->
+          <div
+            v-if="errorMessage"
+            class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100 text-red-700"
           >
-            {{ loading ? "Registrando..." : "Criar Conta" }}
-          </button>
-        </form>
+            <i class="pi pi-exclamation-circle mt-0.5 shrink-0 text-red-500"></i>
+            <p class="text-sm font-medium">{{ errorMessage }}</p>
+          </div>
 
-        <!-- Footer -->
-        <div
-          class="mt-10 pt-6 border-t border-white/5 text-center text-sm text-gray-400"
-        >
-          Já possui uma conta?
-          <RouterLink
-            to="/signin"
-            class="text-indigo-400 hover:text-indigo-300"
+          <!-- Formulário -->
+          <form class="space-y-5" @submit.prevent="handleSignup">
+            <div>
+              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+                Nome completo
+              </label>
+              <input
+                v-model="name"
+                type="text"
+                placeholder="Ex: Prof. Carlos Silva"
+                required
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+                E-mail institucional
+              </label>
+              <input
+                v-model="email"
+                type="email"
+                placeholder="carlos.silva@escola.com"
+                required
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+                Senha
+              </label>
+              <input
+                v-model="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                class="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <button
+              type="submit"
+              :disabled="loading"
+              class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10 active:scale-[0.98]"
+            >
+              <span v-if="loading" class="flex items-center justify-center gap-2">
+                <i class="pi pi-spin pi-spinner text-sm"></i> Criando conta...
+              </span>
+              <span v-else>Criar Conta</span>
+            </button>
+          </form>
+
+          <!-- Footer -->
+          <div
+            class="mt-8 pt-6 border-t border-slate-100 text-center text-sm text-slate-500"
           >
-            Entrar
-          </RouterLink>
+            Já possui uma conta?
+            <RouterLink
+              to="/signin"
+              class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+            >
+              Entrar
+            </RouterLink>
+          </div>
         </div>
       </div>
     </div>
