@@ -51,7 +51,7 @@ async function handleSignup() {
     >
       <!-- Background Escolar -->
       <img
-        src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070&auto=format&fit=crop"
+        src="/cadastro.jpg"
         alt="Sala de aula"
         class="absolute inset-0 w-full h-full object-cover z-0"
       />

@@ -44,7 +44,7 @@ async function handleResetPassword() {
     class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans bg-slate-100"
   >
     <img
-      src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2073&auto=format&fit=crop"
+      src="/reset_password.jpg"
       alt="Biblioteca Escolar"
       class="absolute inset-0 w-full h-full object-cover z-0"
     />

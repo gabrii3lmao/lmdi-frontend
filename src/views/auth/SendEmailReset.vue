@@ -34,7 +34,7 @@ async function handleForgotPassword() {
     class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans bg-slate-100"
   >
     <img
-      src="https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?q=80&w=2068&auto=format&fit=crop"
+      src="/send_email_reset.jpg"
       alt="Materiais de estudo"
       class="absolute inset-0 w-full h-full object-cover z-0"
     />
