@@ -16,10 +16,10 @@ defineEmits(["close"]);
     ></div>
 
     <div
-      class="absolute inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-300"
+      class="absolute inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl flex flex-col border-l border-slate-400/60 animate-in slide-in-from-right duration-300"
     >
       <div
-        class="p-6 border-b border-slate-100 flex justify-between items-center"
+        class="p-6 border-b border-slate-400/60 flex justify-between items-center"
       >
         <h2 class="text-xl font-bold text-slate-800">
           {{ submission.studentName }}

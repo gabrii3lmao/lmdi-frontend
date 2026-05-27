@@ -4,8 +4,10 @@ import { turmaService } from "@/services/turmas";
 import TurmaCard from "@/components/Classes/TurmaCard.vue";
 import TurmaModal from "@/components/Classes/TurmaModal.vue";
 import { useToast } from "primevue/usetoast";
+import { useConfirm } from "primevue/useconfirm"; // <-- Importamos o useConfirm
 
 const toast = useToast();
+const confirm = useConfirm(); // <-- Inicializamos o confirm
 
 const turmas = ref<any[]>([]);
 const loading = ref(true);
@@ -69,22 +71,18 @@ async function handleSalvar(nome: string) {
     await carregarTurmas();
     fecharModal();
   } catch (error: any) {
-    // 1. Definimos a mensagem padrão caso não seja um erro de validação
     let errorMessage = "Ocorreu um erro ao salvar as alterações.";
     let errorSummary = "Erro";
 
-    // 2. Verificamos se a resposta do backend existe e contém o array do Zod
     if (error.response?.data?.errors && error.response.data.errors.length > 0) {
-      errorMessage = error.response.data.errors[0].message; // Pega a mensagem específica
-      errorSummary = "Aviso"; // Opcional: mudar o título para não parecer um erro fatal
+      errorMessage = error.response.data.errors[0].message;
+      errorSummary = "Aviso";
     } else if (error.response?.data?.message) {
-      // Pega a mensagem geral da API, se existir (ex: "Validation Failed")
       errorMessage = error.response.data.message;
     }
 
-    // 3. Exibimos o Toast com a mensagem extraída
     toast.add({
-      severity: "error", // ou "warn" se preferir que erros de validação sejam amarelos
+      severity: "error",
       summary: errorSummary,
       detail: errorMessage,
       life: 4000,
@@ -94,25 +92,36 @@ async function handleSalvar(nome: string) {
   }
 }
 
-async function handleExcluir(id: string) {
-  if (!confirm("Tem certeza que deseja excluir esta turma?")) return;
-  try {
-    await turmaService.delete(id);
-    turmas.value = turmas.value.filter((t) => t._id !== id);
-    toast.add({
-      severity: "success",
-      summary: "Excluída",
-      detail: "A turma foi removida com sucesso.",
-      life: 3000,
-    });
-  } catch (e) {
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: "Não foi possível excluir esta turma.",
-      life: 4000,
-    });
-  }
+// Transformamos a função para acionar o ConfirmDialog do PrimeVue
+function handleExcluir(id: string) {
+  confirm.require({
+    message:
+      "Tem certeza que deseja excluir esta turma? Esta ação não pode ser desfeita.",
+    header: "Confirmação de Exclusão",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Sim, Excluir",
+    rejectLabel: "Cancelar",
+    acceptClass: "p-button-danger", // Deixa o botão de confirmar vermelho (dependendo do seu tema)
+    accept: async () => {
+      try {
+        await turmaService.delete(id);
+        turmas.value = turmas.value.filter((t) => t._id !== id);
+        toast.add({
+          severity: "success",
+          summary: "Excluída",
+          detail: "A turma foi removida com sucesso.",
+          life: 3000,
+        });
+      } catch (e) {
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível excluir esta turma.",
+          life: 4000,
+        });
+      }
+    },
+  });
 }
 
 onMounted(carregarTurmas);
@@ -198,5 +207,7 @@ onMounted(carregarTurmas);
       @close="fecharModal"
       @confirm="handleSalvar"
     />
+
+    <ConfirmDialog></ConfirmDialog>
   </div>
 </template>

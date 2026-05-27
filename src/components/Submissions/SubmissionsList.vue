@@ -16,14 +16,14 @@ defineProps({
 
     <div
       v-if="!examId"
-      class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
+      class="bg-white border border-dashed border-slate-400/60 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
     >
       Selecione uma prova acima para visualizar o desempenho da turma.
     </div>
 
     <div
       v-else-if="submissoes.length === 0"
-      class="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
+      class="bg-white border border-dashed border-slate-400/60 rounded-2xl p-12 text-center text-slate-500 font-semibold shadow-sm"
     >
       Nenhuma submissão encontrada para esta prova.
     </div>

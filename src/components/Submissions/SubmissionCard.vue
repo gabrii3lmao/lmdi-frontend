@@ -13,7 +13,7 @@ defineProps({
     :class="
       submissao.status === 'pending'
         ? 'border-amber-300 shadow-amber-500/5'
-        : 'border-slate-200 shadow-slate-100'
+        : 'border-slate-400/60 shadow-slate-100'
     "
   >
     <!-- Animação de pulso se estiver pendente -->

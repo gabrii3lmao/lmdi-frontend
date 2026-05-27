@@ -16,12 +16,12 @@ defineEmits(["open"]);
 
 <template>
   <div
-    class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden ring-1 ring-slate-100 shadow-sm"
+    class="bg-white border border-slate-400/60 rounded-2xl overflow-hidden ring-1 ring-slate-300 shadow-sm"
   >
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead
-          class="bg-slate-50/75 text-xs uppercase text-slate-500 font-bold tracking-wider border-b border-slate-200"
+          class="bg-slate-50/75 text-xs uppercase text-slate-500 font-bold tracking-wider border-b border-slate-400/60"
         >
           <tr>
             <th class="p-4 px-6 font-semibold">Nome do Aluno</th>

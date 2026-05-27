@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useToast } from "primevue/usetoast"; // <-- Importamos o useToast
 
 const props = defineProps<{ isOpen: boolean; enviando: boolean }>();
 const emit = defineEmits(["close", "confirm"]);
+
+const toast = useToast(); // <-- Inicializamos o toast
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const nomeAluno = ref("");
@@ -30,7 +33,12 @@ function handleFileChange(event: any) {
 
 function handleSubmit() {
   if (!nomeAluno.value || !imagemSelecionada.value) {
-    alert("Preencha o nome e selecione a imagem do gabarito.");
+    toast.add({
+      severity: "warn",
+      summary: "Atenção",
+      detail: "Preencha o nome e selecione a imagem do gabarito.",
+      life: 4000,
+    });
     return;
   }
   emit("confirm", {
@@ -67,7 +75,9 @@ function handleSubmit() {
 
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+          <label
+            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1"
+          >
             Nome do Aluno (ou Identificador)
           </label>
           <div class="relative">
@@ -87,7 +97,9 @@ function handleSubmit() {
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+          <label
+            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1"
+          >
             Foto do Gabarito
           </label>
           <div
@@ -118,7 +130,10 @@ function handleSubmit() {
               </p>
             </div>
 
-            <div v-else class="relative rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
+            <div
+              v-else
+              class="relative rounded-xl overflow-hidden bg-slate-100 border border-slate-200"
+            >
               <img
                 :src="previewUrl"
                 class="max-h-52 w-full object-contain mx-auto"

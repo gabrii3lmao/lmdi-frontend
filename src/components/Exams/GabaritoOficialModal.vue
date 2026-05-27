@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import { useToast } from "primevue/usetoast"; // <-- Importamos o useToast
+
+const toast = useToast(); // <-- Inicializamos o toast
 
 interface InitialData {
   _id?: string;
@@ -69,8 +72,15 @@ watch(
 );
 
 function handleSubmit() {
-  if (respostas.value.some((r) => r === ""))
-    return alert("Preencha o gabarito de todas as questões.");
+  if (respostas.value.some((r) => r === "")) {
+    toast.add({
+      severity: "warn",
+      summary: "Atenção",
+      detail: "Preencha o gabarito de todas as questões antes de salvar.",
+      life: 4000,
+    });
+    return;
+  }
 
   emit("confirm", {
     name: nomeProva.value,
@@ -103,7 +113,10 @@ function handleSubmit() {
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="flex flex-col gap-1">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1">Nome</label>
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
+            >Nome</label
+          >
           <input
             v-model="nomeProva"
             class="bg-slate-50/50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors shadow-sm"
@@ -111,7 +124,10 @@ function handleSubmit() {
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1">Questões</label>
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
+            >Questões</label
+          >
           <input
             v-model.number="qtdQuestoes"
             type="number"
@@ -120,8 +136,13 @@ function handleSubmit() {
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1">Opções</label>
-          <div class="flex bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-sm">
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
+            >Opções</label
+          >
+          <div
+            class="flex bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-sm"
+          >
             <button
               v-for="n in [4, 5]"
               :key="n"

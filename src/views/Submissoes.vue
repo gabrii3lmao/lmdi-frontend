@@ -168,7 +168,7 @@ const openStudentDetails = async (sub: Submission) => {
 
       <div
         v-if="activeExam && !loadingExams"
-        class="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-200/80 border border-slate-100 shadow-sm transition-all"
+        class="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-400/60 border border-slate-300 shadow-sm transition-all"
       >
         <div>
           <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
