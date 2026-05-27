@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import { useToast } from "primevue/usetoast"; // <-- Importamos o useToast
+
+const toast = useToast(); // <-- Inicializamos o toast
 
 interface InitialData {
   _id?: string;
@@ -69,8 +72,15 @@ watch(
 );
 
 function handleSubmit() {
-  if (respostas.value.some((r) => r === ""))
-    return alert("Preencha o gabarito de todas as questões.");
+  if (respostas.value.some((r) => r === "")) {
+    toast.add({
+      severity: "warn",
+      summary: "Atenção",
+      detail: "Preencha o gabarito de todas as questões antes de salvar.",
+      life: 4000,
+    });
+    return;
+  }
 
   emit("confirm", {
     name: nomeProva.value,
@@ -84,18 +94,18 @@ function handleSubmit() {
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
   >
     <div
-      class="bg-gray-900 border border-gray-800 w-full max-w-4xl rounded-2xl shadow-2xl p-6 max-h-[90vh] flex flex-col"
+      class="bg-white border border-slate-200 w-full max-w-4xl rounded-3xl shadow-2xl p-6 max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200"
     >
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold">
+        <h2 class="text-xl font-bold text-slate-800">
           {{ props.initialData ? "Editar Gabarito" : "Novo Gabarito Oficial" }}
         </h2>
         <button
           @click="emit('close')"
-          class="text-gray-500 hover:text-white transition-colors"
+          class="text-slate-400 hover:text-slate-600 p-2 transition-colors hover:bg-slate-50 rounded-lg"
         >
           <i class="pi pi-times"></i>
         </button>
@@ -103,40 +113,45 @@ function handleSubmit() {
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="flex flex-col gap-1">
-          <label class="text-[10px] uppercase font-bold text-gray-500"
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
             >Nome</label
           >
           <input
             v-model="nomeProva"
-            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none focus:border-indigo-500 transition-colors"
+            class="bg-slate-50/50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors shadow-sm"
             placeholder="Ex: Simulado A"
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-[10px] uppercase font-bold text-gray-500"
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
             >Questões</label
           >
           <input
             v-model.number="qtdQuestoes"
             type="number"
             min="1"
-            class="bg-gray-800 border border-gray-700 rounded-lg p-2 text-sm outline-none focus:border-indigo-500 transition-colors"
+            class="bg-slate-50/50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors shadow-sm"
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label class="text-[10px] uppercase font-bold text-gray-500"
+          <label
+            class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 px-1"
             >Opções</label
           >
-          <div class="flex bg-gray-800 rounded-lg p-1 border border-gray-700">
+          <div
+            class="flex bg-slate-50 rounded-xl p-1 border border-slate-200 shadow-sm"
+          >
             <button
               v-for="n in [4, 5]"
               :key="n"
               @click="qtdAlternativas = n"
               :class="[
-                'flex-1 text-xs py-1 rounded transition-all',
+                'flex-1 text-xs py-2 rounded-lg transition-all font-semibold',
                 qtdAlternativas === n
-                  ? 'bg-indigo-600 text-white font-bold'
-                  : 'text-gray-400 hover:text-gray-200',
+                  ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/10'
+                  : 'text-slate-500 hover:text-slate-800',
               ]"
             >
               {{ n }}
@@ -146,15 +161,15 @@ function handleSubmit() {
       </div>
 
       <div
-        class="flex-1 overflow-y-auto custom-scrollbar pr-2 pt-4 border-t border-gray-800"
+        class="flex-1 overflow-y-auto custom-scrollbar pr-2 pt-4 border-t border-slate-100"
       >
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="i in qtdQuestoes"
             :key="i"
-            class="flex items-center justify-between p-2 rounded-lg bg-gray-800/30 border border-gray-800"
+            class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/50 border border-slate-200/80 shadow-sm"
           >
-            <span class="text-xs font-mono text-gray-500">{{
+            <span class="text-xs font-mono font-semibold text-slate-400">{{
               String(i).padStart(2, "0")
             }}</span>
             <div class="flex gap-1">
@@ -163,10 +178,10 @@ function handleSubmit() {
                 :key="alt"
                 @click="respostas[i - 1] = alt"
                 :class="[
-                  'w-7 h-7 rounded text-[10px] font-bold border transition-all',
+                  'w-8 h-8 rounded-lg text-xs font-bold border transition-all flex items-center justify-center',
                   respostas[i - 1] === alt
-                    ? 'bg-indigo-600 border-indigo-400 text-white'
-                    : 'bg-gray-900 border-gray-700 text-gray-500 hover:bg-gray-800',
+                    ? 'bg-emerald-600 border-transparent text-white shadow-md shadow-emerald-600/10'
+                    : 'bg-white border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600',
                 ]"
               >
                 {{ alt }}
@@ -176,19 +191,21 @@ function handleSubmit() {
         </div>
       </div>
 
-      <div class="flex gap-3 mt-6 pt-6 border-t border-gray-800">
+      <div class="flex gap-3 mt-6 pt-6 border-t border-slate-100">
         <button
           @click="emit('close')"
-          class="flex-1 py-2 text-sm font-bold text-gray-400 hover:text-white transition-colors"
+          class="flex-1 py-3 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors bg-slate-100 hover:bg-slate-200 rounded-xl"
         >
           Cancelar
         </button>
         <button
           @click="handleSubmit"
           :disabled="enviando || nomeProva.trim() === ''"
-          class="flex-[2] py-2 bg-indigo-600 hover:bg-indigo-500 transition-colors rounded-lg font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          class="flex-[2] py-3 bg-emerald-600 hover:bg-emerald-700 transition-all rounded-xl font-bold text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-600/10 active:scale-95"
         >
-          <span v-if="enviando">Salvando...</span>
+          <span v-if="enviando" class="flex items-center justify-center gap-2">
+            <i class="pi pi-spin pi-spinner animate-spin"></i> Salvando...
+          </span>
           <span v-else-if="props.initialData">Atualizar Gabarito</span>
           <span v-else>Confirmar Gabarito</span>
         </button>
@@ -202,7 +219,7 @@ function handleSubmit() {
   width: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4f46e5;
+  background: #10b981;
   border-radius: 10px;
 }
 </style>
