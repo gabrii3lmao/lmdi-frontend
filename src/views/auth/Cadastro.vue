@@ -67,7 +67,7 @@ async function handleSignup() {
           class="w-16 h-16 xl:w-20 xl:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-3 shadow-sm"
         >
           <img
-            src="../../../public/logo.png"
+            src="/logo.png"
             alt="Logo"
             class="w-full h-full object-contain"
           />
