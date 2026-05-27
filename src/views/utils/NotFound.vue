@@ -39,7 +39,7 @@ import { RouterLink } from "vue-router";
           <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <RouterLink
               to="/"
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-slate-900 rounded-xl hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 active:scale-[0.98]"
+              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
             >
               <i class="pi pi-arrow-left text-xs"></i>
               Voltar para o Início
