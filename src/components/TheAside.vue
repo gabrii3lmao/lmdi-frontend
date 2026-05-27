@@ -143,7 +143,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
           <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
             <div class="mb-6">
               <h3
-                class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.8rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
               >
                 Principal
               </h3>
@@ -319,7 +319,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
       <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
           >
             Principal
           </h3>
@@ -349,7 +349,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
           >
             Gestão de Provas
           </h3>
@@ -379,7 +379,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
           >
             Análise
           </h3>
@@ -409,7 +409,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
           >
             Suporte
           </h3>

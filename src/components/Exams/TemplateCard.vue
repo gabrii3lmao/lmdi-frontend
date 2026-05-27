@@ -29,38 +29,42 @@ const alternativasLetra = computed(() =>
 
 <template>
   <div
-    class="group bg-white border border-slate-200/80 ring-1 ring-slate-100 p-6 rounded-2xl hover:ring-emerald-500/30 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+    class="group bg-white border border-slate-600/80 ring-1 ring-slate-100 p-4 rounded-2xl hover:ring-emerald-500/30 hover:border-emerald-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
   >
-    <div class="flex justify-between items-start mb-6">
+    <!-- Topo do card (Margem reduzida de mb-6 para mb-3) -->
+    <div class="flex justify-between items-start mb-3">
       <div class="flex gap-3 items-center">
+        <!-- Ícone menor (w-10 h-10 em vez de w-12 h-12) -->
         <div
-          class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform"
+          class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform"
         >
-          <i class="pi pi-file-check text-xl"></i>
+          <i class="pi pi-file-check" style="font-size: 1.3rem"></i>
         </div>
 
         <div
-          class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          class="flex gap-3 ml-2 opacity-100 group-hover:opacity-100 transition-opacity"
         >
           <button
             @click="emit('edit', template)"
-            class="p-2 text-slate-400 hover:text-emerald-600 transition-colors rounded-lg hover:bg-slate-50"
+            class="p-1.5 text-slate-600 hover:text-emerald-600 transition-colors rounded-lg hover:bg-slate-50"
             title="Editar Gabarito"
           >
-            <i class="pi pi-pencil text-sm"></i>
+            <i class="pi pi-pencil" style="font-size: 1.1rem"></i>
           </button>
+
           <button
             @click="emit('delete', template._id)"
-            class="p-2 text-slate-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
+            class="p-1.5 text-slate-600 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
             title="Deletar Gabarito"
           >
-            <i class="pi pi-trash text-sm"></i>
+            <i class="pi pi-trash" style="font-size: 1.1rem"></i>
           </button>
-        </div>
+        </div>  
       </div>
 
+      <!-- Badge de turma com padding vertical ligeiramente menor -->
       <div
-        class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg max-w-[150px]"
+        class="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg max-w-[150px]"
       >
         <p
           class="text-xs font-semibold text-slate-600 truncate"
@@ -71,37 +75,43 @@ const alternativasLetra = computed(() =>
       </div>
     </div>
 
-    <div class="mb-6">
+    <!-- Título (Margem reduzida de mb-6 para mb-4) -->
+    <div class="mb-4">
       <h3
-        class="text-lg font-bold text-slate-800 line-clamp-2 group-hover:text-emerald-600 transition-colors"
+        class="text-base font-bold text-slate-800 line-clamp-2 group-hover:text-emerald-600 transition-colors"
       >
         {{ template.title }}
       </h3>
-      <p class="text-xs text-slate-400 mt-2 font-mono uppercase tracking-wider">
+      <p
+        class="text-[11px] text-slate-400 mt-1 font-mono uppercase tracking-wider"
+      >
         REF: #{{ idRef }}
       </p>
     </div>
 
-    <div class="flex gap-3">
+    <!-- Estatísticas inferiores (padding py-2 em vez de py-2.5) -->
+    <div class="flex gap-2">
       <div
-        class="flex-1 bg-slate-50 border border-slate-100 ring-1 ring-slate-100 px-3 py-2.5 rounded-xl flex flex-col items-center justify-center"
+        class="flex-1 bg-slate-50 border border-slate-100 ring-1 ring-slate-100 px-3 py-2 rounded-xl flex flex-col items-center justify-center"
       >
-        <span class="text-emerald-600 font-extrabold text-lg leading-none mb-1">{{
-          template.questionsCount
-        }}</span>
         <span
-          class="text-[10px] text-slate-500 uppercase font-bold tracking-wider"
+          class="text-emerald-600 font-extrabold text-base leading-none mb-1"
+          >{{ template.questionsCount }}</span
+        >
+        <span
+          class="text-[9px] text-slate-500 uppercase font-bold tracking-wider"
           >Questões</span
         >
       </div>
       <div
-        class="flex-1 bg-slate-50 border border-slate-100 ring-1 ring-slate-100 px-3 py-2.5 rounded-xl flex flex-col items-center justify-center"
+        class="flex-1 bg-slate-50 border border-slate-100 ring-1 ring-slate-100 px-3 py-2 rounded-xl flex flex-col items-center justify-center"
       >
-        <span class="text-emerald-600 font-extrabold text-lg leading-none mb-1"
+        <span
+          class="text-emerald-600 font-extrabold text-base leading-none mb-1"
           >A-{{ alternativasLetra }}</span
         >
         <span
-          class="text-[10px] text-slate-500 uppercase font-bold tracking-wider"
+          class="text-[9px] text-slate-500 uppercase font-bold tracking-wider"
           >Alternativas</span
         >
       </div>
