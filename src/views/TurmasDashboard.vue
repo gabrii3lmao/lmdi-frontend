@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import { turmaService } from "@/services/turmas";
 import TurmaCard from "@/components/Classes/TurmaCard.vue";
 import TurmaModal from "@/components/Classes/TurmaModal.vue";
+import { useToast } from "primevue/usetoast";
+
+const toast = useToast();
 
 const turmas = ref<any[]>([]);
 const loading = ref(true);
@@ -17,6 +20,12 @@ async function carregarTurmas() {
     turmas.value = data;
   } catch (error) {
     console.error("Erro ao carregar turmas:", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível carregar suas turmas.",
+      life: 4000,
+    });
   } finally {
     loading.value = false;
   }
@@ -42,13 +51,44 @@ async function handleSalvar(nome: string) {
   try {
     if (turmaSendoEditada.value) {
       await turmaService.put(turmaSendoEditada.value._id, nome);
+      toast.add({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Turma atualizada com sucesso!",
+        life: 3000,
+      });
     } else {
       await turmaService.create(nome);
+      toast.add({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Nova turma criada com sucesso!",
+        life: 3000,
+      });
     }
     await carregarTurmas();
     fecharModal();
-  } catch (error) {
-    alert("Erro ao salvar as alterações.");
+  } catch (error: any) {
+    // 1. Definimos a mensagem padrão caso não seja um erro de validação
+    let errorMessage = "Ocorreu um erro ao salvar as alterações.";
+    let errorSummary = "Erro";
+
+    // 2. Verificamos se a resposta do backend existe e contém o array do Zod
+    if (error.response?.data?.errors && error.response.data.errors.length > 0) {
+      errorMessage = error.response.data.errors[0].message; // Pega a mensagem específica
+      errorSummary = "Aviso"; // Opcional: mudar o título para não parecer um erro fatal
+    } else if (error.response?.data?.message) {
+      // Pega a mensagem geral da API, se existir (ex: "Validation Failed")
+      errorMessage = error.response.data.message;
+    }
+
+    // 3. Exibimos o Toast com a mensagem extraída
+    toast.add({
+      severity: "error", // ou "warn" se preferir que erros de validação sejam amarelos
+      summary: errorSummary,
+      detail: errorMessage,
+      life: 4000,
+    });
   } finally {
     enviando.value = false;
   }
@@ -59,8 +99,19 @@ async function handleExcluir(id: string) {
   try {
     await turmaService.delete(id);
     turmas.value = turmas.value.filter((t) => t._id !== id);
+    toast.add({
+      severity: "success",
+      summary: "Excluída",
+      detail: "A turma foi removida com sucesso.",
+      life: 3000,
+    });
   } catch (e) {
-    alert("Erro ao excluir");
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível excluir esta turma.",
+      life: 4000,
+    });
   }
 }
 

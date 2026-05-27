@@ -3,13 +3,14 @@ import "@/assets/main.css";
 import App from "./App.vue";
 import router from "./router";
 import PrimeVue from "primevue/config";
-import "primeicons/primeicons.css";
+import ToastService from 'primevue/toastservice';
 import Aura from "@primevue/themes/aura";
 import { createPinia } from "pinia";
-
+import "primeicons/primeicons.css"
 const app = createApp(App);
 const pinia = createPinia();
 
+app.use(ToastService);
 app.use(pinia);
 app.use(PrimeVue, {
   theme: {

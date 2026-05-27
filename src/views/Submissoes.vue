@@ -1,6 +1,6 @@
-// Submissoes.vue
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
+import { useToast } from "primevue/usetoast"; // <-- Importado o Toast
 
 import SubmissionFilters from "@/components/Submissions/SubmissionFilters.vue";
 import SubmissionTable from "@/components/Submissions/SubmissionTable.vue";
@@ -13,11 +13,12 @@ import { examService } from "@/services/examService";
 import type { Exam } from "@/types/Exam";
 import type { Submission } from "@/types/Submission";
 
+const toast = useToast(); // <-- Inicializado o Toast
+
 interface Turma {
   _id: string;
   name: string;
 }
-
 
 // estados
 const turmas = ref<Turma[]>([]);
@@ -28,7 +29,7 @@ const selectedClassId = ref("");
 const selectedExamId = ref("");
 
 const selectedSubmission = ref<Submission | null>(null);
-const activeExam = ref<Exam | null>(null); // Pode usar 'any' temporariamente se o tipo Exam reclamar do 'title'
+const activeExam = ref<Exam | null>(null);
 const isDrawerOpen = ref(false);
 
 const loadingTurmas = ref(true);
@@ -36,11 +37,9 @@ const loadingExams = ref(false);
 const loadingSubmissions = ref(false);
 const loadingAnswers = ref(false);
 
-// NOVA FEATURE: Cálculo dinâmico da nota média da turma
 const averageScore = computed(() => {
   if (submissions.value.length === 0) return "-";
 
-  // Filtra apenas submissões que possuem nota
   const gradedSubmissions = submissions.value.filter(
     (s) => s.score !== undefined,
   );
@@ -58,7 +57,12 @@ onMounted(async () => {
     const res = await turmaService.getAll();
     turmas.value = res.data;
   } catch (error) {
-    console.error("Erro ao carregar turmas", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível carregar as turmas.",
+      life: 4000,
+    });
   } finally {
     loadingTurmas.value = false;
   }
@@ -77,7 +81,12 @@ watch(selectedClassId, async (id) => {
     const res = await examService.listarGabaritosMestre(id);
     exams.value = res.data;
   } catch (error) {
-    console.error("Erro ao carregar provas", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Falha ao carregar provas da turma.",
+      life: 4000,
+    });
   } finally {
     loadingExams.value = false;
   }
@@ -85,7 +94,6 @@ watch(selectedClassId, async (id) => {
 
 watch(selectedExamId, async (id) => {
   submissions.value = [];
-
   activeExam.value = exams.value.find((e) => e._id === id) || null;
 
   if (!id) return;
@@ -95,14 +103,19 @@ watch(selectedExamId, async (id) => {
     const res = await submissionService.getAllSubmission(id);
     submissions.value = res.data;
   } catch (error) {
-    console.error("Erro ao carregar submissões", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Falha ao carregar as submissões desta prova.",
+      life: 4000,
+    });
   } finally {
     loadingSubmissions.value = false;
   }
 });
 
 const openStudentDetails = async (sub: Submission) => {
-  selectedSubmission.value = {...sub, answers: null};
+  selectedSubmission.value = { ...sub, answers: null };
   isDrawerOpen.value = true;
   loadingAnswers.value = true;
 
@@ -113,15 +126,23 @@ const openStudentDetails = async (sub: Submission) => {
       answers: res.data.answers,
     };
   } catch (error) {
-    console.error("Erro ao carregar respostas da submissão", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível carregar os detalhes do aluno.",
+      life: 4000,
+    });
+    isDrawerOpen.value = false; // Fecha o drawer se falhar ao carregar os dados detalhados
   } finally {
     loadingAnswers.value = false;
   }
-};  
+};
 </script>
 
 <template>
-  <div class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-8 font-sans">
+  <div
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-8 font-sans"
+  >
     <div class="max-w-7xl mx-auto">
       <div class="flex justify-between items-center mb-6">
         <div>
@@ -191,7 +212,9 @@ const openStudentDetails = async (sub: Submission) => {
         class="p-16 flex flex-col items-center justify-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm animate-pulse"
       >
         <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 mb-4"></i>
-        <span class="text-slate-500 text-sm font-semibold">Carregando submissões...</span>
+        <span class="text-slate-500 text-sm font-semibold"
+          >Carregando submissões...</span
+        >
       </div>
 
       <SubmissionTable
