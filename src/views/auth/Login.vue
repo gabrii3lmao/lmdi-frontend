@@ -1,7 +1,10 @@
+// Login.vue
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
+
+// Lógica de Autenticação
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
@@ -41,16 +44,64 @@ async function handleLogin() {
     isLoading.value = false;
   }
 }
+
+// Lógica do Carrossel
+const currentSlide = ref(0);
+let slideInterval: ReturnType<typeof setInterval>;
+
+const slides = [
+  {
+    title: "Gerencie suas turmas de forma simples e eficiente.",
+    description:
+      "Crie, edite e organize suas turmas com facilidade, tudo em um painel intuitivo e responsivo.",
+    image: "/app-screenshot-dashboard.png",
+  },
+  {
+    title: "Revolução na gestão de gabaritos.",
+    description:
+      "Tudo o que você precisa para gerenciar suas turmas e notas em um único lugar.",
+    image: "/app-screenshot-turma.png", // Substitua pelas suas imagens
+  },
+  {
+    title: "Correção automatizada e rápida.",
+    description:
+      "Poupe horas de trabalho corrigindo centenas de provas em poucos segundos.",
+    image: "/app-screenshot-provas.png",
+  },
+  {
+    title: "Análise de desempenho avançada.",
+    description:
+      "Acompanhe de perto as métricas e o progresso de cada aluno da sua turma.",
+    image: "/app-screenshot-alunos.png",
+  },
+];
+
+const nextSlide = () => {
+  currentSlide.value = (currentSlide.value + 1) % slides.length;
+};
+
+const setSlide = (index: number) => {
+  currentSlide.value = index;
+  // Reseta o timer ao clicar manualmente para não pular rápido demais
+  clearInterval(slideInterval);
+  slideInterval = setInterval(nextSlide, 5000);
+};
+
+onMounted(() => {
+  slideInterval = setInterval(nextSlide, 5000); // Muda a imagem a cada 5 segundos
+});
+
+onUnmounted(() => {
+  if (slideInterval) clearInterval(slideInterval);
+});
 </script>
 
 <template>
   <div class="min-h-screen w-full flex font-sans bg-white overflow-hidden">
-    <!-- Lado do Formulário (Esquerda) -->
     <div
       class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative z-10"
     >
       <div class="w-full max-w-sm mx-auto">
-        <!-- Logo Header Corrigido -->
         <div class="flex items-center gap-3 mb-10">
           <span class="text-5xl font-extrabold text-slate-900 tracking-tight">
             Let Me <span class="text-emerald-600">Do It!</span>
@@ -131,33 +182,66 @@ async function handleLogin() {
       </div>
     </div>
 
-    <!-- Lado da Imagem (Direita) -->
     <div
-      class="hidden lg:flex lg:w-1/2 relative bg-slate-900 items-center justify-center p-12 lg:p-20 overflow-hidden"
+      class="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 lg:p-20 overflow-hidden bg-emerald-950"
     >
+      <img
+        src="/cadastro.jpg"
+        alt="Background"
+        class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay z-0"
+      />
       <div
-        class="absolute inset-0 bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-900 z-0"
+        class="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-emerald-900/80 to-slate-900/90 z-0"
       ></div>
 
       <div class="relative z-10 w-full max-w-2xl flex flex-col items-center">
-        <h2
-          class="text-3xl font-bold text-white mb-4 text-center leading-tight"
+        <div
+          class="h-32 flex flex-col items-center justify-end mb-6 text-center"
         >
-          Gestão inteligente, resultados reais.
-        </h2>
-        <p class="text-slate-400 text-center mb-10 text-lg max-w-lg">
-          Tudo o que você precisa para gerenciar seus processos em um único
-          lugar.
-        </p>
+          <h2
+            class="text-3xl font-bold text-white mb-3 leading-tight transition-opacity duration-500"
+          >
+            {{ slides[currentSlide]!.title }}
+          </h2>
+          <p
+            class="text-emerald-100/80 text-lg max-w-lg transition-opacity duration-500"
+          >
+            {{ slides[currentSlide]!.description }}
+          </p>
+        </div>
 
         <div
-          class="w-full rounded-2xl bg-white/5 p-2 backdrop-blur-sm border border-white/10 shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
+          class="w-full rounded-2xl bg-white/10 p-2 backdrop-blur-md border border-white/20 shadow-2xl relative"
         >
-          <img
-            src="/app-screenshot.png"
-            alt="Interface do LetMeDoIt"
-            class="w-full h-auto rounded-xl border border-white/10 shadow-inner"
-          />
+          <div
+            class="relative w-full aspect-video overflow-hidden rounded-xl bg-slate-800 border border-white/10"
+          >
+            <template v-for="(slide, index) in slides" :key="index">
+              <img
+                :src="slide.image"
+                :alt="slide.title"
+                class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+                :class="
+                  currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                "
+              />
+            </template>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-8">
+          <button
+            v-for="(_, index) in slides"
+            :key="index"
+            @click="setSlide(index)"
+            class="transition-all duration-500 rounded-full"
+            :class="
+              currentSlide === index
+                ? 'w-8 h-2.5 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]'
+                : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/50'
+            "
+            aria-label="Ir para o slide"
+          ></button>
         </div>
       </div>
     </div>

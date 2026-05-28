@@ -49,7 +49,7 @@ async function handleSignup() {
     >
       <!-- Background Escolar -->
       <img
-        src="/cadastro.jpg"
+        src="@/assets/cadastro.webp"
         alt="Sala de aula"
         class="absolute inset-0 w-full h-full object-cover z-0"
       />
@@ -64,7 +64,7 @@ async function handleSignup() {
           class="w-32 h-auto xl:w-48 xl:h-auto rounded-2xl bg-emerald-500/1 flex items-center justify-center p-3"
         >
           <img
-            src="/logo1.png"
+            src="@/assets/logo1.webp"
             alt="Logo"
             class="w-full h-auto object-contain"
           />
@@ -114,17 +114,16 @@ async function handleSignup() {
         <!-- Mobile Logo (Visível apenas em Mobile/Tablet) -->
         <div class="lg:hidden flex flex-col items-center mb-8 gap-4">
           <div
-            class="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-3 shadow-sm"
+            class="w-22 h-22 rounded-2xl flex items-center justify-center p-3 shadow-sm"
           >
             <img
-              src="/logo1.png"
+              src="@/assets/logo1.webp"
               alt="Logo"
-              class="w-full h-full object-contain"
+              class="w-16 h-22 object-contain"
             />
           </div>
-
           <h1
-            class="text-2xl font-extrabold text-slate-800 text-center tracking-tight"
+            class="text-4xl font-extrabold text-slate-800 text-center tracking-tight"
           >
             LetMe<span class="text-emerald-600">DoIt</span>
           </h1>

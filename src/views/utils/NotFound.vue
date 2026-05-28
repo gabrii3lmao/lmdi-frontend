@@ -16,7 +16,7 @@ import { RouterLink } from "vue-router";
           <!-- AREA DA ILUSTRAÇÃO -->
           <div class="w-full h-64 md:h-80 rounded-2xl flex items-center justify-center mb-8">
             <div class="text-center p-6">
-              <img class="rounded-xl border-8 border-slate-200" src="/confused_dog.jpg" alt="cachorro confuso">
+              <img class="rounded-xl border-8 border-slate-200" src="@/assets/confused_dog.webp" alt="cachorro confuso">
             </div>
           </div>
         </div>

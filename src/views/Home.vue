@@ -90,7 +90,7 @@ onMounted(() => {
         class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
       >
         <div class="space-y-1">
-          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+          <h1 class="text-3xl font-extrabold text-emerald-600 tracking-tight">
             Dashboard
           </h1>
           <p class="text-slate-500 text-sm">
