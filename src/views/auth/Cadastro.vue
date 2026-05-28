@@ -42,9 +42,7 @@ async function handleSignup() {
 </script>
 
 <template>
-  <div
-    class="min-h-screen flex w-full font-sans bg-slate-50 overflow-x-hidden"
-  >
+  <div class="min-h-screen flex w-full font-sans bg-slate-50 overflow-x-hidden">
     <!-- LADO ESQUERDO (Imagens e Branding - Visível apenas em Telas Grandes) -->
     <div
       class="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 xl:p-16"
@@ -61,15 +59,14 @@ async function handleSignup() {
         class="absolute inset-0 bg-gradient-to-br from-white/95 via-white/85 to-emerald-50/50 backdrop-blur-[1px] z-10"
       ></div>
 
-      <!-- Logo + Nome -->
       <div class="relative z-20 flex items-center gap-4">
         <div
-          class="w-16 h-16 xl:w-20 xl:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center p-3 shadow-sm"
+          class="w-32 h-auto xl:w-48 xl:h-auto rounded-2xl bg-emerald-500/1 flex items-center justify-center p-3"
         >
           <img
             src="/logo1.png"
             alt="Logo"
-            class="w-full h-full object-contain"
+            class="w-full h-auto object-contain"
           />
         </div>
 
@@ -95,8 +92,11 @@ async function handleSignup() {
           Automatize a correção das suas provas.
         </h1>
 
-        <p class="text-base xl:text-lg text-slate-600 mb-8 max-w-md font-medium">
-          Gestão de gabaritos, análise de submissões e acompanhamento em tempo real para professores.
+        <p
+          class="text-base xl:text-lg text-slate-600 mb-8 max-w-md font-medium"
+        >
+          Gestão de gabaritos, análise de submissões e acompanhamento em tempo
+          real para professores.
         </p>
       </div>
     </div>
@@ -123,17 +123,27 @@ async function handleSignup() {
             />
           </div>
 
-          <h1 class="text-2xl font-extrabold text-slate-800 text-center tracking-tight">
+          <h1
+            class="text-2xl font-extrabold text-slate-800 text-center tracking-tight"
+          >
             LetMe<span class="text-emerald-600">DoIt</span>
           </h1>
         </div>
 
         <!-- Card de Cadastro -->
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-10 shadow-xl">
+        <div
+          class="bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-10 shadow-xl"
+        >
           <!-- Título -->
           <div class="mb-8 text-center sm:text-left">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">Crie sua conta</h2>
-            <p class="text-slate-500 text-sm mt-2">Preencha seus dados para começar.</p>
+            <h2
+              class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight"
+            >
+              Crie sua conta
+            </h2>
+            <p class="text-slate-500 text-sm mt-2">
+              Preencha seus dados para começar.
+            </p>
           </div>
 
           <!-- Mensagem de Erro -->
@@ -141,14 +151,18 @@ async function handleSignup() {
             v-if="errorMessage"
             class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100 text-red-700"
           >
-            <i class="pi pi-exclamation-circle mt-0.5 shrink-0 text-red-500"></i>
+            <i
+              class="pi pi-exclamation-circle mt-0.5 shrink-0 text-red-500"
+            ></i>
             <p class="text-sm font-medium">{{ errorMessage }}</p>
           </div>
 
           <!-- Formulário -->
           <form class="space-y-5" @submit.prevent="handleSignup">
             <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+              <label
+                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1"
+              >
                 Nome completo
               </label>
               <input
@@ -161,7 +175,9 @@ async function handleSignup() {
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+              <label
+                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1"
+              >
                 E-mail institucional
               </label>
               <input
@@ -174,7 +190,9 @@ async function handleSignup() {
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+              <label
+                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-1"
+              >
                 Senha
               </label>
               <input
@@ -191,7 +209,10 @@ async function handleSignup() {
               :disabled="loading"
               class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10 active:scale-[0.98]"
             >
-              <span v-if="loading" class="flex items-center justify-center gap-2">
+              <span
+                v-if="loading"
+                class="flex items-center justify-center gap-2"
+              >
                 <i class="pi pi-spin pi-spinner text-sm"></i> Criando conta...
               </span>
               <span v-else>Criar Conta</span>
