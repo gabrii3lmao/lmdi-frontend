@@ -63,7 +63,7 @@ const toggleFaq = (index: number) => {
 };
 </script>
 <template>
-  <div class="sm:ml-64 min-h-screen bg-white text-slate-800 p-8">
+  <div class="sm:ml-64 min-h-screen bg-white text-slate-800 p-8 overflow-y-auto">
     <div class="max-w-3xl mx-auto">
       <!-- HEADER ATUALIZADO -->
       <header class="text-center mb-12">

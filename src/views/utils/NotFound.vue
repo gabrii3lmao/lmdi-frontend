@@ -39,7 +39,7 @@ import { RouterLink } from "vue-router";
           <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <RouterLink
               to="/"
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
+              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
             >
               <i class="pi pi-arrow-left text-xs"></i>
               Voltar para o Início
@@ -47,7 +47,7 @@ import { RouterLink } from "vue-router";
             
             <!-- Botão secundário opcional para profissionalizar (ex: reportar erro) -->
             <button
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-slate-700 transition-all bg-slate-100 rounded-xl hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-300 active:scale-[0.98]"
+              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-red-500 border border-red-600 rounded-xl hover:bg-red-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-300 active:scale-[0.98]"
             >
               <i class="pi pi-flag text-xs"></i>
               Reportar Bug

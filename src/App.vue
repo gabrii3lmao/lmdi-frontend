@@ -5,7 +5,7 @@ import ConfirmDialog from "primevue/confirmdialog";
 </script>
 
 <template>
-  <main class="min-h-screen bg-gray-900 flex flex-col justify-center">
+  <main class="min-h-screen bg-white flex flex-col justify-center">
     <TheAside />
     <Toast />
     <ConfirmDialog />

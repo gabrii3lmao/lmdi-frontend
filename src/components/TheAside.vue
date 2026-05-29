@@ -93,13 +93,10 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
     <Drawer
       v-model:visible="isMenuOpen"
       position="left"
+      :blockScroll="true"
       :showCloseIcon="false"
-      class="sm:hidden !border-none !p-0"
+      class="sm:hidden !border-none !p-0 !bg-transparent !shadow-none"
       :pt="{
-        root: {
-          class:
-            'w-64 h-screen bg-white border-r border-slate-200 shadow-2xl flex flex-col',
-        },
         mask: { class: 'bg-slate-900/50 backdrop-blur-sm' },
       }"
     >
@@ -126,7 +123,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                 ></span>
               </div>
               <span
-                class="text-[10px] uppercase tracking-[0.2em] text-slate-400 mt-0.5 font-bold"
+                class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mt-0.5 font-bold"
               >
                 Painel Docente
               </span>
@@ -143,7 +140,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
           <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
             <div class="mb-6">
               <h3
-                class="px-4 text-[0.8rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
               >
                 Principal
               </h3>
@@ -175,7 +172,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
               >
                 Gestão de Provas
               </h3>
@@ -207,9 +204,9 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
               >
-                Análise
+                Análises (Em Breve)
               </h3>
               <ul class="space-y-1">
                 <li>
@@ -239,7 +236,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
               >
                 Suporte
               </h3>
@@ -252,7 +249,18 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                     @click="closeCallback"
                   >
                     <i class="pi pi-question-circle text-base"></i>
-                    <span>FAQ</span>
+                    <span>Dúvidas</span>
+                  </RouterLink>
+                </li>
+                <li>
+                  <RouterLink
+                    to="/support"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
+                    @click="closeCallback"
+                  >
+                    <i class="pi pi-info-circle text-base"></i>
+                    <span>Contato</span>
                   </RouterLink>
                 </li>
               </ul>
@@ -421,8 +429,18 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                 :active-class="activeNavClass"
               >
                 <i class="pi pi-question-circle text-base"></i>
-                <span>FAQ</span>
+                <span>Dúvidas</span>
               </RouterLink>
+            </li>
+            <li>
+              <RouterLink
+                to="/support"
+                :class="navItemClass"
+                :active-class="activeNavClass"
+              >
+                <i class="pi pi-info-circle text-base"></i>
+                <span>Contato</span>
+              </RouterLink> 
             </li>
           </ul>
         </div>
