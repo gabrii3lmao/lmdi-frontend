@@ -1,119 +1,85 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from "vue";
-import { useToast } from "primevue/usetoast"; // <-- Importado o Toast
+import { ref, watch, computed } from "vue";
+import { useToast } from "primevue/usetoast";
+import { useQuery } from "@tanstack/vue-query"; // <-- Importação do TanStack Query
 
 import SubmissionFilters from "@/components/Submissions/SubmissionFilters.vue";
 import SubmissionTable from "@/components/Submissions/SubmissionTable.vue";
 import SubmissionDrawer from "@/components/Submissions/SubmissionDrawer.vue";
-
 import { submissionService } from "@/services/submissionService";
 import { turmaService } from "@/services/turmas";
 import { examService } from "@/services/examService";
-
+import type { Turma } from "@/types/Turma";
 import type { Exam } from "@/types/Exam";
 import type { Submission } from "@/types/Submission";
 
-const toast = useToast(); // <-- Inicializado o Toast
+const toast = useToast();
 
-interface Turma {
-  _id: string;
-  name: string;
-}
-
-// estados
-const turmas = ref<Turma[]>([]);
-const exams = ref<Exam[]>([]);
-const submissions = ref<Submission[]>([]);
-
+// Estados locais de interface
 const selectedClassId = ref("");
 const selectedExamId = ref("");
-
 const selectedSubmission = ref<Submission | null>(null);
-const activeExam = ref<Exam | null>(null);
 const isDrawerOpen = ref(false);
-
-const loadingTurmas = ref(true);
-const loadingExams = ref(false);
-const loadingSubmissions = ref(false);
 const loadingAnswers = ref(false);
+
+// 1. Query das Turmas (Cache Compartilhado Global)
+const { data: turmas, isLoading: loadingTurmas } = useQuery({
+  queryKey: ["turmas"],
+  queryFn: async () => {
+    const res = await turmaService.getAll();
+    return res.data || [];
+  },
+  initialData: [],
+});
+
+// 2. Query das Provas (Dependente da Turma selecionada)
+const { data: exams, isLoading: loadingExams } = useQuery({
+  queryKey: ["provas", selectedClassId],
+  queryFn: async () => {
+    const res = await examService.listarGabaritosMestre(selectedClassId.value);
+    return res.data || [];
+  },
+  enabled: computed(() => !!selectedClassId.value), // Só executa se tiver turma
+  initialData: [],
+});
+
+// 3. Query das Submissões (Dependente da Prova selecionada)
+const { data: submissions, isLoading: loadingSubmissions } = useQuery({
+  queryKey: ["submissoes", selectedExamId],
+  queryFn: async () => {
+    const res = await submissionService.getAllSubmission(selectedExamId.value);
+    return res.data || [];
+  },
+  enabled: computed(() => !!selectedExamId.value), // Só executa se tiver prova
+  initialData: [],
+});
+
+// Limpa a prova selecionada ao trocar de turma
+watch(selectedClassId, () => {
+  selectedExamId.value = "";
+});
+
+// Variáveis computadas derivadas das Queries
+const activeExam = computed(() => {
+  return exams.value.find((e: Exam) => e._id === selectedExamId.value) || null;
+});
 
 const averageScore = computed(() => {
   if (submissions.value.length === 0) return "-";
 
   const gradedSubmissions = submissions.value.filter(
-    (s) => s.score !== undefined,
+    (s: Submission) => s.score !== undefined,
   );
   if (gradedSubmissions.length === 0) return "-";
 
   const total = gradedSubmissions.reduce(
-    (acc, curr) => acc + (curr.score || 0),
+    (acc: number, curr: Submission) => acc + (curr.score || 0),
     0,
   );
   return (total / gradedSubmissions.length).toFixed(1);
 });
 
-onMounted(async () => {
-  try {
-    const res = await turmaService.getAll();
-    turmas.value = res.data;
-  } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: "Não foi possível carregar as turmas.",
-      life: 4000,
-    });
-  } finally {
-    loadingTurmas.value = false;
-  }
-});
-
-watch(selectedClassId, async (id) => {
-  selectedExamId.value = "";
-  exams.value = [];
-  submissions.value = [];
-  activeExam.value = null;
-
-  if (!id) return;
-
-  loadingExams.value = true;
-  try {
-    const res = await examService.listarGabaritosMestre(id);
-    exams.value = res.data;
-  } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: "Falha ao carregar provas da turma.",
-      life: 4000,
-    });
-  } finally {
-    loadingExams.value = false;
-  }
-});
-
-watch(selectedExamId, async (id) => {
-  submissions.value = [];
-  activeExam.value = exams.value.find((e) => e._id === id) || null;
-
-  if (!id) return;
-
-  loadingSubmissions.value = true;
-  try {
-    const res = await submissionService.getAllSubmission(id);
-    submissions.value = res.data;
-  } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: "Falha ao carregar as submissões desta prova.",
-      life: 4000,
-    });
-  } finally {
-    loadingSubmissions.value = false;
-  }
-});
-
+// Mantivemos a requisição manual aqui porque é a abertura de um modal sob demanda
 const openStudentDetails = async (sub: Submission) => {
   selectedSubmission.value = { ...sub, answers: null };
   isDrawerOpen.value = true;
@@ -121,10 +87,9 @@ const openStudentDetails = async (sub: Submission) => {
 
   try {
     const res = await submissionService.getSubmissionAnswers(sub._id);
-    selectedSubmission.value = {
-      ...selectedSubmission.value,
-      answers: res.data.answers,
-    };
+    if (selectedSubmission.value) {
+      selectedSubmission.value.answers = res.data.answers;
+    }
   } catch (error) {
     toast.add({
       severity: "error",
@@ -132,7 +97,7 @@ const openStudentDetails = async (sub: Submission) => {
       detail: "Não foi possível carregar os detalhes do aluno.",
       life: 4000,
     });
-    isDrawerOpen.value = false; // Fecha o drawer se falhar ao carregar os dados detalhados
+    isDrawerOpen.value = false;
   } finally {
     loadingAnswers.value = false;
   }
@@ -177,7 +142,9 @@ const openStudentDetails = async (sub: Submission) => {
           </h2>
           <p class="text-sm text-slate-500 mt-1">
             Turma:
-            {{ turmas.find((t) => t._id === selectedClassId)?.name || "-" }}
+            {{
+              turmas.find((t: Turma) => t._id === selectedClassId)?.name || "-"
+            }}
           </p>
         </div>
 
@@ -230,7 +197,7 @@ const openStudentDetails = async (sub: Submission) => {
         <div
           class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-200 text-slate-400"
         >
-          <i class="pi pi-inbox text-2xl" style="font-size: 2rem;"></i>
+          <i class="pi pi-inbox text-2xl" style="font-size: 2rem"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800">
           Nenhuma submissão encontrada.
@@ -247,7 +214,7 @@ const openStudentDetails = async (sub: Submission) => {
         <div
           class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-600"
         >
-          <i class="pi pi-filter text-2xl" style="font-size: 2rem;"></i>
+          <i class="pi pi-filter text-2xl" style="font-size: 2rem"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800">
           Selecione uma avaliação

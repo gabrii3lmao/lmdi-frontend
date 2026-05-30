@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useToast } from "primevue/usetoast"; // <-- Import Toast
+import { ref } from "vue";
+import { useToast } from "primevue/usetoast";
+import { useQueryClient } from "@tanstack/vue-query"; // <-- Importado para invalidar o cache
 import { useGabaritos } from "@/composables/useGabaritos";
 import { examService } from "@/services/examService";
 import GabaritoOficialModal from "@/components/Exams/GabaritoOficialModal.vue";
 import TemplateCard from "@/components/Exams/TemplateCard.vue";
+import { useConfirm } from "primevue/useconfirm"; // Opcional: Para manter o padrão do PrimeVue nos deletes
 
-const toast = useToast(); // <-- Inicia Toast
+const toast = useToast();
+const confirm = useConfirm();
+const queryClient = useQueryClient(); // <-- Inicializa o client
 
-const { templates, turmas, loading, carregarDados, getTurmaName } =
-  useGabaritos();
+// 1. Não importamos mais o `carregarDados`
+const { templates, turmas, loading, getTurmaName } = useGabaritos();
 
 const enviando = ref(false);
 const isModalOpen = ref(false);
@@ -43,34 +47,43 @@ const closeModal = () => {
   classIdSelecionadaParaNovoGabarito.value = "";
 };
 
-const handleDelete = async (id: string) => {
-  const confirmacao = window.confirm(
-    "Tem certeza que deseja excluir este gabarito? Esta ação não pode ser desfeita.",
-  );
-  if (!confirmacao) return;
+const handleDelete = (id: string) => {
+  // Opcional: Mudei para o ConfirmDialog do PrimeVue para combinar com o design das turmas
+  confirm.require({
+    message:
+      "Tem certeza que deseja excluir este gabarito? Esta ação não pode ser desfeita.",
+    header: "Confirmação de Exclusão",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Sim, Excluir",
+    rejectLabel: "Cancelar",
+    acceptClass: "p-button-danger",
+    accept: async () => {
+      try {
+        await examService.deletarGabarito(id);
 
-  try {
-    await examService.deletarGabarito(id);
-    toast.add({
-      severity: "success",
-      summary: "Excluído",
-      detail: "Gabarito deletado com sucesso!",
-      life: 3000,
-    });
-    await carregarDados();
-  } catch (error: any) {
-    let errorMessage = "Falha ao deletar o gabarito.";
-    if (error.response?.data?.message) {
-      errorMessage = error.response.data.message;
-    }
+        // 2. Invalida a query em vez de chamar carregarDados manualmente
+        queryClient.invalidateQueries({ queryKey: ["todos-gabaritos"] });
+        // (Opcional) invalida os específicos de uma turma
+        queryClient.invalidateQueries({ queryKey: ["provas"] });
 
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: errorMessage,
-      life: 4000,
-    });
-  }
+        toast.add({
+          severity: "success",
+          summary: "Excluído",
+          detail: "Gabarito deletado com sucesso!",
+          life: 3000,
+        });
+      } catch (error: any) {
+        let errorMessage =
+          error.response?.data?.message || "Falha ao deletar o gabarito.";
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: errorMessage,
+          life: 4000,
+        });
+      }
+    },
+  });
 };
 
 const handleSalvarGabaritoOficial = async (dados: any) => {
@@ -117,18 +130,20 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
       });
     }
 
+    // 3. Invalida o cache geral e o específico da turma modificada
+    queryClient.invalidateQueries({ queryKey: ["todos-gabaritos"] });
+    queryClient.invalidateQueries({
+      queryKey: ["provas", classIdSelecionadaParaNovoGabarito.value],
+    });
+
     closeModal();
-    await carregarDados();
   } catch (error: any) {
     let errorMessage = "Falha ao salvar gabarito oficial.";
-
-    // Mesma lógica de extração de erro do Zod
     if (error.response?.data?.errors && error.response.data.errors.length > 0) {
       errorMessage = error.response.data.errors[0].message;
     } else if (error.response?.data?.message) {
       errorMessage = error.response.data.message;
     }
-
     toast.add({
       severity: "error",
       summary: "Erro",
@@ -140,7 +155,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
   }
 };
 
-onMounted(carregarDados);
+// 4. O onMounted FOI APAGADO!
 </script>
 
 <template>
@@ -209,7 +224,7 @@ onMounted(carregarDados);
         <div
           class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-4"
         >
-          <i class="pi pi-file-check text-2xl" style="font-size: 2rem;"></i>
+          <i class="pi pi-file-check text-2xl" style="font-size: 2rem"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800 mb-1">
           Nenhum gabarito mestre
@@ -239,5 +254,7 @@ onMounted(carregarDados);
       @close="closeModal"
       @confirm="handleSalvarGabaritoOficial"
     />
+
+    <ConfirmDialog></ConfirmDialog>
   </div>
 </template>

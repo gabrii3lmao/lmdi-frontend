@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { examService } from "@/services/examService";
 import { useExams } from "@/composables/useExams";
 import { submissionService } from "@/services/submissionService";
 import { useToast } from "primevue/usetoast";
+import { useQueryClient } from "@tanstack/vue-query"; // Importação importante!
 
 // Componentes Modularizados
 import ExamHeader from "@/components/Exams/ExamHeader.vue";
@@ -15,17 +16,13 @@ import AdicionarAlunoModal from "@/components/Submissions/AdicionarAlunoModal.vu
 
 const route = useRoute();
 const toast = useToast();
+const queryClient = useQueryClient(); // Inicializa o QueryClient
 const classIdAtual = ref(route.params.id);
 
-// Lógica isolada no Composable (que já contém o Polling)
-const {
-  examIdSelecionado,
-  provasDaTurma,
-  submissoes,
-  enviando,
-  buscarSubmissoes,
-  carregarProvasDaTurma,
-} = useExams(classIdAtual.value);
+// Note que aqui só extraímos as variáveis reativas, o Vue Query faz o resto!
+const { examIdSelecionado, provasDaTurma, submissoes, enviando } = useExams(
+  classIdAtual.value,
+);
 
 const modalGabarito = ref(false);
 const modalAluno = ref(false);
@@ -41,9 +38,10 @@ const handleSalvarGabarito = async (dados) => {
       dados.answerKey,
     );
 
-    const novoExame = response.data.exam;
-    provasDaTurma.value.push(novoExame);
-    examIdSelecionado.value = novoExame._id;
+    examIdSelecionado.value = response.data.exam._id;
+
+    // Invalida o cache e faz a tela puxar a prova recém criada
+    queryClient.invalidateQueries({ queryKey: ["provas", classIdAtual.value] });
 
     toast.add({
       severity: "success",
@@ -54,8 +52,6 @@ const handleSalvarGabarito = async (dados) => {
 
     modalGabarito.value = false;
   } catch (error) {
-    console.error("Erro ao salvar gabarito:", error);
-
     let errorMessage = "Erro ao salvar o gabarito oficial.";
     if (error.response?.data?.errors && error.response.data.errors.length > 0) {
       errorMessage = error.response.data.errors[0].message;
@@ -98,12 +94,12 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
     modalAluno.value = false;
 
-    // Dispara a busca que vai iniciar o loop do polling
-    await buscarSubmissoes();
+    // Invalida o cache das submissões. Como tem uma nova "pendente",
+    // o refetchInterval de 3 segundos do useExams vai começar automaticamente!
+    queryClient.invalidateQueries({
+      queryKey: ["submissoes", examIdSelecionado.value],
+    });
   } catch (error) {
-    console.error("Erro no envio:", error);
-
-    // Fallback padrão se não houver erro detalhado
     let msgErro = error.response?.data?.error || "Erro no upload do gabarito.";
 
     if (error.response?.data?.errors && error.response.data.errors.length > 0) {
@@ -122,10 +118,6 @@ const handleProcessarGabaritoAluno = async (dados) => {
     enviando.value = false;
   }
 };
-
-onMounted(() => {
-  carregarProvasDaTurma();
-});
 </script>
 
 <template>

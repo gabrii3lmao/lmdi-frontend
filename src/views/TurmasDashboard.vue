@@ -1,37 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { turmaService } from "@/services/turmas";
 import TurmaCard from "@/components/Classes/TurmaCard.vue";
 import TurmaModal from "@/components/Classes/TurmaModal.vue";
 import { useToast } from "primevue/usetoast";
-import { useConfirm } from "primevue/useconfirm"; // <-- Importamos o useConfirm
+import { useConfirm } from "primevue/useconfirm";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
 
 const toast = useToast();
-const confirm = useConfirm(); // <-- Inicializamos o confirm
+const confirm = useConfirm();
+const queryClient = useQueryClient();
 
-const turmas = ref<any[]>([]);
-const loading = ref(true);
+// O useQuery substitui o "turmas", "loading", "carregarTurmas" e o "onMounted"
+const { data: turmas, isLoading: loading } = useQuery({
+  queryKey: ["turmas"],
+  queryFn: async () => {
+    const { data } = await turmaService.getAll();
+    return data || [];
+  },
+  initialData: [], // Garante que comece como um array vazio e não quebre a tela
+});
+
 const isModalOpen = ref(false);
 const enviando = ref(false);
-
 const turmaSendoEditada = ref<any>(null);
-
-async function carregarTurmas() {
-  try {
-    const { data } = await turmaService.getAll();
-    turmas.value = data;
-  } catch (error) {
-    console.error("Erro ao carregar turmas:", error);
-    toast.add({
-      severity: "error",
-      summary: "Erro",
-      detail: "Não foi possível carregar suas turmas.",
-      life: 4000,
-    });
-  } finally {
-    loading.value = false;
-  }
-}
 
 function abrirModalCriacao() {
   turmaSendoEditada.value = null;
@@ -68,7 +60,9 @@ async function handleSalvar(nome: string) {
         life: 3000,
       });
     }
-    await carregarTurmas();
+
+    // Invalida o cache: o Vue Query vai buscar os dados atualizados no servidor automaticamente
+    queryClient.invalidateQueries({ queryKey: ["turmas"] });
     fecharModal();
   } catch (error: any) {
     let errorMessage = "Ocorreu um erro ao salvar as alterações.";
@@ -101,11 +95,14 @@ function handleExcluir(id: string) {
     icon: "pi pi-exclamation-triangle",
     acceptLabel: "Sim, Excluir",
     rejectLabel: "Cancelar",
-    acceptClass: "p-button-danger", // Deixa o botão de confirmar vermelho (dependendo do seu tema)
+    acceptClass: "p-button-danger", // Deixa o botão de confirmar vermelho
     accept: async () => {
       try {
         await turmaService.delete(id);
-        turmas.value = turmas.value.filter((t) => t._id !== id);
+
+        // Em vez de filtrar o array manualmente, apenas invalidamos a query
+        queryClient.invalidateQueries({ queryKey: ["turmas"] });
+
         toast.add({
           severity: "success",
           summary: "Excluída",
@@ -123,8 +120,6 @@ function handleExcluir(id: string) {
     },
   });
 }
-
-onMounted(carregarTurmas);
 </script>
 
 <template>
@@ -172,7 +167,7 @@ onMounted(carregarTurmas);
         <div
           class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 text-emerald-600"
         >
-          <i class="pi pi-folder-open text-3xl" style="font-size: 2rem;"></i>
+          <i class="pi pi-folder-open text-3xl" style="font-size: 2rem"></i>
         </div>
         <h3 class="text-xl font-bold text-slate-800 mb-2">
           Nenhuma turma encontrada

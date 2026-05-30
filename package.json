@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@primevue/themes": "^4.5.4",
+    "@tanstack/vue-query": "^5.100.14",
     "axios": "^1.13.5",
     "dotenv": "^17.4.2",
     "pinia": "^3.0.4",

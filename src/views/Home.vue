@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { RouterLink } from "vue-router";
 import { turmaService } from "@/services/turmas";
 import { submissionService } from "@/services/submissionService";
+import { useQuery } from "@tanstack/vue-query"; // <-- Importado
 
 interface Turma {
   _id: string;
@@ -10,10 +11,59 @@ interface Turma {
 }
 
 // Estados
-const loading = ref(true);
 const name = ref("Professor");
-const turmas = ref<Turma[]>([]);
-const totalSubmissoes = ref(0);
+
+// Dicas (Transformado em ref para não mudar aleatoriamente quando os dados carregarem)
+const dicas = [
+  "Organize seus alunos criando as turmas primeiro. Depois, basta criar um gabarito mestre vinculado a essa turma para iniciar a correção por IA.",
+  "Ao criar um gabarito, certifique-se de que o número de questões e o número de alternativas estejam corretos.",
+  "Para cada turma, você pode criar um gabarito mestre e diversos modelos de provas. Não há um limite de questões ou alternativas, nem de alunos!",
+  "Quando for tirar a foto de um modelo de prova, certifique-se de que a foto esteja bem iluminada e que as questões estejam legíveis.",
+  "Ao clicar em um dos botões de 'Ver Provas' você será redirecionado para a página de provas da turma",
+];
+const dicaAtual = ref(dicas[Math.floor(Math.random() * dicas.length)]);
+
+function carregarNomeUsuario() {
+  const savedName = localStorage.getItem("username");
+  if (savedName) {
+    const firstName = savedName.trim().split(" ")[0];
+    name.value =
+      (firstName as string).charAt(0).toUpperCase() +
+      (firstName as string).slice(1).toLowerCase();
+  }
+}
+
+// 1. Busca as turmas usando a mesma chave das outras telas (Cache Compartilhado)
+const { data: turmasData, isLoading: loading } = useQuery({
+  queryKey: ["turmas"],
+  queryFn: async () => {
+    const { data } = await turmaService.getAll();
+    return data || [];
+  },
+  initialData: [],
+});
+
+// Inverte a ordem apenas para a visualização do Dashboard, usando uma cópia para não mutar o cache
+const turmas = computed(() => [...turmasData.value].reverse());
+
+// 2. Busca as submissões APENAS quando as turmas terminarem de carregar (Query Dependente)
+const { data: totalSubmissoes } = useQuery({
+  // A chave da query inclui os IDs das turmas, se criar turma nova, ele recalcula as submissões!
+  queryKey: [
+    "dashboard-submissoes",
+    computed(() => turmasData.value.map((t: Turma) => t._id).join(",")),
+  ],
+  queryFn: async () => {
+    const promises = turmasData.value.map((turma: Turma) =>
+      submissionService.getSubmissionsByClass(turma._id),
+    );
+    const responses = await Promise.all(promises);
+    return responses.reduce((acc, res) => acc + (res.data?.length || 0), 0);
+  },
+  // O Vue Query só executa essa requisição se existirem turmas
+  enabled: computed(() => turmasData.value.length > 0),
+  initialData: 0,
+});
 
 const stats = computed(() => [
   {
@@ -30,54 +80,9 @@ const stats = computed(() => [
   },
 ]);
 
-// Funções Auxiliares
-function carregarNomeUsuario() {
-  const savedName = localStorage.getItem("username");
-  if (savedName) {
-    const firstName = savedName.trim().split(" ")[0];
-    name.value =
-      (firstName as string).charAt(0).toUpperCase() +
-      (firstName as string).slice(1).toLowerCase();
-  }
-}
-
-const dicas = [
-  "Organize seus alunos criando as turmas primeiro. Depois, basta criar um gabarito mestre vinculado a essa turma para iniciar a correção por IA.",
-  "Ao criar um gabarito, certifique-se de que o número de questões e o número de alternativas estejam corretos.",
-  "Para cada turma, você pode criar um gabarito mestre e diversos modelos de provas. Não há um limite de questões ou alternativas, nem de alunos!",
-  "Quando for tirar a foto de um modelo de prova, certifique-se de que a foto esteja bem iluminada e que as questões estejam legíveis.",
-  "Ao clicar em um dos botões de 'Ver Provas' você será redirecionado para a página de provas da turma"
-]
-
-async function carregarDadosDashboard() {
-  loading.value = true;
-
-  try {
-    const responseTurmas = await turmaService.getAll();
-    turmas.value = responseTurmas.data.reverse();
-
-    if (turmas.value.length > 0) {
-      const promisesSubmissoes = turmas.value.map((turma) =>
-        submissionService.getSubmissionsByClass(turma._id),
-      );
-
-      const responses = await Promise.all(promisesSubmissoes);
-      totalSubmissoes.value = responses.reduce(
-        (acumulador, response) => acumulador + (response.data?.length || 0),
-        0,
-      );
-    }
-  } catch (error) {
-    console.error("Erro ao carregar dados do dashboard:", error);
-  } finally {
-    loading.value = false;
-  }
-}
-
 // Ciclo de Vida
 onMounted(() => {
   carregarNomeUsuario();
-  carregarDadosDashboard(); // Uma única chamada limpa que cuida de tudo
 });
 </script>
 
@@ -136,7 +141,6 @@ onMounted(() => {
           </div>
 
           <div v-else-if="turmas.length > 0" class="space-y-3">
-            <!-- O RouterLink agora é o card principal -->
             <RouterLink
               v-for="turma in turmas"
               :key="turma._id"
@@ -183,8 +187,11 @@ onMounted(() => {
             <div
               class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600"
             >
-              <i :class="['pi text-3xl', stat.icon]" style="font-size: 1.8rem"></i>
-            </div>  
+              <i
+                :class="['pi text-3xl', stat.icon]"
+                style="font-size: 1.8rem"
+              ></i>
+            </div>
             <div>
               <p class="text-sm font-semibold text-slate-500 mb-1">
                 {{ stat.label }}
@@ -199,11 +206,14 @@ onMounted(() => {
             class="bg-gradient-to-br from-slate-50/50 to-slate-200 p-6 rounded-2xl border border-slate-900/10 shadow-sm"
           >
             <h4 class="font-bold mb-2 flex items-center gap-2 text-slate-800">
-              <i class="pi pi-lightbulb text-amber-500" style="font-size: 1.3rem" ></i>
+              <i
+                class="pi pi-lightbulb text-amber-500"
+                style="font-size: 1.3rem"
+              ></i>
               Dica de uso
             </h4>
             <p class="text-sm text-slate-600 leading-relaxed font-medium">
-              {{ dicas[Math.floor(Math.random() * dicas.length)] }}
+              {{ dicaAtual }}
             </p>
           </div>
         </aside>
