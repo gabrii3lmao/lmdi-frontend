@@ -193,11 +193,21 @@ onUnmounted(() => {
         </form>
 
         <!-- Google Login -->
-        <p class="text-slate-500 align-center text-sm my-4">Ou</p>
-        <div class="w-full flex items-center justify-center mb-4">
-          <div class="w-full h-px bg-slate-200">
-            <GoogleLogin :callback="callbackGoogle" />
+        <div class="relative my-8">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-200"></div>
           </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-3 bg-white text-slate-500 font-medium"
+              >Ou continue com</span
+            >
+          </div>
+        </div>
+
+        <div
+          class="flex justify-center w-full transform transition-all hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <GoogleLogin :callback="callbackGoogle" />
         </div>
 
         <p class="mt-8 text-center text-sm text-slate-500">
