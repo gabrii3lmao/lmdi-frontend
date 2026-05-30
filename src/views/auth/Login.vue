@@ -20,8 +20,8 @@ async function handleLogin() {
       email: email.value,
       password: password.value,
     });
-
-    const { id, name, token } = response.data.user;
+    const token = response.data.token;
+    const { id, name } = response.data.user;
 
     localStorage.setItem("token", token);
     localStorage.setItem("username", name);

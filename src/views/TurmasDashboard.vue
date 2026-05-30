@@ -172,7 +172,7 @@ onMounted(carregarTurmas);
         <div
           class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 text-emerald-600"
         >
-          <i class="pi pi-folder-open text-3xl"></i>
+          <i class="pi pi-folder-open text-3xl" style="font-size: 2rem;"></i>
         </div>
         <h3 class="text-xl font-bold text-slate-800 mb-2">
           Nenhuma turma encontrada

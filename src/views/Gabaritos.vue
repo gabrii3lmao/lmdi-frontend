@@ -209,7 +209,7 @@ onMounted(carregarDados);
         <div
           class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-4"
         >
-          <i class="pi pi-file-check text-2xl"></i>
+          <i class="pi pi-file-check text-2xl" style="font-size: 2rem;"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800 mb-1">
           Nenhum gabarito mestre

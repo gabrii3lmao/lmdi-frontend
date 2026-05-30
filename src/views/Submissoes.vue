@@ -230,7 +230,7 @@ const openStudentDetails = async (sub: Submission) => {
         <div
           class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-200 text-slate-400"
         >
-          <i class="pi pi-inbox text-2xl"></i>
+          <i class="pi pi-inbox text-2xl" style="font-size: 2rem;"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800">
           Nenhuma submissão encontrada.
@@ -247,7 +247,7 @@ const openStudentDetails = async (sub: Submission) => {
         <div
           class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-600"
         >
-          <i class="pi pi-filter text-2xl"></i>
+          <i class="pi pi-filter text-2xl" style="font-size: 2rem;"></i>
         </div>
         <h3 class="text-lg font-bold text-slate-800">
           Selecione uma avaliação

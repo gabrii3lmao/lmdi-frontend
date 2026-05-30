@@ -7,7 +7,7 @@ import SendEmailReset from "@/views/auth/SendEmailReset.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
 import TurmasDashboard from "@/views/TurmasDashboard.vue";
 import Duvidas from "@/views/utils/Duvidas.vue";
-import ModeloProva from "@/views/ModeloProva.vue";
+import ModeloProva from "@/views/Gabaritos.vue";
 // @ts-ignore
 import Turma from "../views/Turma.vue";
 import NotFound from "@/views/utils/NotFound.vue"; // <-- Nova importação
@@ -18,37 +18,37 @@ const routes = [
     path: "/signin",
     name: "login",
     component: Login,
-    meta: { hideSidebar: true, title: "Login" },
+    meta: { hideSidebar: true},
   },
   {
     path: "/signup",
     name: "register",
     component: Cadastro,
-    meta: { hideSidebar: true, title: "Signup" },
+    meta: { hideSidebar: true},
   },
   {
     path: "/",
     name: "home",
     component: Home,
-    meta: { requiresAuth: true, title: "Home"},
+    meta: { requiresAuth: true},
   },
   {
     path: "/forgot-password",
     name: "forgot-password",
     component: SendEmailReset,
-    meta: { hideSidebar: true, title: "Forgot Password" }, 
+    meta: { hideSidebar: true}, 
   },
   {
     path: "/reset-password/:token",
     name: "reset-password",
     component: ResetPassword,
-    meta: { hideSidebar: true, title: "Reset Password" }, 
+    meta: { hideSidebar: true}, 
   },
   {
     path: "/classes",
     name: "showclasses",
     component: TurmasDashboard,
-    meta: { requiresAuth: true, title: "Classes" },
+    meta: { requiresAuth: true, title: "Minhas Turmas" },
   },
   {
     path: "/faq",
@@ -60,26 +60,26 @@ const routes = [
     path: "/templates",
     name: "modelo-provas",
     component: ModeloProva,
-    meta: { requiresAuth: true, title: "Gabaritos" },
+    meta: { requiresAuth: true, title: "Meus Gabaritos" },
   },
   {
     path: `/classes/:id`,
     name: "provas-turma",
     component: Turma,
-    meta: { requiresAuth: true, title: "Classes" },
+    meta: { requiresAuth: true, title: "Provas da Turma" },
   },
   {
     path: "/submissions",
     name: "submissoes",
     component: Submissoes,
-    meta: { requiresAuth: true, title: "Submissões" },
+    meta: { requiresAuth: true, title: "Submissões dos Alunos" },
   },
 
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFound,
-    meta: { hideSidebar: true }, // Esconde a sidebar para a tela de erro ficar limpa
+    meta: { hideSidebar: true, title: "Página Não Encontrada" }, // Esconde a sidebar para a tela de erro ficar limpa
   },
 ];
 
@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
     return next("/signin");
   }
 
-  const baseTitle = 'Meu App';
+  const baseTitle = 'Let Me Do It | Gestão de Provas e Submissões';
   const pageTitle = to.meta.title as string;
   
   document.title = pageTitle ? pageTitle : baseTitle;
