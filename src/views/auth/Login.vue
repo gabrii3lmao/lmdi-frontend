@@ -23,7 +23,7 @@ const callbackGoogle = async (response: any) => {
     localStorage.setItem("token", res.data.token);
     localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    router.push("/turmas-dashboard");
+    router.push("/");
   } catch (error) {
     errorMessage.value =
       "Não foi possível realizar o login com o Google. Tente novamente mais tarde.";
