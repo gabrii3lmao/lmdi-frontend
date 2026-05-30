@@ -8,8 +8,16 @@ import ConfirmationService from "primevue/confirmationservice";
 import Aura from "@primevue/themes/aura";
 import { createPinia } from "pinia";
 import "primeicons/primeicons.css";
+import vue3GoogleLogin from "vue3-google-login";
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 const app = createApp(App);
 const pinia = createPinia();
+
+app.use(vue3GoogleLogin, {
+  clientId: googleClientId
+});
 
 app.use(ConfirmationService);
 app.use(ToastService);

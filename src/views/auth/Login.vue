@@ -3,6 +3,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
+import { GoogleLogin } from "vue3-google-login";
 
 // Lógica de Autenticação
 const email = ref("");
@@ -10,6 +11,26 @@ const password = ref("");
 const isLoading = ref(false);
 const errorMessage = ref("");
 const router = useRouter();
+
+const callbackGoogle = async (response: any) => {
+  errorMessage.value = "";
+  isLoading.value = true;
+  try {
+    const res = await api.post("/auth/google", {
+      token: response.credential,
+    });
+
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+
+    router.push("/turmas-dashboard");
+  } catch (error) {
+    errorMessage.value =
+      "Não foi possível realizar o login com o Google. Tente novamente mais tarde.";
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 async function handleLogin() {
   isLoading.value = true;
@@ -169,6 +190,10 @@ onUnmounted(() => {
             <span>{{ isLoading ? "Entrando..." : "Entrar na conta" }}</span>
           </button>
         </form>
+
+        <p class="text-slate-500 text-sm my-4">Ou</p>
+
+        <GoogleLogin :callback="callbackGoogle" />
 
         <p class="mt-8 text-center text-sm text-slate-500">
           Ainda não tem uma conta?
