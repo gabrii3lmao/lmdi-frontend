@@ -24,7 +24,6 @@ const callbackGoogle = async (response: any) => {
     localStorage.setItem("username", res.data.user.name);
     localStorage.setItem("userId", res.data.user.id);
 
-
     router.push("/");
   } catch (error) {
     errorMessage.value =
@@ -193,9 +192,13 @@ onUnmounted(() => {
           </button>
         </form>
 
-        <p class="text-slate-500 text-sm my-4">Ou</p>
-
-        <GoogleLogin :callback="callbackGoogle" />
+        <!-- Google Login -->
+        <p class="text-slate-500 align-center text-sm my-4">Ou</p>
+        <div class="w-full flex items-center justify-center mb-4">
+          <div class="w-full h-px bg-slate-200">
+            <GoogleLogin :callback="callbackGoogle" />
+          </div>
+        </div>
 
         <p class="mt-8 text-center text-sm text-slate-500">
           Ainda não tem uma conta?
