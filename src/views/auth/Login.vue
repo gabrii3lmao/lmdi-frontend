@@ -21,7 +21,9 @@ const callbackGoogle = async (response: any) => {
     });
 
     localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+    localStorage.setItem("username", JSON.stringify(res.data.user.name));
+    localStorage.setItem("userId", JSON.stringify(res.data.user.id));
+
 
     router.push("/");
   } catch (error) {
