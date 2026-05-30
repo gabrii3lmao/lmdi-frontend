@@ -21,8 +21,8 @@ const callbackGoogle = async (response: any) => {
     });
 
     localStorage.setItem("token", res.data.token);
-    localStorage.setItem("username", JSON.stringify(res.data.user.name));
-    localStorage.setItem("userId", JSON.stringify(res.data.user.id));
+    localStorage.setItem("username", res.data.user.name);
+    localStorage.setItem("userId", res.data.user.id);
 
 
     router.push("/");
