@@ -17,7 +17,7 @@ const callbackGoogle = async (response: any) => {
   isLoading.value = true;
   try {
     const res = await api.post("/auth/google", {
-      token: response.credential,
+      credential: response.credential,
     });
 
     localStorage.setItem("token", res.data.token);
