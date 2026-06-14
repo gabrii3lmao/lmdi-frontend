@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/vue-query"; // Importação importante
 import ExamHeader from "@/components/Exams/ExamHeader.vue";
 import ExamActionCards from "@/components/Exams/ExamActionCards.vue";
 import SubmissionsList from "@/components/Submissions/SubmissionsList.vue";
+import Pagination from "@/components/common/Pagination.vue";
 import GabaritoOficialModal from "@/components/Exams/GabaritoOficialModal.vue";
 import AdicionarAlunoModal from "@/components/Submissions/AdicionarAlunoModal.vue";
 
@@ -20,7 +21,7 @@ const queryClient = useQueryClient(); // Inicializa o QueryClient
 const classIdAtual = ref(route.params.id);
 
 // Note que aqui só extraímos as variáveis reativas, o Vue Query faz o resto!
-const { examIdSelecionado, provasDaTurma, submissoes, enviando } = useExams(
+const { examIdSelecionado, provasDaTurma, submissoes, enviando, page, totalPages, totalItems, changePage } = useExams(
   classIdAtual.value,
 );
 
@@ -122,22 +123,38 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans relative overflow-hidden"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 font-sans flex flex-col"
   >
-    <div class="max-w-6xl mx-auto space-y-8">
-      <ExamHeader
-        v-model="examIdSelecionado"
-        :class-id="classIdAtual"
-        :provas="provasDaTurma"
-      />
+    <div class="flex-1 p-6 md:p-10">
+      <div class="max-w-6xl mx-auto space-y-8">
+        <ExamHeader
+          v-model="examIdSelecionado"
+          :class-id="classIdAtual"
+          :provas="provasDaTurma"
+        />
 
-      <ExamActionCards
-        :has-active-exam="!!examIdSelecionado"
-        @open-gabarito="modalGabarito = true"
-        @open-aluno="modalAluno = true"
-      />
+        <ExamActionCards
+          :has-active-exam="!!examIdSelecionado"
+          @open-gabarito="modalGabarito = true"
+          @open-aluno="modalAluno = true"
+        />
 
-      <SubmissionsList :exam-id="examIdSelecionado" :submissoes="submissoes" />
+        <SubmissionsList :exam-id="examIdSelecionado" :submissoes="submissoes" />
+      </div>
+    </div>
+
+    <div
+      v-if="examIdSelecionado && submissoes.length > 0"
+      class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 md:px-10"
+    >
+      <div class="max-w-6xl mx-auto py-3">
+        <Pagination
+          :currentPage="page"
+          :totalPages="totalPages"
+          :totalItems="totalItems"
+          @page-change="changePage"
+        />
+      </div>
     </div>
 
     <GabaritoOficialModal

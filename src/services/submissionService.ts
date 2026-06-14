@@ -1,13 +1,16 @@
 import api from "./api";
 
 export const submissionService = {
-  getAllSubmission: (examId: string) =>
+  getAllSubmission: (examId: string, page?: number, limit?: number) =>
     api.get("/submissions", {
       params: {
-        examId: examId,
+        examId,
+        page,
+        limit,
       },
     }),
-  getSubmissionsByClass: (classId: string) => api.get(`/submissions/class/${classId}`),
+  getSubmissionsByClass: (classId: string, page?: number, limit?: number) =>
+    api.get(`/submissions/class/${classId}`, { params: { page, limit } }),
 
   listarSubmissao: (id: string) => api.get(`/submissions/${id}`),
   criarSubmissao: (examId: string, dados: { nome: string; arquivo: File }) => {

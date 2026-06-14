@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/vue-query"; // <-- Importação do TanStack 
 import SubmissionFilters from "@/components/Submissions/SubmissionFilters.vue";
 import SubmissionTable from "@/components/Submissions/SubmissionTable.vue";
 import SubmissionDrawer from "@/components/Submissions/SubmissionDrawer.vue";
+import Pagination from "@/components/common/Pagination.vue";
 import { submissionService } from "@/services/submissionService";
 import { turmaService } from "@/services/turmas";
 import { examService } from "@/services/examService";
@@ -22,12 +23,18 @@ const selectedSubmission = ref<Submission | null>(null);
 const isDrawerOpen = ref(false);
 const loadingAnswers = ref(false);
 
+const page = ref(1);
+const limit = ref(10);
+const totalItems = ref(0);
+const totalPages = ref(0);
+
 // 1. Query das Turmas (Cache Compartilhado Global)
 const { data: turmas, isLoading: loadingTurmas } = useQuery({
   queryKey: ["turmas"],
   queryFn: async () => {
-    const res = await turmaService.getAll();
-    return res.data || [];
+    const res = await turmaService.getAll(1, 100);
+    const paginated = res.data as any;
+    return paginated?.data || paginated || [];
   },
   initialData: [],
 });
@@ -36,8 +43,9 @@ const { data: turmas, isLoading: loadingTurmas } = useQuery({
 const { data: exams, isLoading: loadingExams } = useQuery({
   queryKey: ["provas", selectedClassId],
   queryFn: async () => {
-    const res = await examService.listarGabaritosMestre(selectedClassId.value);
-    return res.data || [];
+    const res = await examService.listarGabaritosMestre(selectedClassId.value, 1, 100);
+    const paginated = res.data as any;
+    return paginated?.data || paginated || [];
   },
   enabled: computed(() => !!selectedClassId.value), // Só executa se tiver turma
   initialData: [],
@@ -45,10 +53,20 @@ const { data: exams, isLoading: loadingExams } = useQuery({
 
 // 3. Query das Submissões (Dependente da Prova selecionada)
 const { data: submissions, isLoading: loadingSubmissions } = useQuery({
-  queryKey: ["submissoes", selectedExamId],
+  queryKey: ["submissoes", selectedExamId, page, limit],
   queryFn: async () => {
-    const res = await submissionService.getAllSubmission(selectedExamId.value);
-    return res.data || [];
+    const res = await submissionService.getAllSubmission(
+      selectedExamId.value,
+      page.value,
+      limit.value,
+    );
+    const paginated = res.data as any;
+    if (paginated?.data) {
+      totalItems.value = paginated.totalItems;
+      totalPages.value = paginated.totalPages;
+      return paginated.data;
+    }
+    return paginated || [];
   },
   enabled: computed(() => !!selectedExamId.value), // Só executa se tiver prova
   initialData: [],
@@ -57,17 +75,23 @@ const { data: submissions, isLoading: loadingSubmissions } = useQuery({
 // Limpa a prova selecionada ao trocar de turma
 watch(selectedClassId, () => {
   selectedExamId.value = "";
+  page.value = 1;
+});
+
+watch(selectedExamId, () => {
+  page.value = 1;
 });
 
 // Variáveis computadas derivadas das Queries
 const activeExam = computed(() => {
-  return exams.value.find((e: Exam) => e._id === selectedExamId.value) || null;
+  return (exams.value || []).find((e: Exam) => e._id === selectedExamId.value) || null;
 });
 
 const averageScore = computed(() => {
-  if (submissions.value.length === 0) return "-";
+  const list = submissions.value || [];
+  if (list.length === 0) return "-";
 
-  const gradedSubmissions = submissions.value.filter(
+  const gradedSubmissions = list.filter(
     (s: Submission) => s.score !== undefined,
   );
   if (gradedSubmissions.length === 0) return "-";
@@ -106,130 +130,147 @@ const openStudentDetails = async (sub: Submission) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-8 font-sans"
+    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 font-sans flex flex-col"
   >
-    <div class="max-w-7xl mx-auto">
-      <div class="flex justify-between items-center mb-6">
-        <div>
-          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
-            Submissões
-          </h1>
-          <p class="text-slate-500 text-sm mt-1">
-            Gerencie os cartões-resposta enviados pelos alunos.
-          </p>
-        </div>
-      </div>
-
-      <SubmissionFilters
-        :turmas="turmas"
-        :exams="exams"
-        :selectedClassId="selectedClassId"
-        :selectedExamId="selectedExamId"
-        :loadingTurmas="loadingTurmas"
-        :loadingExams="loadingExams"
-        @update:selectedClassId="selectedClassId = $event"
-        @update:selectedExamId="selectedExamId = $event"
-      />
-
-      <div
-        v-if="activeExam && !loadingExams"
-        class="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-400/60 border border-slate-300 shadow-sm transition-all"
-      >
-        <div>
-          <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <i class="pi pi-file-edit text-emerald-600"></i>
-            {{ (activeExam as any).title || "Prova Selecionada" }}
-          </h2>
-          <p class="text-sm text-slate-500 mt-1">
-            Turma:
-            {{
-              turmas.find((t: Turma) => t._id === selectedClassId)?.name || "-"
-            }}
-          </p>
-        </div>
-
-        <div class="flex items-center gap-3 w-full sm:w-auto">
-          <div
-            class="flex-1 sm:flex-none bg-slate-50 px-5 py-2.5 rounded-xl border border-slate-200 flex flex-col items-center justify-center"
-          >
-            <span
-              class="text-xs text-slate-500 uppercase tracking-wider font-bold"
-              >Submissões</span
-            >
-            <span class="text-lg font-bold text-slate-800">{{
-              submissions.length
-            }}</span>
-          </div>
-          <div
-            class="flex-1 sm:flex-none bg-emerald-50 px-5 py-2.5 rounded-xl border border-emerald-100 flex flex-col items-center justify-center animate-pulse-slow"
-          >
-            <span
-              class="text-xs text-emerald-700 uppercase tracking-wider font-bold"
-              >Média (Nota)</span
-            >
-            <span class="text-lg font-bold text-emerald-700">{{
-              averageScore
-            }}</span>
+    <div class="flex-1 p-6 md:p-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+              Submissões
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">
+              Gerencie os cartões-resposta enviados pelos alunos.
+            </p>
           </div>
         </div>
-      </div>
 
-      <div
-        v-if="loadingSubmissions"
-        class="p-16 flex flex-col items-center justify-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm animate-pulse"
-      >
-        <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 mb-4"></i>
-        <span class="text-slate-500 text-sm font-semibold"
-          >Carregando submissões...</span
-        >
-      </div>
+        <SubmissionFilters
+          :turmas="turmas"
+          :exams="exams"
+          :selectedClassId="selectedClassId"
+          :selectedExamId="selectedExamId"
+          :loadingTurmas="loadingTurmas"
+          :loadingExams="loadingExams"
+          @update:selectedClassId="selectedClassId = $event"
+          @update:selectedExamId="selectedExamId = $event"
+        />
 
-      <SubmissionTable
-        v-else-if="submissions.length > 0"
-        :submissions="submissions"
-        @open="openStudentDetails"
-      />
-
-      <div
-        v-else-if="selectedExamId"
-        class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
-      >
         <div
-          class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-200 text-slate-400"
+          v-if="activeExam && !loadingExams"
+          class="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-400/60 border border-slate-300 shadow-sm transition-all"
         >
-          <i class="pi pi-inbox text-2xl" style="font-size: 2rem"></i>
-        </div>
-        <h3 class="text-lg font-bold text-slate-800">
-          Nenhuma submissão encontrada.
-        </h3>
-        <p class="text-sm text-slate-500 mt-1 font-medium">
-          Faça o upload de provas para esta avaliação.
-        </p>
-      </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <i class="pi pi-file-edit text-emerald-600"></i>
+              {{ (activeExam as any).title || "Prova Selecionada" }}
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Turma:
+              {{
+                (turmas || []).find((t: Turma) => t._id === selectedClassId)?.name || "-"
+              }}
+            </p>
+          </div>
 
-      <div
-        v-else
-        class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
-      >
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div
+              class="flex-1 sm:flex-none bg-slate-50 px-5 py-2.5 rounded-xl border border-slate-200 flex flex-col items-center justify-center"
+            >
+              <span
+                class="text-xs text-slate-500 uppercase tracking-wider font-bold"
+                >Submissões</span
+              >
+              <span class="text-lg font-bold text-slate-800">{{
+                totalItems || submissions.length
+              }}</span>
+            </div>
+            <div
+              class="flex-1 sm:flex-none bg-emerald-50 px-5 py-2.5 rounded-xl border border-emerald-100 flex flex-col items-center justify-center animate-pulse-slow"
+            >
+              <span
+                class="text-xs text-emerald-700 uppercase tracking-wider font-bold"
+                >Média (Nota)</span
+              >
+              <span class="text-lg font-bold text-emerald-700">{{
+                averageScore
+              }}</span>
+            </div>
+          </div>
+        </div>
+
         <div
-          class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-600"
+          v-if="loadingSubmissions"
+          class="p-16 flex flex-col items-center justify-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm animate-pulse"
         >
-          <i class="pi pi-filter text-2xl" style="font-size: 2rem"></i>
+          <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 mb-4"></i>
+          <span class="text-slate-500 text-sm font-semibold"
+            >Carregando submissões...</span
+          >
         </div>
-        <h3 class="text-lg font-bold text-slate-800">
-          Selecione uma avaliação
-        </h3>
-        <p class="text-sm text-slate-500 mt-1 font-medium">
-          Use os filtros acima para escolher a turma e a prova.
-        </p>
-      </div>
 
-      <SubmissionDrawer
-        :submission="selectedSubmission"
-        :exam="activeExam"
-        :open="isDrawerOpen"
-        @close="isDrawerOpen = false"
-      />
+        <div v-else-if="submissions.length > 0">
+          <SubmissionTable
+            :submissions="submissions"
+            @open="openStudentDetails"
+          />
+        </div>
+
+        <div
+          v-else-if="selectedExamId"
+          class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
+        >
+          <div
+            class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-200 text-slate-400"
+          >
+            <i class="pi pi-inbox text-2xl" style="font-size: 2rem"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">
+            Nenhuma submissão encontrada.
+          </h3>
+          <p class="text-sm text-slate-500 mt-1 font-medium">
+            Faça o upload de provas para esta avaliação.
+          </p>
+        </div>
+
+        <div
+          v-else
+          class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
+        >
+          <div
+            class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-600"
+          >
+            <i class="pi pi-filter text-2xl" style="font-size: 2rem"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">
+            Selecione uma avaliação
+          </h3>
+          <p class="text-sm text-slate-500 mt-1 font-medium">
+            Use os filtros acima para escolher a turma e a prova.
+          </p>
+        </div>
+
+        <SubmissionDrawer
+          :submission="selectedSubmission"
+          :exam="activeExam"
+          :open="isDrawerOpen"
+          @close="isDrawerOpen = false"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="submissions.length > 0"
+      class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 md:px-8"
+    >
+      <div class="max-w-7xl mx-auto py-3">
+        <Pagination
+          :currentPage="page"
+          :totalPages="totalPages"
+          :totalItems="totalItems"
+          @page-change="(p: number) => (page = p)"
+        />
+      </div>
     </div>
   </div>
 </template>

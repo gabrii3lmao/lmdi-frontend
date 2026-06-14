@@ -24,7 +24,7 @@ const callbackGoogle = async (response: any) => {
     localStorage.setItem("username", res.data.user.name);
     localStorage.setItem("userId", res.data.user.id);
 
-    router.push("/");
+    router.push("/dashboard");
   } catch (error) {
     errorMessage.value =
       "Não foi possível realizar o login com o Google. Tente novamente mais tarde.";
@@ -49,7 +49,7 @@ async function handleLogin() {
     localStorage.setItem("username", name);
     localStorage.setItem("userId", id);
 
-    router.push("/");
+    router.push("/dashboard");
   } catch (error: any) {
     if (error.response?.data) {
       const data = error.response.data;

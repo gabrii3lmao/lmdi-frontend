@@ -22,8 +22,9 @@ export function useGabaritos() {
   const { data: turmas, isLoading: carregandoTurmas } = useQuery({
     queryKey: ["turmas"],
     queryFn: async () => {
-      const resTurmas = await turmaService.getAll();
-      return (resTurmas.data || []) as Turma[];
+      const resTurmas = await turmaService.getAll(1, 100);
+      const paginated = resTurmas.data as any;
+      return (paginated?.data || paginated || []) as Turma[];
     },
     initialData: [],
   });
@@ -33,21 +34,22 @@ export function useGabaritos() {
     queryKey: [
       "todos-gabaritos",
       // Essa key recarrega os gabaritos automaticamente se uma turma nova for criada!
-      computed(() => turmas.value.map((t: Turma) => t._id).join(",")),
+      computed(() => (turmas.value || []).map((t: Turma) => t._id).join(",")),
     ],
     queryFn: async () => {
       if (!turmas.value || turmas.value.length === 0) return [];
 
       const promisesGabaritos = turmas.value.map(async (turma: Turma) => {
-        const res = await examService.listarGabaritosMestre(turma._id);
-        return res.data || [];
+        const res = await examService.listarGabaritosMestre(turma._id, 1, 100);
+        const paginated = res.data as any;
+        return paginated?.data || paginated || [];
       });
 
       const resultadosArray = await Promise.all(promisesGabaritos);
       return resultadosArray.flat() as Template[];
     },
     // O fetch só é disparado se existir pelo menos uma turma carregada
-    enabled: computed(() => turmas.value.length > 0),
+    enabled: computed(() => (turmas.value || []).length > 0),
     initialData: [],
   });
 

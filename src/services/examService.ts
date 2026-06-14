@@ -16,8 +16,8 @@ export const examService = {
       answerKey,
     }),
 
-  listarGabaritosMestre: (classId: string) =>
-    api.get(`/exams/class/${classId}`),
+  listarGabaritosMestre: (classId: string, page?: number, limit?: number) =>
+    api.get(`/exams/class/${classId}`, { params: { page, limit } }),
 
   atualizarGabarito: (examData: Partial<Exam> & { _id: string }) =>
     api.put(`/exams/${examData._id}`, examData),

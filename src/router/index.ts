@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/auth/Login.vue";
 import Cadastro from "@/views/auth/Cadastro.vue";
 import Home from "@/views/Home.vue";
+import Landing from "@/views/Landing.vue";
 import SendEmailReset from "@/views/auth/SendEmailReset.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
 import TurmasDashboard from "@/views/TurmasDashboard.vue";
@@ -15,6 +16,18 @@ import Submissoes from "@/views/Submissoes.vue";
 
 const routes = [
   {
+    path: "/",
+    name: "landing",
+    component: Landing,
+    meta: { hideSidebar: true },
+  },
+  {
+    path: "/dashboard",
+    name: "home",
+    component: Home,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/signin",
     name: "login",
     component: Login,
@@ -25,12 +38,6 @@ const routes = [
     name: "register",
     component: Cadastro,
     meta: { hideSidebar: true},
-  },
-  {
-    path: "/",
-    name: "home",
-    component: Home,
-    meta: { requiresAuth: true},
   },
   {
     path: "/forgot-password",

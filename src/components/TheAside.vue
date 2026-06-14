@@ -108,7 +108,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
             class="h-20 flex items-center justify-between px-6 border-b border-slate-100 shrink-0"
           >
             <RouterLink
-              to="/"
+              to="/dashboard"
               class="flex flex-col justify-center group outline-none"
               @click="closeCallback"
             >
@@ -147,7 +147,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
               <ul class="space-y-1">
                 <li>
                   <RouterLink
-                    to="/"
+                    to="/dashboard"
                     :class="navItemClass"
                     :active-class="activeNavClass"
                     @click="closeCallback"
@@ -302,7 +302,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
         class="h-20 flex items-center justify-between px-6 border-b border-slate-100 shrink-0"
       >
         <RouterLink
-          to="/"
+          to="/dashboard"
           class="flex flex-col justify-center group outline-none"
         >
           <div class="flex items-baseline gap-1">
@@ -334,7 +334,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
           <ul class="space-y-1">
             <li>
               <RouterLink
-                to="/"
+                to="/dashboard"
                 :class="navItemClass"
                 :active-class="activeNavClass"
               >

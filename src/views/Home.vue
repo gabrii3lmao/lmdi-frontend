@@ -37,31 +37,36 @@ function carregarNomeUsuario() {
 const { data: turmasData, isLoading: loading } = useQuery({
   queryKey: ["turmas"],
   queryFn: async () => {
-    const { data } = await turmaService.getAll();
-    return data || [];
+    const { data } = await turmaService.getAll(1, 100);
+    const paginated = data as any;
+    return (paginated?.data || paginated || []) as Turma[];
   },
   initialData: [],
 });
 
 // Inverte a ordem apenas para a visualização do Dashboard, usando uma cópia para não mutar o cache
-const turmas = computed(() => [...turmasData.value].reverse());
+const turmas = computed(() => {
+  const list = turmasData.value || [];
+  return [...list].reverse();
+});
 
 // 2. Busca as submissões APENAS quando as turmas terminarem de carregar (Query Dependente)
 const { data: totalSubmissoes } = useQuery({
   // A chave da query inclui os IDs das turmas, se criar turma nova, ele recalcula as submissões!
   queryKey: [
     "dashboard-submissoes",
-    computed(() => turmasData.value.map((t: Turma) => t._id).join(",")),
+    computed(() => (turmasData.value || []).map((t: Turma) => t._id).join(",")),
   ],
   queryFn: async () => {
-    const promises = turmasData.value.map((turma: Turma) =>
+    const list = turmasData.value || [];
+    const promises = list.map((turma: Turma) =>
       submissionService.getSubmissionsByClass(turma._id),
     );
     const responses = await Promise.all(promises);
     return responses.reduce((acc, res) => acc + (res.data?.length || 0), 0);
   },
   // O Vue Query só executa essa requisição se existirem turmas
-  enabled: computed(() => turmasData.value.length > 0),
+  enabled: computed(() => (turmasData.value || []).length > 0),
   initialData: 0,
 });
 

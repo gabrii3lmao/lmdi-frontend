@@ -22,7 +22,7 @@ const classIdSelecionadaParaNovoGabarito = ref("");
 const templateEmEdicao = ref<any>(null);
 
 const openModalParaCriar = () => {
-  if (turmas.value.length === 0) {
+  if (!turmas.value || turmas.value.length === 0) {
     toast.add({
       severity: "warn",
       summary: "Aviso",

@@ -5,10 +5,10 @@ import ConfirmDialog from "primevue/confirmdialog";
 </script>
 
 <template>
-  <main class="min-h-screen bg-white flex flex-col justify-center">
-    <TheAside />
-    <Toast />
-    <ConfirmDialog />
-    <RouterView />
-  </main>
+    <main class="min-h-screen bg-white flex flex-col justify-center">
+        <TheAside />
+        <Toast />
+        <ConfirmDialog />
+        <RouterView />
+    </main>
 </template>
