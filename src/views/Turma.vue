@@ -83,41 +83,46 @@ const handleProcessarGabaritoAluno = async (dados) => {
   }
 
   enviando.value = true;
-  try {
-    await submissionService.criarSubmissao(examIdSelecionado.value, dados);
+  let sucessos = 0;
+  let erros = 0;
 
+  for (const item of dados.itens) {
+    try {
+      await submissionService.criarSubmissao(examIdSelecionado.value, {
+        nome: item.nome,
+        arquivo: item.arquivo,
+      });
+      sucessos++;
+    } catch {
+      erros++;
+    }
+  }
+
+  if (sucessos > 0) {
     toast.add({
       severity: "success",
       summary: "Correção Iniciada",
-      detail: "Imagem enviada! Correção em segundo plano.",
+      detail: `${sucessos} gabarito${sucessos !== 1 ? "s" : ""} enviado${sucessos !== 1 ? "s" : ""} com sucesso!`,
       life: 3000,
     });
 
     modalAluno.value = false;
 
-    // Invalida o cache das submissões. Como tem uma nova "pendente",
-    // o refetchInterval de 3 segundos do useExams vai começar automaticamente!
     queryClient.invalidateQueries({
       queryKey: ["submissoes", examIdSelecionado.value],
     });
-  } catch (error) {
-    let msgErro = error.response?.data?.error || "Erro no upload do gabarito.";
+  }
 
-    if (error.response?.data?.errors && error.response.data.errors.length > 0) {
-      msgErro = error.response.data.errors[0].message;
-    } else if (error.response?.data?.message) {
-      msgErro = error.response.data.message;
-    }
-
+  if (erros > 0) {
     toast.add({
       severity: "error",
       summary: "Erro",
-      detail: msgErro,
+      detail: `${erros} gabarito${erros !== 1 ? "s" : ""} não pode${erros !== 1 ? "m" : ""} ser enviado${erros !== 1 ? "s" : ""}. Tente novamente.`,
       life: 4000,
     });
-  } finally {
-    enviando.value = false;
   }
+
+  enviando.value = false;
 };
 </script>
 

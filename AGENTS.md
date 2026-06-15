@@ -32,13 +32,6 @@ No tests, no linter, no formatter, no CI (no `.github/workflows`).
 - **Icons**: PrimeIcons (`pi-*` class names)
 - **Path alias**: `@` → `./src`
 
-## Env
-
-```
-VITE_BACKEND_URL=https://lmdi.onrender.com/api
-VITE_GOOGLE_CLIENT_ID=...
-```
-
 Dev API: `http://localhost:3000/api` (hardcoded in `api.ts`). Prod API: `VITE_BACKEND_URL` env var.
 
 ## Project structure
