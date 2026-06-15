@@ -137,7 +137,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
             </button>
           </div>
 
-          <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+          <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar min-h-0">
             <div class="mb-6">
               <h3
                 class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
@@ -267,7 +267,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
             </div>
           </nav>
 
-          <div class="p-4 border-t border-slate-100 bg-slate-50">
+          <div class="p-4 border-t border-slate-100 bg-slate-50 shrink-0">
             <div class="flex items-center gap-3 mb-4 px-2">
               <Avatar
                 :label="name.charAt(0) || 'P'"
@@ -324,7 +324,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
         </RouterLink>
       </div>
 
-      <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+      <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar min-h-0">
         <div class="mb-6">
           <h3
             class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
@@ -446,7 +446,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
         </div>
       </nav>
 
-      <div class="p-4 border-t border-slate-100 bg-slate-50">
+      <div class="p-4 border-t border-slate-100 bg-slate-50 shrink-0">
         <div class="flex items-center gap-3 mb-4 px-2">
           <Avatar
             :label="name.charAt(0) || 'P'"
