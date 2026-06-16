@@ -13,6 +13,7 @@ import ModeloProva from "@/views/Gabaritos.vue";
 import Turma from "../views/Turma.vue";
 import NotFound from "@/views/utils/NotFound.vue"; // <-- Nova importação
 import Submissoes from "@/views/Submissoes.vue";
+import Configuracoes from "@/views/Configuracoes.vue";
 
 const routes = [
   {
@@ -83,10 +84,17 @@ const routes = [
   },
 
   {
+    path: "/settings",
+    name: "configuracoes",
+    component: Configuracoes,
+    meta: { requiresAuth: true, title: "Configurações" },
+  },
+
+  {
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFound,
-    meta: { hideSidebar: true, title: "Página Não Encontrada" }, // Esconde a sidebar para a tela de erro ficar limpa
+    meta: { hideSidebar: true, title: "Página Não Encontrada" },
   },
 ];
 

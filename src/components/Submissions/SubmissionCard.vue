@@ -9,11 +9,11 @@ defineProps({
 
 <template>
   <div
-    class="bg-white border p-5 rounded-2xl flex flex-col justify-between hover:border-emerald-500/30 hover:shadow-lg transition-all shadow-sm relative overflow-hidden"
+    class="bg-white dark:bg-slate-800 border p-5 rounded-2xl flex flex-col justify-between hover:border-emerald-500/30 hover:shadow-lg transition-all shadow-sm relative overflow-hidden"
     :class="
       submissao.status === 'pending'
-        ? 'border-amber-300 shadow-amber-500/5'
-        : 'border-slate-400/60 shadow-slate-100'
+        ? 'border-amber-300 dark:border-amber-700 shadow-amber-500/5'
+        : 'border-slate-400/60 dark:border-slate-600 shadow-slate-100'
     "
   >
     <!-- Animação de pulso se estiver pendente -->
@@ -24,17 +24,17 @@ defineProps({
 
     <div class="flex justify-between items-start mb-4">
       <div>
-        <h4 class="font-bold text-slate-800 truncate max-w-[150px]">
+        <h4 class="font-bold text-slate-800 dark:text-slate-100 truncate max-w-[150px]">
           {{ submissao.studentName }}
         </h4>
         <span
           :class="[
             'text-[10px] font-bold uppercase px-2 py-0.5 rounded flex items-center gap-1 inline-flex mt-1',
             submissao.status === 'success'
-              ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+              ? 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800'
               : submissao.status === 'pending'
-                ? 'bg-amber-50 text-amber-700 border border-amber-100'
-                : 'bg-red-50 text-red-700 border border-red-100',
+                ? 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-800'
+                : 'bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800',
           ]"
         >
           <i
@@ -58,10 +58,10 @@ defineProps({
       </div>
 
       <div class="text-right">
-        <p class="text-[10px] text-slate-400 uppercase font-bold">Nota</p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold">Nota</p>
         <p
           v-if="submissao.status === 'pending'"
-          class="text-2xl font-black text-slate-400"
+          class="text-2xl font-black text-slate-400 dark:text-slate-500"
         >
           -.-
         </p>
@@ -69,7 +69,7 @@ defineProps({
           v-else
           class="text-2xl font-black"
           :class="
-            submissao.status === 'success' ? 'text-emerald-600' : 'text-red-500'
+            submissao.status === 'success' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'
           "
         >
           {{
@@ -80,16 +80,16 @@ defineProps({
     </div>
 
     <div
-      class="pt-4 border-t flex justify-between items-center text-[11px] text-slate-400 border-slate-100"
+      class="pt-4 border-t flex justify-between items-center text-[11px] text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700"
     >
       <span v-if="submissao.status === 'pending'" class="italic font-medium">
         Aguardando IA...
       </span>
-      <span v-else class="font-medium text-slate-500">
-        Acertos: <b class="text-slate-800 font-extrabold">{{ submissao.totalCorrect ?? 0 }}</b>
+      <span v-else class="font-medium text-slate-500 dark:text-slate-400">
+        Acertos: <b class="text-slate-800 dark:text-slate-100 font-extrabold">{{ submissao.totalCorrect ?? 0 }}</b>
       </span>
 
-      <span class="font-mono text-slate-400">
+      <span class="font-mono text-slate-400 dark:text-slate-500">
         ID: {{ submissao._id.slice(-4).toUpperCase() }}
       </span>
     </div>

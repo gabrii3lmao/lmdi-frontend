@@ -98,10 +98,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white font-sans">
+  <div class="min-h-screen bg-white dark:bg-slate-900 font-sans">
     <!-- Navbar -->
     <header
-      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200"
+      class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
     >
       <div
         class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
@@ -112,18 +112,18 @@ onUnmounted(() => {
             alt="LetMeDoIt"
             class="h-9 w-auto"
           />
-        <p class="text-xl md:text-xl lg:text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Let me <span class="text-emerald-600">Do it</span></p>
+        <p class="text-xl md:text-xl lg:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">Let me <span class="text-emerald-600 dark:text-emerald-400">Do it</span></p>
         </RouterLink>
         <nav class="flex items-center gap-3">
           <RouterLink
             to="/signin"
-            class="px-5 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+            class="px-5 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
           >
             Entrar
           </RouterLink>
           <RouterLink
             to="/signup"
-            class="px-5 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-sm active:scale-95"
+            class="px-5 py-2 text-sm font-semibold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 rounded-lg transition-all shadow-sm active:scale-95"
           >
             Cadastre-se Grátis
           </RouterLink>
@@ -133,7 +133,7 @@ onUnmounted(() => {
 
     <!-- Hero -->
     <section
-      class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-emerald-50/50 to-white"
+      class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-emerald-50/50 to-white dark:from-slate-800 dark:to-slate-900"
     >
       <div
         class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-200/20 via-transparent to-transparent pointer-events-none"
@@ -147,14 +147,14 @@ onUnmounted(() => {
           class="max-w-3xl mx-auto text-center space-y-8"
         >
           <div
-            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold border border-emerald-200"
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-sm font-semibold border border-emerald-200 dark:border-emerald-700"
           >
             <i class="pi pi-sparkles text-xs"></i>
             Correção de provas por inteligência artificial
           </div>
 
           <h1
-            class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight"
+            class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight"
           >
             A maneira mais
             <span
@@ -165,7 +165,7 @@ onUnmounted(() => {
           </h1>
 
           <p
-            class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed"
+            class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
           >
             Crie gabaritos, fotografe os cartões-resposta e deixe a IA fazer a
             correção automaticamente. Economize horas de trabalho e acompanhe o
@@ -182,7 +182,7 @@ onUnmounted(() => {
             </RouterLink>
             <RouterLink
               to="/signin"
-              class="inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold text-slate-700 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 hover:border-slate-300 shadow-sm active:scale-95"
+              class="inline-flex items-center gap-2 px-8 py-3.5 text-base font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl transition-all border border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 shadow-sm active:scale-95"
             >
               Já tenho conta
             </RouterLink>
@@ -192,10 +192,10 @@ onUnmounted(() => {
         <!-- App screenshot -->
         <div class="mt-16 max-w-5xl mx-auto relative">
           <div
-            class="relative rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-200/50 overflow-hidden"
+            class="relative rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-slate-950/50 overflow-hidden"
           >
             <div
-              class="h-10 bg-slate-50 border-b border-slate-200 flex items-center gap-1.5 px-4"
+              class="h-10 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center gap-1.5 px-4"
             >
               <span class="w-3 h-3 rounded-full bg-red-400"></span>
               <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
@@ -222,16 +222,16 @@ onUnmounted(() => {
     </section>
 
     <!-- Features -->
-    <section class="py-20 md:py-28 bg-white">
+    <section class="py-20 md:py-28 bg-white dark:bg-slate-900">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center max-w-2xl mx-auto mb-16">
           <h2
-            class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4"
+            class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-4"
           >
             Tudo que você precisa para
-            <span class="text-emerald-600">gerenciar provas</span>
+            <span class="text-emerald-600 dark:text-emerald-400">gerenciar provas</span>
           </h2>
-          <p class="text-slate-500 text-lg">
+          <p class="text-slate-500 dark:text-slate-400 text-lg">
             Uma plataforma completa para educadores que querem economizar tempo
             e ter mais controle sobre o desempenho dos alunos.
           </p>
@@ -243,17 +243,17 @@ onUnmounted(() => {
           <div
             v-for="(f, i) in features"
             :key="i"
-            class="group relative bg-white rounded-2xl p-6 border border-slate-200 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300"
+            class="group relative bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300"
           >
             <div
-              class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300"
+              class="w-14 h-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300"
             >
               <i :class="['pi text-xl', f.icon]"></i>
             </div>
-            <h3 class="text-lg font-bold text-slate-800 mb-2">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">
               {{ f.title }}
             </h3>
-            <p class="text-sm text-slate-500 leading-relaxed">
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               {{ f.desc }}
             </p>
           </div>
@@ -262,15 +262,15 @@ onUnmounted(() => {
     </section>
 
     <!-- How it works -->
-    <section class="py-20 md:py-28 bg-slate-50">
+    <section class="py-20 md:py-28 bg-slate-50 dark:bg-slate-800/50">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center max-w-2xl mx-auto mb-16">
           <h2
-            class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4"
+            class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-4"
           >
             Como funciona
           </h2>
-          <p class="text-slate-500 text-lg">
+          <p class="text-slate-500 dark:text-slate-400 text-lg">
             Três passos simples para automatizar a correção das suas provas.
           </p>
         </div>
@@ -297,17 +297,17 @@ onUnmounted(() => {
               },
             ]"
             :key="i"
-            class="relative bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center"
+            class="relative bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm text-center"
           >
             <div
-              class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 mx-auto mb-6"
+              class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto mb-6"
             >
               <i :class="['pi text-2xl', step.icon]"></i>
             </div>
-            <h3 class="text-xl font-bold text-slate-800 mb-3">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3">
               {{ step.title }}
             </h3>
-            <p class="text-slate-500">
+            <p class="text-slate-500 dark:text-slate-400">
               {{ step.desc }}
             </p>
           </div>
@@ -316,20 +316,20 @@ onUnmounted(() => {
     </section>
 
     <!-- Testimonials -->
-    <section class="py-20 md:py-28 bg-white">
+    <section class="py-20 md:py-28 bg-white dark:bg-slate-900">
       <div class="max-w-5xl mx-auto px-6 text-center">
         <h2
-          class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4"
+          class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-4"
         >
-          Quem usa, <span class="text-emerald-600">recomenda</span>
+          Quem usa, <span class="text-emerald-600 dark:text-emerald-400">recomenda</span>
         </h2>
-        <p class="text-slate-500 text-lg max-w-xl mx-auto">
+        <p class="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto">
           Veja o que professores estão falando sobre o LetMeDoIt.
         </p>
 
         <div class="relative mt-12 max-w-2xl mx-auto">
           <div
-            class="bg-slate-50 rounded-3xl p-8 md:p-12 border border-slate-200"
+            class="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 md:p-12 border border-slate-200 dark:border-slate-700"
           >
             <div class="flex items-center justify-center gap-1 mb-6">
               <i
@@ -339,14 +339,14 @@ onUnmounted(() => {
               ></i>
             </div>
             <p
-              class="text-xl md:text-2xl text-slate-700 font-medium leading-relaxed italic mb-8"
+              class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 font-medium leading-relaxed italic mb-8"
             >
               "{{ depoimentos[currentSlide]!.quote }}"
             </p>
-            <p class="text-lg font-bold text-slate-900">
+            <p class="text-lg font-bold text-slate-900 dark:text-slate-100">
               {{ depoimentos[currentSlide]!.author }}
             </p>
-            <p class="text-sm text-slate-500 mt-1">
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
               {{ depoimentos[currentSlide]!.role }}
             </p>
 

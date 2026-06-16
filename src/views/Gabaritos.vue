@@ -160,17 +160,17 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans"
+    class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 p-6 md:p-10 font-sans"
   >
     <div class="max-w-6xl mx-auto space-y-8">
       <header
         class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
       >
         <div class="space-y-1">
-          <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+          <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
             Gabaritos Mestres
           </h1>
-          <p class="text-slate-500 text-sm">
+          <p class="text-slate-500 dark:text-slate-400 text-sm">
             Gerencie e crie as referências oficiais para a correção por IA.
           </p>
         </div>
@@ -181,7 +181,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
           <div class="relative w-full sm:w-64">
             <select
               v-model="classIdSelecionadaParaNovoGabarito"
-              class="w-full appearance-none bg-white ring-1 ring-slate-200 border border-slate-100 rounded-xl pl-4 pr-10 py-3 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer shadow-sm"
+              class="w-full appearance-none bg-white dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700 border border-slate-100 dark:border-slate-600 rounded-xl pl-4 pr-10 py-3 text-sm text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer shadow-sm"
             >
               <option value="" disabled>1. Selecione uma Turma</option>
               <option v-for="t in turmas" :key="t._id" :value="t._id">
@@ -189,14 +189,14 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
               </option>
             </select>
             <i
-              class="pi pi-chevron-down text-xs absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              class="pi pi-chevron-down text-xs absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none"
             ></i>
           </div>
 
           <button
             @click="openModalParaCriar"
             :disabled="!classIdSelecionadaParaNovoGabarito"
-            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-xl disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed hover:bg-emerald-700 shadow-lg shadow-emerald-600/10 disabled:shadow-none whitespace-nowrap active:scale-95"
+            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed hover:bg-emerald-700 dark:hover:bg-emerald-600 shadow-lg shadow-emerald-600/10 disabled:shadow-none whitespace-nowrap active:scale-95"
           >
             <i
               class="pi pi-plus text-xs transition-transform group-hover:rotate-90"
@@ -213,23 +213,23 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
         <div
           v-for="i in 4"
           :key="i"
-          class="h-48 bg-slate-200/50 ring-1 ring-slate-200/80 rounded-2xl animate-pulse"
+          class="h-48 bg-slate-200/50 dark:bg-slate-700/40 ring-1 ring-slate-200/80 dark:ring-slate-700/60 rounded-2xl animate-pulse"
         ></div>
       </div>
 
       <div
         v-else-if="templates.length === 0"
-        class="flex flex-col items-center justify-center py-20 bg-white ring-1 ring-slate-200/80 rounded-3xl border border-dashed border-slate-300 shadow-sm text-center px-4"
+        class="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 ring-1 ring-slate-200/80 dark:ring-slate-700 rounded-3xl border border-dashed border-slate-300 dark:border-slate-600 shadow-sm text-center px-4"
       >
         <div
-          class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 mb-4"
+          class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/40 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4"
         >
           <i class="pi pi-file-check text-2xl" style="font-size: 2rem"></i>
         </div>
-        <h3 class="text-lg font-bold text-slate-800 mb-1">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">
           Nenhum gabarito mestre
         </h3>
-        <p class="text-slate-500 text-sm max-w-xs font-medium">
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xs font-medium">
           Selecione uma turma e clique em "Novo Modelo" para criar a prova de
           referência.
         </p>

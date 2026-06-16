@@ -58,47 +58,45 @@ const toggleFaq = (index: number) => {
 </script>
 <template>
     <div
-        class="sm:ml-64 min-h-screen bg-white text-slate-800 p-8 overflow-y-auto"
+        class="sm:ml-64 min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-8 overflow-y-auto"
     >
         <div class="max-w-3xl mx-auto">
-            <!-- HEADER ATUALIZADO -->
+            <!-- HEADER -->
             <header class="text-center mb-12">
-                <!-- Contêiner maior e ícone com text-8xl -->
                 <div
-                    class="inline-flex items-center justify-center p-6 bg-indigo-50 rounded-full mb-6 shadow-sm border border-indigo-100"
+                    class="inline-flex items-center justify-center p-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-full mb-6 shadow-sm border border-indigo-100 dark:border-indigo-800"
                 >
                     <i
-                        class="pi pi-question-circle text-indigo-500"
+                        class="pi pi-question-circle text-indigo-500 dark:text-indigo-400"
                         style="font-size: 4rem"
                     ></i>
                 </div>
 
-                <h1 class="text-3xl font-bold">
+                <h1 class="text-3xl font-bold dark:text-slate-100">
                     Central de <span class="text-indigo-400">Ajuda</span>
                 </h1>
 
-                <p class="text-gray-500 mt-2">
+                <p class="text-gray-500 dark:text-slate-400 mt-2">
                     Tudo o que você precisa saber para dominar o Let me do it.
                 </p>
             </header>
-            <!-- FIM DO HEADER ATUALIZADO -->
 
             <div class="space-y-4">
                 <div
                     v-for="(faq, index) in faqs"
                     :key="index"
                     :class="[
-                        'bg-slate-50 border rounded-2xl overflow-hidden transition-all duration-300 border-l-4 border-l-indigo-500',
+                        'bg-slate-50 dark:bg-slate-800 border rounded-2xl overflow-hidden transition-all duration-300 border-l-4 border-l-indigo-500',
                         faq.open
                             ? 'border-indigo-500/40 shadow-lg shadow-indigo-500/5'
-                            : 'border-slate-200/80',
+                            : 'border-slate-200/80 dark:border-slate-700',
                     ]"
                 >
                     <button
                         @click="toggleFaq(index)"
-                        class="w-full p-5 text-left flex justify-between items-center hover:bg-slate-50 transition-colors"
+                        class="w-full p-5 text-left flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                     >
-                        <span class="font-semibold text-slate-800">
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">
                             {{ faq.question }}
                         </span>
 
@@ -111,9 +109,9 @@ const toggleFaq = (index: number) => {
                     <Transition name="accordion">
                         <div
                             v-if="faq.open"
-                            class="px-5 text-slate-600 text-sm leading-relaxed overflow-hidden"
+                            class="px-5 text-slate-600 dark:text-slate-400 text-sm leading-relaxed overflow-hidden"
                         >
-                            <div class="pt-4 pb-5 border-t border-slate-200/80">
+                            <div class="pt-4 pb-5 border-t border-slate-200/80 dark:border-slate-700">
                                 {{ faq.answer }}
                             </div>
                         </div>
@@ -122,14 +120,14 @@ const toggleFaq = (index: number) => {
             </div>
 
             <footer
-                class="mt-16 p-8 bg-indigo-600/10 border border-indigo-500/20 rounded-3xl text-center"
+                class="mt-16 p-8 bg-indigo-600/10 dark:bg-indigo-900/20 border border-indigo-500/20 dark:border-indigo-800 rounded-3xl text-center"
             >
-                <h3 class="font-bold text-lg mb-2">
+                <h3 class="font-bold text-lg mb-2 dark:text-slate-100">
                     Ainda precisa de suporte?
                 </h3>
 
                 <p
-                    class="bg-slate-100 text-gray-750 text-sm mb-6 inline-block px-4 py-1 rounded-lg mt-2"
+                    class="bg-slate-100 dark:bg-slate-700 text-gray-750 dark:text-slate-300 text-sm mb-6 inline-block px-4 py-1 rounded-lg mt-2"
                 >
                     Se sua dúvida não foi respondida, nossa equipe técnica pode
                     te ajudar.

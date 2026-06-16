@@ -10,6 +10,7 @@ import { createPinia } from "pinia";
 import "primeicons/primeicons.css";
 import vue3GoogleLogin from "vue3-google-login";
 import { VueQueryPlugin } from "@tanstack/vue-query";
+import { useThemeStore } from "@/stores/theme";
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -34,5 +35,8 @@ app.use(PrimeVue, {
 });
 
 app.use(router);
+
+const themeStore = useThemeStore();
+themeStore.init();
 
 app.mount("#app");

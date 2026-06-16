@@ -56,28 +56,26 @@ onMounted(() => {
   updateUsername();
 });
 
-// Atualizado para Tema Claro
 const navItemClass =
-  "flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-500 rounded-lg hover:bg-slate-50 hover:text-slate-900 group transition-all duration-200 border-l-2 border-transparent";
+  "flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60 hover:text-slate-900 dark:hover:text-slate-100 group transition-all duration-200 border-l-2 border-transparent";
 
-// Atualizado para Tema Claro (contraste ajustado)
-const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
+const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 dark:!bg-emerald-900/30 !border-emerald-500";
 </script>
 
 <template>
   <div v-if="showSidebar">
     <header
-      class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-40 flex items-center justify-between px-4 sm:hidden"
+      class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-40 flex items-center justify-between px-4 sm:hidden"
     >
       <div class="flex items-center gap-3">
         <button
           @click="toggleMenu"
           type="button"
-          class="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-all focus:outline-none"
+          class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all focus:outline-none"
         >
           <i class="pi pi-bars text-xl"></i>
         </button>
-        <span class="text-lg font-bold text-slate-900 tracking-tighter">
+        <span class="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tighter">
           LetMe<span class="text-emerald-500">DoIt</span>
         </span>
       </div>
@@ -97,15 +95,15 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
       :showCloseIcon="false"
       class="sm:hidden !border-none !p-0 !bg-transparent !shadow-none"
       :pt="{
-        mask: { class: 'bg-slate-900/50 backdrop-blur-sm' },
+        mask: { class: 'bg-slate-900/50 dark:bg-slate-950/70 backdrop-blur-sm' },
       }"
     >
       <template #container="{ closeCallback }">
         <div
-          class="w-64 h-screen bg-white border-r border-slate-200 shadow-2xl flex flex-col"
+          class="w-64 h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 shadow-2xl flex flex-col"
         >
           <div
-            class="h-20 flex items-center justify-between px-6 border-b border-slate-100 shrink-0"
+            class="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-700 shrink-0"
           >
             <RouterLink
               to="/dashboard"
@@ -114,7 +112,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
             >
               <div class="flex items-baseline gap-1">
                 <span
-                  class="text-2xl font-extrabold tracking-tighter text-slate-800 transition-colors group-hover:text-slate-950"
+                  class="text-2xl font-extrabold tracking-tighter text-slate-800 dark:text-slate-100 transition-colors group-hover:text-slate-950 dark:group-hover:text-white"
                 >
                   LetMe<span class="text-emerald-500">DoIt</span>
                 </span>
@@ -123,7 +121,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                 ></span>
               </div>
               <span
-                class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mt-0.5 font-bold"
+                class="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 mt-0.5 font-bold"
               >
                 Painel Docente
               </span>
@@ -131,7 +129,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <button
               @click="closeCallback"
-              class="text-slate-400 hover:text-slate-600 p-2"
+              class="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 p-2"
             >
               <i class="pi pi-times text-lg"></i>
             </button>
@@ -140,7 +138,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
           <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar min-h-0">
             <div class="mb-6">
               <h3
-                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
               >
                 Principal
               </h3>
@@ -172,7 +170,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
               >
                 Gestão de Provas
               </h3>
@@ -204,7 +202,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
               >
                 Análises (Em Breve)
               </h3>
@@ -236,7 +234,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
             <div class="mb-6">
               <h3
-                class="px-4 text-[0.6rem] font-bold text-slate-900 uppercase tracking-widest mb-3"
+                class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
               >
                 Suporte
               </h3>
@@ -261,32 +259,53 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                   >
                     <i class="pi pi-info-circle text-base"></i>
                     <span>Contato</span>
+                  </RouterLink> 
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3
+                class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
+              >
+                Conta
+              </h3>
+              <ul class="space-y-1">
+                <li>
+                  <RouterLink
+                    to="/settings"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
+                    @click="closeCallback"
+                  >
+                    <i class="pi pi-cog text-base"></i>
+                    <span>Configurações</span>
                   </RouterLink>
                 </li>
               </ul>
             </div>
           </nav>
 
-          <div class="p-4 border-t border-slate-100 bg-slate-50 shrink-0">
-            <div class="flex items-center gap-3 mb-4 px-2">
-              <Avatar
-                :label="name.charAt(0) || 'P'"
-                shape="circle"
-                class="!bg-emerald-100 !text-emerald-600 !border !border-emerald-200 !font-bold"
-                style="width: 2.25rem; height: 2.25rem"
-              />
-              <div class="flex flex-col min-w-0">
-                <span class="text-slate-800 text-sm font-semibold truncate">
-                  {{ name || "Professor" }}
-                </span>
-                <span class="text-slate-500 text-xs"> Docente </span>
-              </div>
+        <div class="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 shrink-0">
+          <div class="flex items-center gap-3 mb-4 px-2">
+            <Avatar
+              :label="name.charAt(0) || 'P'"
+              shape="circle"
+              class="!bg-emerald-100 dark:!bg-emerald-900/40 !text-emerald-600 dark:!text-emerald-400 !border !border-emerald-200 dark:!border-emerald-700 !font-bold"
+              style="width: 2.25rem; height: 2.25rem"
+            />
+            <div class="flex flex-col min-w-0">
+              <span class="text-slate-800 dark:text-slate-100 text-sm font-semibold truncate">
+                {{ name || "Professor" }}
+              </span>
+              <span class="text-slate-500 dark:text-slate-400 text-xs"> Docente </span>
             </div>
+          </div>
 
-            <button
-              @click="handleSignout"
-              class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
-            >
+          <button
+            @click="handleSignout"
+            class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
+          >
               <i class="pi pi-sign-out"></i>
               <span>Encerrar Sessão</span>
             </button>
@@ -296,10 +315,10 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
     </Drawer>
 
     <aside
-      class="hidden sm:flex fixed top-0 left-0 z-50 w-64 h-screen bg-white border-r border-slate-200 shadow-sm flex-col"
+      class="hidden sm:flex fixed top-0 left-0 z-50 w-64 h-screen bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 shadow-sm flex-col"
     >
       <div
-        class="h-20 flex items-center justify-between px-6 border-b border-slate-100 shrink-0"
+        class="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-700 shrink-0"
       >
         <RouterLink
           to="/dashboard"
@@ -307,7 +326,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
         >
           <div class="flex items-baseline gap-1">
             <span
-              class="text-2xl font-extrabold tracking-tighter text-slate-800 transition-colors group-hover:text-slate-950"
+              class="text-2xl font-extrabold tracking-tighter text-slate-800 dark:text-slate-100 transition-colors group-hover:text-slate-950 dark:group-hover:text-white"
             >
               LetMe<span class="text-emerald-500">DoIt</span>
             </span>
@@ -317,7 +336,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
           </div>
 
           <span
-            class="text-[10px] uppercase tracking-[0.2em] text-slate-400 mt-0.5 font-bold"
+            class="text-[10px] uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mt-0.5 font-bold"
           >
             Painel Docente
           </span>
@@ -327,7 +346,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
       <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar min-h-0">
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
           >
             Principal
           </h3>
@@ -357,7 +376,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
           >
             Gestão de Provas
           </h3>
@@ -387,7 +406,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
           >
             Análise
           </h3>
@@ -417,7 +436,7 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
 
         <div class="mb-6">
           <h3
-            class="px-4 text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-3"
+            class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
           >
             Suporte
           </h3>
@@ -432,39 +451,59 @@ const activeNavClass = "!text-emerald-600 !bg-emerald-50 !border-emerald-500";
                 <span>Dúvidas</span>
               </RouterLink>
             </li>
-            <li>
-              <RouterLink
-                to="/support"
-                :class="navItemClass"
-                :active-class="activeNavClass"
-              >
-                <i class="pi pi-info-circle text-base"></i>
-                <span>Contato</span>
-              </RouterLink> 
-            </li>
-          </ul>
-        </div>
-      </nav>
+                <li>
+                  <RouterLink
+                    to="/support"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
+                  >
+                    <i class="pi pi-info-circle text-base"></i>
+                    <span>Contato</span>
+                  </RouterLink> 
+                </li>
+              </ul>
+            </div>
 
-      <div class="p-4 border-t border-slate-100 bg-slate-50 shrink-0">
+            <div class="mb-6">
+              <h3
+                class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
+              >
+                Conta
+              </h3>
+              <ul class="space-y-1">
+                <li>
+                  <RouterLink
+                    to="/settings"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
+                  >
+                    <i class="pi pi-cog text-base"></i>
+                    <span>Configurações</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+          <div class="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 shrink-0">
         <div class="flex items-center gap-3 mb-4 px-2">
           <Avatar
             :label="name.charAt(0) || 'P'"
             shape="circle"
-            class="!bg-emerald-100 !text-emerald-600 !border !border-emerald-200 !font-bold"
+            class="!bg-emerald-100 dark:!bg-emerald-900/40 !text-emerald-600 dark:!text-emerald-400 !border !border-emerald-200 dark:!border-emerald-700 !font-bold"
             style="width: 2.25rem; height: 2.25rem"
           />
           <div class="flex flex-col min-w-0">
-            <span class="text-slate-800 text-sm font-semibold truncate">
+            <span class="text-slate-800 dark:text-slate-100 text-sm font-semibold truncate">
               {{ name || "Professor" }}
             </span>
-            <span class="text-slate-500 text-xs"> Docente </span>
+            <span class="text-slate-500 dark:text-slate-400 text-xs"> Docente </span>
           </div>
         </div>
 
         <button
           @click="handleSignout"
-          class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
+          class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
         >
           <i class="pi pi-sign-out"></i>
           <span>Encerrar Sessão</span>

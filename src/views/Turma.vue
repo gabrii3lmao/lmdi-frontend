@@ -128,7 +128,7 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 font-sans flex flex-col"
+    class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-10">
       <div class="max-w-6xl mx-auto space-y-8">
@@ -150,7 +150,7 @@ const handleProcessarGabaritoAluno = async (dados) => {
 
     <div
       v-if="examIdSelecionado && submissoes.length > 0"
-      class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 md:px-10"
+      class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 px-6 md:px-10"
     >
       <div class="max-w-6xl mx-auto py-3">
         <Pagination

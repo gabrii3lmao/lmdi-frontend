@@ -140,7 +140,7 @@ function handleExcluir(id: string) {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 font-sans flex flex-col"
+    class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-10">
       <div class="max-w-6xl mx-auto space-y-8">
@@ -148,16 +148,16 @@ function handleExcluir(id: string) {
           class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
         >
           <div class="space-y-1">
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+            <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
               Suas Turmas
             </h1>
-            <p class="text-slate-500 text-sm">
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
               Gerencie suas classes e acompanhe os gabaritos processados.
             </p>
           </div>
           <button
             @click="abrirModalCriacao"
-            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95"
+            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg shadow-emerald-500/20 active:scale-95"
           >
             <i
               class="pi pi-plus text-xs transition-transform group-hover:rotate-90"
@@ -173,29 +173,29 @@ function handleExcluir(id: string) {
           <div
             v-for="i in 6"
             :key="i"
-            class="h-44 bg-slate-200/50 ring-1 ring-slate-200/80 rounded-2xl animate-pulse"
+            class="h-44 bg-slate-200/50 dark:bg-slate-700/40 ring-1 ring-slate-200/80 dark:ring-slate-700/60 rounded-2xl animate-pulse"
           ></div>
         </div>
 
         <div
           v-else-if="turmas.length === 0"
-          class="flex flex-col items-center justify-center py-20 bg-white ring-1 ring-slate-200/80 rounded-3xl border border-dashed border-slate-300 shadow-sm"
+          class="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 ring-1 ring-slate-200/80 dark:ring-slate-700 rounded-3xl border border-dashed border-slate-300 dark:border-slate-600 shadow-sm"
         >
           <div
-            class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 text-emerald-600"
+            class="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/40 rounded-full flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400"
           >
             <i class="pi pi-folder-open text-3xl" style="font-size: 2rem"></i>
           </div>
-          <h3 class="text-xl font-bold text-slate-800 mb-2">
+          <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
             Nenhuma turma encontrada
           </h3>
-          <p class="text-slate-500 text-sm mb-6 max-w-sm text-center font-medium">
+          <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 max-w-sm text-center font-medium">
             Você ainda não cadastrou nenhuma turma. Crie sua primeira turma para
             começar a corrigir gabaritos.
           </p>
           <button
             @click="abrirModalCriacao"
-            class="text-emerald-600 font-bold hover:text-emerald-700 transition-colors flex items-center gap-2"
+            class="text-emerald-600 dark:text-emerald-400 font-bold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2"
           >
             <i class="pi pi-plus-circle"></i> Criar primeira turma
           </button>
@@ -217,7 +217,7 @@ function handleExcluir(id: string) {
 
     <div
       v-if="!loading && turmas.length > 0"
-      class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 md:px-10"
+      class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 px-6 md:px-10"
     >
       <div class="max-w-6xl mx-auto py-3">
         <Pagination

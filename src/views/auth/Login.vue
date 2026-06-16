@@ -119,29 +119,29 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen w-full flex font-sans bg-white overflow-hidden">
+  <div class="min-h-screen w-full flex font-sans bg-white dark:bg-slate-900 overflow-hidden">
     <div
       class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative z-10"
     >
       <div class="w-full max-w-sm mx-auto">
         <div class="flex items-center gap-3 mb-10">
-          <span class="text-5xl font-extrabold text-slate-900 tracking-tight">
-            Let Me <span class="text-emerald-600">Do It!</span>
+          <span class="text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            Let Me <span class="text-emerald-600 dark:text-emerald-400">Do It!</span>
           </span>
         </div>
 
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-slate-900 mb-2 tracking-tight">
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2 tracking-tight">
             Bem-vindo de volta
           </h1>
-          <p class="text-slate-500 text-sm">
+          <p class="text-slate-500 dark:text-slate-400 text-sm">
             Insira suas credenciais para acessar o seu painel de gestão.
           </p>
         </div>
 
         <div
           v-if="errorMessage"
-          class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50/50 border border-red-100 text-red-700 transition-all"
+          class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50/50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-400 transition-all"
         >
           <i class="pi pi-exclamation-circle mt-0.5 shrink-0 text-red-500"></i>
           <p class="text-sm font-medium">{{ errorMessage }}</p>
@@ -149,7 +149,7 @@ onUnmounted(() => {
 
         <form class="space-y-5" @submit.prevent="handleLogin">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1.5">
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               E-mail
             </label>
             <input
@@ -157,18 +157,18 @@ onUnmounted(() => {
               type="email"
               placeholder="seu@email.com"
               required
-              class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+              class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
             />
           </div>
 
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700">
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Senha
               </label>
               <RouterLink
                 to="/forgot-password"
-                class="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+                class="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               >
                 Esqueceu a senha?
               </RouterLink>
@@ -178,14 +178,14 @@ onUnmounted(() => {
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+              class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
             />
           </div>
 
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full py-2.5 mt-2 rounded-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
+            class="w-full py-2.5 mt-2 rounded-lg font-semibold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
           >
             <i v-if="isLoading" class="pi pi-spin pi-spinner text-sm"></i>
             <span>{{ isLoading ? "Entrando..." : "Entrar na conta" }}</span>
@@ -195,10 +195,10 @@ onUnmounted(() => {
         <!-- Google Login -->
         <div class="relative my-8">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-slate-200"></div>
+            <div class="w-full border-t border-slate-200 dark:border-slate-700"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-3 bg-white text-slate-500 font-medium"
+            <span class="px-3 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-medium"
               >Ou continue com</span
             >
           </div>
@@ -210,11 +210,11 @@ onUnmounted(() => {
           <GoogleLogin :callback="callbackGoogle" />
         </div>
 
-        <p class="mt-8 text-center text-sm text-slate-500">
+        <p class="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
           Ainda não tem uma conta?
           <RouterLink
             to="/signup"
-            class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+            class="font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
           >
             Cadastre-se grátis
           </RouterLink>

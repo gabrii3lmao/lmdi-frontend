@@ -130,16 +130,16 @@ const openStudentDetails = async (sub: Submission) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 font-sans flex flex-col"
+    class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-8">
       <div class="max-w-7xl mx-auto">
         <div class="flex justify-between items-center mb-6">
           <div>
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+            <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
               Submissões
             </h1>
-            <p class="text-slate-500 text-sm mt-1">
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
               Gerencie os cartões-resposta enviados pelos alunos.
             </p>
           </div>
@@ -158,14 +158,14 @@ const openStudentDetails = async (sub: Submission) => {
 
         <div
           v-if="activeExam && !loadingExams"
-          class="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-400/60 border border-slate-300 shadow-sm transition-all"
+          class="bg-white dark:bg-slate-800 rounded-2xl p-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ring-1 ring-slate-400/60 dark:ring-slate-600 border border-slate-300 dark:border-slate-600 shadow-sm transition-all"
         >
           <div>
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-              <i class="pi pi-file-edit text-emerald-600"></i>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <i class="pi pi-file-edit text-emerald-600 dark:text-emerald-400"></i>
               {{ (activeExam as any).title || "Prova Selecionada" }}
             </h2>
-            <p class="text-sm text-slate-500 mt-1">
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
               Turma:
               {{
                 (turmas || []).find((t: Turma) => t._id === selectedClassId)?.name || "-"
@@ -175,24 +175,24 @@ const openStudentDetails = async (sub: Submission) => {
 
           <div class="flex items-center gap-3 w-full sm:w-auto">
             <div
-              class="flex-1 sm:flex-none bg-slate-50 px-5 py-2.5 rounded-xl border border-slate-200 flex flex-col items-center justify-center"
+              class="flex-1 sm:flex-none bg-slate-50 dark:bg-slate-700/50 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 flex flex-col items-center justify-center"
             >
               <span
-                class="text-xs text-slate-500 uppercase tracking-wider font-bold"
+                class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold"
                 >Submissões</span
               >
-              <span class="text-lg font-bold text-slate-800">{{
+              <span class="text-lg font-bold text-slate-800 dark:text-slate-100">{{
                 totalItems || submissions.length
               }}</span>
             </div>
             <div
-              class="flex-1 sm:flex-none bg-emerald-50 px-5 py-2.5 rounded-xl border border-emerald-100 flex flex-col items-center justify-center animate-pulse-slow"
+              class="flex-1 sm:flex-none bg-emerald-50 dark:bg-emerald-900/30 px-5 py-2.5 rounded-xl border border-emerald-100 dark:border-emerald-800 flex flex-col items-center justify-center animate-pulse-slow"
             >
               <span
-                class="text-xs text-emerald-700 uppercase tracking-wider font-bold"
+                class="text-xs text-emerald-700 dark:text-emerald-300 uppercase tracking-wider font-bold"
                 >Média (Nota)</span
               >
-              <span class="text-lg font-bold text-emerald-700">{{
+              <span class="text-lg font-bold text-emerald-700 dark:text-emerald-300">{{
                 averageScore
               }}</span>
             </div>
@@ -201,10 +201,10 @@ const openStudentDetails = async (sub: Submission) => {
 
         <div
           v-if="loadingSubmissions"
-          class="p-16 flex flex-col items-center justify-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm animate-pulse"
+          class="p-16 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-200/80 dark:ring-slate-700 border border-slate-100 dark:border-slate-700 shadow-sm animate-pulse"
         >
-          <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 mb-4"></i>
-          <span class="text-slate-500 text-sm font-semibold"
+          <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 dark:text-emerald-400 mb-4"></i>
+          <span class="text-slate-500 dark:text-slate-400 text-sm font-semibold"
             >Carregando submissões...</span
           >
         </div>
@@ -218,34 +218,34 @@ const openStudentDetails = async (sub: Submission) => {
 
         <div
           v-else-if="selectedExamId"
-          class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
+          class="p-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-200/80 dark:ring-slate-700 border border-slate-100 dark:border-slate-700 shadow-sm"
         >
           <div
-            class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 border border-slate-200 text-slate-400"
+            class="w-16 h-16 bg-slate-50 dark:bg-slate-700/50 rounded-full flex items-center justify-center mb-4 border border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-500"
           >
             <i class="pi pi-inbox text-2xl" style="font-size: 2rem"></i>
           </div>
-          <h3 class="text-lg font-bold text-slate-800">
+          <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">
             Nenhuma submissão encontrada.
           </h3>
-          <p class="text-sm text-slate-500 mt-1 font-medium">
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
             Faça o upload de provas para esta avaliação.
           </p>
         </div>
 
         <div
           v-else
-          class="p-16 flex flex-col items-center justify-center text-center bg-white rounded-2xl ring-1 ring-slate-200/80 border border-slate-100 shadow-sm"
+          class="p-16 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-200/80 dark:ring-slate-700 border border-slate-100 dark:border-slate-700 shadow-sm"
         >
           <div
-            class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-600"
+            class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/40 rounded-full flex items-center justify-center mb-4 text-emerald-600 dark:text-emerald-400"
           >
             <i class="pi pi-filter text-2xl" style="font-size: 2rem"></i>
           </div>
-          <h3 class="text-lg font-bold text-slate-800">
+          <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">
             Selecione uma avaliação
           </h3>
-          <p class="text-sm text-slate-500 mt-1 font-medium">
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
             Use os filtros acima para escolher a turma e a prova.
           </p>
         </div>
@@ -261,7 +261,7 @@ const openStudentDetails = async (sub: Submission) => {
 
     <div
       v-if="submissions.length > 0"
-      class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 md:px-8"
+      class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 px-6 md:px-8"
     >
       <div class="max-w-7xl mx-auto py-3">
         <Pagination
