@@ -133,7 +133,7 @@ const openStudentDetails = async (sub: Submission) => {
     class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-8">
-      <div class="max-w-7xl mx-auto">
+      <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto">
         <div class="flex justify-between items-center mb-6">
           <div>
             <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
@@ -263,7 +263,7 @@ const openStudentDetails = async (sub: Submission) => {
       v-if="submissions.length > 0"
       class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 px-6 md:px-8"
     >
-      <div class="max-w-7xl mx-auto py-3">
+      <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto py-3">
         <Pagination
           :currentPage="page"
           :totalPages="totalPages"

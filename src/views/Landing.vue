@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { RouterLink } from "vue-router";
+import { useThemeStore } from "@/stores/theme";
+import logLight from "@/assets/logo-dark.svg";
+import logDark from "@/assets/logo-white.png";
 
 const router = useRouter();
+const themeStore = useThemeStore();
+const logoSrc = computed(() =>
+  themeStore.theme === "dark" ? logDark : logLight,
+);
 
 const currentSlide = ref(0);
 let slideInterval: ReturnType<typeof setInterval>;
@@ -104,26 +111,26 @@ onUnmounted(() => {
       class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
     >
       <div
-        class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
+        class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2"
       >
-        <RouterLink to="/" class="flex items-center gap-3 group">
+        <RouterLink to="/" class="flex items-center gap-2 sm:gap-3 shrink-0">
           <img
-            src="/logo1.png"
+            :src="logoSrc"
             alt="LetMeDoIt"
-            class="h-9 w-auto"
+            class="h-8 sm:h-9 w-auto"
           />
-        <p class="text-xl md:text-xl lg:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">Let me <span class="text-emerald-600 dark:text-emerald-400">Do it</span></p>
+          <p class="text-base sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight whitespace-nowrap">Let me <span class="text-emerald-600 dark:text-emerald-400">Do it</span></p>
         </RouterLink>
-        <nav class="flex items-center gap-3">
+        <nav class="flex items-center gap-1.5 sm:gap-3">
           <RouterLink
             to="/signin"
-            class="px-5 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+            class="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors whitespace-nowrap"
           >
             Entrar
           </RouterLink>
           <RouterLink
             to="/signup"
-            class="px-5 py-2 text-sm font-semibold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 rounded-lg transition-all shadow-sm active:scale-95"
+            class="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 rounded-lg transition-all shadow-sm active:scale-95 whitespace-nowrap"
           >
             Cadastre-se Grátis
           </RouterLink>
@@ -142,7 +149,7 @@ onUnmounted(() => {
         class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-slate-200/20 via-transparent to-transparent pointer-events-none"
       ></div>
 
-      <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6 relative z-10">
         <div
           class="max-w-3xl mx-auto text-center space-y-8"
         >
@@ -263,7 +270,7 @@ onUnmounted(() => {
 
     <!-- How it works -->
     <section class="py-20 md:py-28 bg-slate-50 dark:bg-slate-800/50">
-      <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6">
         <div class="text-center max-w-2xl mx-auto mb-16">
           <h2
             class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-4"
@@ -393,15 +400,15 @@ onUnmounted(() => {
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400">
       <div
-        class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"
+        class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"
       >
         <!-- Brand -->
         <div class="space-y-4">
           <div class="flex items-center gap-2">
             <img
-              src="/logo1.png"
+              :src="logoSrc"
               alt="LetMeDoIt"
-              class="h-8 w-auto brightness-0 invert"
+              class="h-8 w-auto"
             />
           </div>
           <p class="text-sm text-slate-500 leading-relaxed max-w-xs">
@@ -541,7 +548,7 @@ onUnmounted(() => {
         class="border-t border-slate-800 py-6"
       >
         <div
-          class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3"
+          class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3"
         >
           <p class="text-xs text-slate-600">
             © 2026 LetMeDoIt. Todos os direitos reservados.

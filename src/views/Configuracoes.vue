@@ -23,7 +23,7 @@ onMounted(loadUser)
   <div
     class="sm:ml-64 min-h-screen bg-slate-50 text-slate-700 p-6 md:p-10 font-sans dark:bg-slate-900 dark:text-slate-300"
   >
-    <div class="max-w-3xl mx-auto space-y-8">
+    <div class="max-w-3xl 2xl:max-w-4xl mx-auto space-y-8">
       <header>
         <h1
           class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 tracking-tight"

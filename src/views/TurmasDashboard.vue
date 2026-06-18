@@ -143,7 +143,7 @@ function handleExcluir(id: string) {
     class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-10">
-      <div class="max-w-6xl mx-auto space-y-8">
+      <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto space-y-8">
         <header
           class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
         >
@@ -168,7 +168,7 @@ function handleExcluir(id: string) {
 
         <div
           v-if="loading"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
         >
           <div
             v-for="i in 6"
@@ -202,7 +202,7 @@ function handleExcluir(id: string) {
         </div>
 
         <div v-else>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
             <TurmaCard
               v-for="turma in turmas"
               :key="turma._id"
@@ -219,7 +219,7 @@ function handleExcluir(id: string) {
       v-if="!loading && turmas.length > 0"
       class="sticky bottom-0 bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700 px-6 md:px-10"
     >
-      <div class="max-w-6xl mx-auto py-3">
+      <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto py-3">
         <Pagination
           :currentPage="page"
           :totalPages="totalPages"

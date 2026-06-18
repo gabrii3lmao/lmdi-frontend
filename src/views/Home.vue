@@ -95,7 +95,7 @@ onMounted(() => {
   <div
     class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 p-6 md:p-10 font-sans"
   >
-    <div class="max-w-5xl mx-auto space-y-10">
+    <div class="max-w-5xl 2xl:max-w-7xl mx-auto space-y-10">
       <header
         class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
       >

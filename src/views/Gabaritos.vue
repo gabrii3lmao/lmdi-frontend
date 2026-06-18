@@ -162,7 +162,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
   <div
     class="sm:ml-64 min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 p-6 md:p-10 font-sans"
   >
-    <div class="max-w-6xl mx-auto space-y-8">
+    <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto space-y-8">
       <header
         class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
       >
@@ -208,7 +208,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
 
       <div
         v-if="loading"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6"
       >
         <div
           v-for="i in 4"
@@ -235,7 +235,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
         </p>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         <TemplateCard
           v-for="temp in templates"
           :key="temp._id"
