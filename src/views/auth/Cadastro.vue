@@ -138,7 +138,7 @@ async function handleSignup() {
             class="w-22 h-22 rounded-2xl flex items-center justify-center p-3 shadow-sm"
           >
             <img
-              src="@/assets/logo-white.png"
+              src="@/assets/logo1.webp"
               alt="Logo"
               class="w-16 h-22 object-contain"
             />
