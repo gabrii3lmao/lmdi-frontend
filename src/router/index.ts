@@ -1,99 +1,86 @@
-// router/index.ts (ou router.js)
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/views/auth/Login.vue";
-import Cadastro from "@/views/auth/Cadastro.vue";
-import Home from "@/views/Home.vue";
-import Landing from "@/views/Landing.vue";
-import SendEmailReset from "@/views/auth/SendEmailReset.vue";
-import ResetPassword from "@/views/auth/ResetPassword.vue";
-import TurmasDashboard from "@/views/TurmasDashboard.vue";
-import Duvidas from "@/views/utils/Duvidas.vue";
-import ModeloProva from "@/views/Gabaritos.vue";
-// @ts-ignore
-import Turma from "../views/Turma.vue";
-import NotFound from "@/views/utils/NotFound.vue"; // <-- Nova importação
-import Submissoes from "@/views/Submissoes.vue";
-import Configuracoes from "@/views/Configuracoes.vue";
+import { ref } from "vue";
+
+export const isRouteLoading = ref(false);
 
 const routes = [
   {
     path: "/",
     name: "landing",
-    component: Landing,
+    component: () => import("@/views/Landing.vue"),
     meta: { hideSidebar: true },
   },
   {
     path: "/dashboard",
     name: "home",
-    component: Home,
+    component: () => import("@/views/Home.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: "/signin",
     name: "login",
-    component: Login,
+    component: () => import("@/views/auth/Login.vue"),
     meta: { hideSidebar: true},
   },
   {
     path: "/signup",
     name: "register",
-    component: Cadastro,
+    component: () => import("@/views/auth/Cadastro.vue"),
     meta: { hideSidebar: true},
   },
   {
     path: "/forgot-password",
     name: "forgot-password",
-    component: SendEmailReset,
+    component: () => import("@/views/auth/SendEmailReset.vue"),
     meta: { hideSidebar: true}, 
   },
   {
     path: "/reset-password/:token",
     name: "reset-password",
-    component: ResetPassword,
+    component: () => import("@/views/auth/ResetPassword.vue"),
     meta: { hideSidebar: true}, 
   },
   {
     path: "/classes",
     name: "showclasses",
-    component: TurmasDashboard,
+    component: () => import("@/views/TurmasDashboard.vue"),
     meta: { requiresAuth: true, title: "Minhas Turmas" },
   },
   {
     path: "/faq",
     name: "duvidas-frequentes",
-    component: Duvidas,
+    component: () => import("@/views/utils/Duvidas.vue"),
     meta: { requiresAuth: true, title: "Perguntas Frequentes" },
   },
   {
     path: "/templates",
     name: "modelo-provas",
-    component: ModeloProva,
+    component: () => import("@/views/Gabaritos.vue"),
     meta: { requiresAuth: true, title: "Meus Gabaritos" },
   },
   {
     path: `/classes/:id`,
     name: "provas-turma",
-    component: Turma,
+    // @ts-expect-error — Turma.vue não tem <script setup lang="ts">
+    component: () => import("@/views/Turma.vue"),
     meta: { requiresAuth: true, title: "Provas da Turma" },
   },
   {
     path: "/submissions",
     name: "submissoes",
-    component: Submissoes,
+    component: () => import("@/views/Submissoes.vue"),
     meta: { requiresAuth: true, title: "Submissões dos Alunos" },
   },
-
   {
     path: "/settings",
     name: "configuracoes",
-    component: Configuracoes,
+    component: () => import("@/views/Configuracoes.vue"),
     meta: { requiresAuth: true, title: "Configurações" },
   },
-
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
-    component: NotFound,
+    component: () => import("@/views/utils/NotFound.vue"),
     meta: { hideSidebar: true, title: "Página Não Encontrada" },
   },
 ];
@@ -104,6 +91,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  isRouteLoading.value = true;
   const token = localStorage.getItem("token");
 
   if (to.meta.requiresAuth && !token) {
@@ -116,6 +104,10 @@ router.beforeEach((to, from, next) => {
   document.title = pageTitle ? pageTitle : baseTitle;
 
   next();
+});
+
+router.afterEach(() => {
+  isRouteLoading.value = false;
 });
 
 export default router;
