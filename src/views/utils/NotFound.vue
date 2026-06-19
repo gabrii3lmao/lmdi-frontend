@@ -53,15 +53,3 @@ import { RouterLink } from "vue-router";
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Adicionando uma fonte mono para o 404 parecer código/coordenada de desenho */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
-
-h1 {
-  font-family: 'JetBrains Mono', monospace;
-  /* Efeito sutil de traço de lápis no número */
-  -webkit-text-stroke: 1px rgba(148, 163, 184, 0.5); 
-  color: transparent;
-}
-</style>
