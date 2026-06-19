@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
 import { useThemeStore } from "@/stores/theme"
+import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
+import api from "@/services/api"
 
 const themeStore = useThemeStore()
+const router = useRouter()
+const confirm = useConfirm()
 const toast = useToast()
 
 const name = ref("")
@@ -16,13 +21,46 @@ const newPassword = ref("")
 const confirmNewPassword = ref("")
 const changingPassword = ref(false)
 
-function loadUser() {
-  const savedName = localStorage.getItem("username") ?? ""
-  const firstName = savedName.split(" ")[0] || ""
-  if (firstName) {
-    name.value = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
+async function loadUser() {
+  try {
+    const { data } = await api.get("/auth/me")
+    name.value = data.name
+    email.value = data.email
+  } catch {
+    name.value = localStorage.getItem("username") ?? ""
+    email.value = ""
   }
-  email.value = localStorage.getItem("userEmail") || "nao-informado@email.com"
+}
+
+function handleDeleteAccount() {
+  confirm.require({
+    message: "Tem certeza que deseja deletar sua conta? Esta ação é irreversível e todos os seus dados serão perdidos.",
+    header: "Deletar Conta",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Sim, Deletar",
+    rejectLabel: "Cancelar",
+    acceptClass: "p-button-danger",
+    accept: async () => {
+      try {
+        await api.delete("/auth/delete-account")
+        localStorage.clear()
+        router.push("/signin")
+        toast.add({
+          severity: "success",
+          summary: "Conta deletada",
+          detail: "Sua conta foi removida com sucesso.",
+          life: 3000,
+        })
+      } catch {
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível deletar sua conta. Tente novamente.",
+          life: 3000,
+        })
+      }
+    },
+  })
 }
 
 function saveName() {
@@ -231,6 +269,31 @@ onMounted(loadUser)
           </button>
         </div>
       </section>
+
+      <section
+        class="bg-white dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700 rounded-2xl p-6 md:p-8 space-y-6"
+      >
+        <h2
+          class="text-lg font-bold text-red-600 dark:text-red-400 flex items-center gap-2"
+        >
+          <i class="pi pi-trash text-red-500"></i>
+          Zona de Perigo
+        </h2>
+
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Ao deletar sua conta, todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
+        </p>
+
+        <button
+          @click="handleDeleteAccount"
+          class="flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 hover:border-red-300 dark:hover:border-red-700 transition-all font-medium text-sm"
+        >
+          <i class="pi pi-trash"></i>
+          <span>Deletar minha conta</span>
+        </button>
+      </section>
+
+      <ConfirmDialog />
     </div>
   </div>
 </template>

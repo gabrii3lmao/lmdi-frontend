@@ -2,7 +2,8 @@ export type Submission = {
   _id: string;
   studentName: string;
   score?: number;
-  status: "pending" | "graded" | "error";
+  totalCorrect?: number;
+  status: "pending" | "success" | "error";
   createdAt: string;
   studentAnswers?: string[];
   answers?: string[] | null;

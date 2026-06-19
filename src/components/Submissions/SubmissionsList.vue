@@ -1,10 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import type { Submission } from "@/types/Submission";
 import SubmissionCard from "./SubmissionCard.vue";
 
-defineProps({
-  examId: String,
-  submissoes: Array,
-});
+defineProps<{
+  examId: string;
+  submissoes: Submission[];
+}>();
 </script>
 
 <template>
