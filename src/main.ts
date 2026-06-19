@@ -5,7 +5,7 @@ import router from "./router";
 import PrimeVue from "primevue/config";
 import ToastService from "primevue/toastservice";
 import ConfirmationService from "primevue/confirmationservice";
-import Aura from "@primevue/themes/aura";
+import Aura from "@primevue/themes/aura"; 
 import { createPinia } from "pinia";
 import "primeicons/primeicons.css";
 import vue3GoogleLogin from "vue3-google-login";

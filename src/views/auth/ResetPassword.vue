@@ -41,19 +41,17 @@ async function handleResetPassword() {
 
 <template>
   <div
-    class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans bg-slate-100 dark:bg-slate-900"
+    class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden font-sans bg-gradient-to-br from-emerald-50 via-white to-slate-100 dark:from-emerald-950 dark:via-slate-900 dark:to-slate-950"
   >
-    <img
-      src="/reset_password.jpg"
-      alt="Biblioteca Escolar"
-      class="absolute inset-0 w-full h-full object-cover z-0"
-    />
-
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-slate-100/75 dark:bg-slate-900/80 backdrop-blur-[2px] z-10"></div>
+    <div
+      class="absolute top-0 right-0 w-[32rem] h-[32rem] translate-x-1/3 -translate-y-1/3 rounded-full bg-emerald-400/10 dark:bg-emerald-500/5 blur-3xl pointer-events-none"
+    ></div>
+    <div
+      class="absolute bottom-0 left-0 w-[24rem] h-[24rem] -translate-x-1/4 translate-y-1/4 rounded-full bg-emerald-300/10 dark:bg-emerald-600/5 blur-3xl pointer-events-none"
+    ></div>
 
     <div
-      class="relative z-20 w-full max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700 rounded-3xl p-8 sm:p-10 shadow-2xl animate-in fade-in zoom-in duration-500"
+      class="relative z-20 w-full max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700 rounded-3xl p-8 sm:p-10 shadow-2xl"
     >
       <div class="flex flex-col items-center justify-center mb-8">
         <div
@@ -75,7 +73,7 @@ async function handleResetPassword() {
       <form class="space-y-5" @submit.prevent="handleResetPassword">
         <div
           v-if="status"
-          class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm flex flex-col gap-4 items-center text-center animate-in slide-in-from-bottom-2"
+          class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm flex flex-col gap-4 items-center text-center"
         >
           <div
             class="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400"
@@ -93,7 +91,7 @@ async function handleResetPassword() {
 
         <div
           v-if="errorMsg"
-          class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-400 text-sm flex gap-3 items-center animate-in shake-x"
+          class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-400 text-sm flex gap-3 items-center"
         >
           <i class="pi pi-exclamation-triangle text-red-500"></i>
           <p class="font-medium">{{ errorMsg }}</p>

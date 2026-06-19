@@ -1,11 +1,9 @@
-// Login.vue
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import api from "@/services/api";
 import { useRouter } from "vue-router";
 import { GoogleLogin } from "vue3-google-login";
 
-// Lógica de Autenticação
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
@@ -67,7 +65,6 @@ async function handleLogin() {
   }
 }
 
-// Lógica do Carrossel
 const currentSlide = ref(0);
 let slideInterval: ReturnType<typeof setInterval>;
 
@@ -82,7 +79,7 @@ const slides = [
     title: "Revolução na gestão de gabaritos.",
     description:
       "Tudo o que você precisa para gerenciar suas turmas e notas em um único lugar.",
-    image: "/app-screenshot-turma.png", // Substitua pelas suas imagens
+    image: "/app-screenshot-turma.png",
   },
   {
     title: "Correção automatizada e rápida.",
@@ -104,13 +101,12 @@ const nextSlide = () => {
 
 const setSlide = (index: number) => {
   currentSlide.value = index;
-  // Reseta o timer ao clicar manualmente para não pular rápido demais
   clearInterval(slideInterval);
   slideInterval = setInterval(nextSlide, 5000);
 };
 
 onMounted(() => {
-  slideInterval = setInterval(nextSlide, 5000); // Muda a imagem a cada 5 segundos
+  slideInterval = setInterval(nextSlide, 5000);
 });
 
 onUnmounted(() => {
@@ -119,11 +115,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen w-full flex font-sans bg-white dark:bg-slate-900 overflow-hidden">
+  <div class="min-h-screen w-full flex font-sans bg-slate-50 dark:bg-slate-900 overflow-hidden">
     <div
-      class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative z-10"
+      class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative z-10 shadow-[4px_0_30px_rgba(0,0,0,0.08)] bg-gradient-to-r from-slate-50 via-slate-50 to-emerald-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20"
     >
-      <div class="w-full max-w-sm mx-auto">
+      <div
+        class="absolute top-0 right-0 w-72 h-72 -translate-y-1/3 translate-x-1/3 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"
+      ></div>
+
+      <div class="w-full max-w-sm mx-auto relative z-10">
         <div class="flex items-center gap-3 mb-10">
           <span class="text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
             Let Me <span class="text-emerald-600 dark:text-emerald-400">Do It!</span>
@@ -149,7 +149,7 @@ onUnmounted(() => {
 
         <form class="space-y-5" @submit.prevent="handleLogin">
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
               E-mail
             </label>
             <input
@@ -157,18 +157,18 @@ onUnmounted(() => {
               type="email"
               placeholder="seu@email.com"
               required
-              class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+              class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
             />
           </div>
 
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Senha
               </label>
               <RouterLink
                 to="/forgot-password"
-                class="text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+                class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               >
                 Esqueceu a senha?
               </RouterLink>
@@ -178,28 +178,27 @@ onUnmounted(() => {
               type="password"
               placeholder="••••••••"
               required
-              class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all shadow-sm"
+              class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
             />
           </div>
 
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full py-2.5 mt-2 rounded-lg font-semibold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
+            class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10 active:scale-[0.98] flex items-center justify-center gap-2"
           >
             <i v-if="isLoading" class="pi pi-spin pi-spinner text-sm"></i>
             <span>{{ isLoading ? "Entrando..." : "Entrar na conta" }}</span>
           </button>
         </form>
 
-        <!-- Google Login -->
         <div class="relative my-8">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-slate-200 dark:border-slate-700"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-3 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-medium"
-              >Ou continue com</span
+            <span class="px-3 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-medium"
+              >Ou</span
             >
           </div>
         </div>
@@ -207,7 +206,7 @@ onUnmounted(() => {
         <div
           class="flex justify-center w-full transform transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
-          <GoogleLogin :callback="callbackGoogle" />
+          <GoogleLogin :callback="callbackGoogle" :button-config="{text: 'continue_with'}"/>
         </div>
 
         <p class="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
@@ -223,8 +222,10 @@ onUnmounted(() => {
     </div>
 
     <div
-      class="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 lg:p-20 overflow-hidden bg-emerald-950"
+      class="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 lg:p-20 bg-emerald-950"
     >
+      <div class="absolute right-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent z-10"></div>
+
       <img
         src="/cadastro.jpg"
         alt="Background"
@@ -234,7 +235,12 @@ onUnmounted(() => {
         class="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-emerald-900/80 to-slate-900/90 z-0"
       ></div>
 
-      <div class="relative z-10 w-full max-w-2xl flex flex-col items-center">
+      <div
+        class="absolute inset-0 z-[5] opacity-[0.04]"
+        style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"
+      ></div>
+
+      <div class="relative z-10 w-full max-w-2xl flex flex-col items-center self-center my-auto">
         <div
           class="h-32 flex flex-col items-center justify-end mb-6 text-center"
         >

@@ -1,8 +1,8 @@
-// Cadastro.vue
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/services/api";
+import { GoogleLogin } from "vue3-google-login";
 
 const name = ref("");
 const email = ref("");
@@ -11,6 +11,27 @@ const loading = ref(false);
 const errorMessage = ref("");
 
 const router = useRouter();
+
+const callbackGoogle = async (response: any) => {
+  errorMessage.value = "";
+  loading.value = true;
+  try {
+    const res = await api.post("/auth/google", {
+      credential: response.credential,
+    });
+
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("username", res.data.user.name);
+    localStorage.setItem("userId", res.data.user.id);
+
+    router.push("/dashboard");
+  } catch (error) {
+    errorMessage.value =
+      "Não foi possível realizar o cadastro com o Google. Tente novamente mais tarde.";
+  } finally {
+    loading.value = false;
+  }
+};
 
 async function handleSignup() {
   loading.value = true;
@@ -42,58 +63,61 @@ async function handleSignup() {
 </script>
 
 <template>
-  <div class="min-h-screen flex w-full font-sans bg-slate-50 dark:bg-slate-900 overflow-x-hidden">
-    <!-- LADO ESQUERDO (Imagens e Branding - Visível apenas em Telas Grandes) -->
+  <div class="min-h-screen flex w-full font-sans bg-slate-50 dark:bg-slate-900 overflow-hidden">
     <div
       class="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 xl:p-16"
     >
-      <!-- Background Escolar -->
       <img
         src="@/assets/cadastro.webp"
         alt="Sala de aula"
         class="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-      <!-- Overlay Escolar (já claro) -->
       <div
-        class="absolute inset-0 bg-gradient-to-br from-white/95 via-white/85 to-emerald-50/50 backdrop-blur-[1px] z-10"
+        class="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-emerald-900/80 to-slate-900/90 z-10"
       ></div>
+
+      <div
+        class="absolute inset-0 z-[5] opacity-[0.04]"
+        style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"
+      ></div>
+
+      <div class="absolute right-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-white/10 to-transparent z-20"></div>
 
       <div class="relative z-20 flex items-center gap-4">
         <div
-          class="w-32 h-auto xl:w-48 xl:h-auto rounded-2xl bg-emerald-500/1 flex items-center justify-center p-3"
+          class="w-32 h-auto xl:w-48 xl:h-auto rounded-2xl flex items-center justify-center p-3"
         >
           <img
-            src="@/assets/logo1.webp"
+            src="@/assets/logo-white.png"
             alt="Logo"
             class="w-full h-auto object-contain"
           />
         </div>
 
         <span
-          class="text-4xl xl:text-5xl font-extrabold text-slate-800 leading-none tracking-tight"
+          class="text-4xl xl:text-5xl font-extrabold text-white leading-none tracking-tight"
         >
-          Let Me<span class="text-emerald-600">Do It!</span>
+          Let Me<span class="text-emerald-400">Do It!</span>
         </span>
       </div>
 
-      <!-- Conteúdo de Apoio -->
       <div class="relative z-20 mt-auto max-w-lg">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-200 text-emerald-700 text-xs font-semibold mb-6 shadow-sm"
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-400/10 border border-emerald-400/20 text-emerald-300 text-xs font-semibold mb-6 shadow-sm"
         >
           <i class="pi pi-sparkles text-[10px]"></i>
           <span>Painel Docente</span>
         </div>
 
         <h1
-          class="text-4xl xl:text-5xl font-extrabold text-slate-800 mb-6 leading-tight tracking-tight"
+          class="text-4xl xl:text-5xl font-extrabold text-white mb-6 leading-tight tracking-tight"
         >
           Automatize a correção das suas provas.
         </h1>
 
         <p
-          class="text-base xl:text-lg text-slate-600 mb-8 max-w-md font-medium"
+          class="text-base xl:text-lg text-emerald-100/80 mb-8 max-w-md font-medium"
         >
           Gestão de gabaritos, análise de submissões e acompanhamento em tempo
           real para professores.
@@ -101,23 +125,20 @@ async function handleSignup() {
       </div>
     </div>
 
-    <!-- LADO DIREITO (Formulário de Cadastro) -->
     <div
-      class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative bg-slate-50 dark:bg-slate-900"
+      class="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:px-24 xl:px-32 relative shadow-[-8px_0_30px_rgba(0,0,0,0.08)] bg-gradient-to-l from-slate-50 via-slate-50 to-emerald-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/20"
     >
-      <!-- Círculo decorativo -->
       <div
         class="absolute top-0 right-0 w-72 h-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"
       ></div>
 
-      <div class="w-full max-w-md relative z-10">
-        <!-- Mobile Logo -->
+      <div class="w-full max-w-sm mx-auto relative z-10">
         <div class="lg:hidden flex flex-col items-center mb-8 gap-4">
           <div
             class="w-22 h-22 rounded-2xl flex items-center justify-center p-3 shadow-sm"
           >
             <img
-              src="@/assets/logo1.webp"
+              src="@/assets/logo-white.png"
               alt="Logo"
               class="w-16 h-22 object-contain"
             />
@@ -129,11 +150,6 @@ async function handleSignup() {
           </h1>
         </div>
 
-        <!-- Card de Cadastro -->
-        <div
-          class="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-3xl p-8 sm:p-10 shadow-xl"
-        >
-          <!-- Título -->
           <div class="mb-8 text-center sm:text-left">
             <h2
               class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight"
@@ -145,7 +161,6 @@ async function handleSignup() {
             </p>
           </div>
 
-          <!-- Mensagem de Erro -->
           <div
             v-if="errorMessage"
             class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-400"
@@ -156,7 +171,6 @@ async function handleSignup() {
             <p class="text-sm font-medium">{{ errorMessage }}</p>
           </div>
 
-          <!-- Formulário -->
           <form class="space-y-5" @submit.prevent="handleSignup">
             <div>
               <label
@@ -218,7 +232,21 @@ async function handleSignup() {
             </button>
           </form>
 
-          <!-- Footer -->
+          <div class="relative my-7">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-slate-200 dark:border-slate-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-3 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-medium">
+                Ou
+              </span>
+            </div>
+          </div>
+
+          <div class="flex justify-center w-full transform transition-all hover:scale-[1.02] active:scale-[0.98]">
+            <GoogleLogin :callback="callbackGoogle" :button-config="{text: 'signup_with' }" />
+          </div>
+
           <div
             class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 text-center text-sm text-slate-500 dark:text-slate-400"
           >
@@ -230,7 +258,6 @@ async function handleSignup() {
               Entrar
             </RouterLink>
           </div>
-        </div>
       </div>
     </div>
   </div>
