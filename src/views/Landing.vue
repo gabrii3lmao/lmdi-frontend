@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { RouterLink } from "vue-router";
 import { useThemeStore } from "@/stores/theme";
-import logLight from "@/assets/logo-dark.svg";
+import logLight from "@/assets/logo1.webp";
 import logDark from "@/assets/logo-white.png";
 
 const router = useRouter();
