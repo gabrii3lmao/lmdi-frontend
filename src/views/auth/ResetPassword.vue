@@ -8,6 +8,8 @@ const token = route.params.token;
 
 const password = ref("");
 const confirmPassword = ref("");
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 const loading = ref(false);
 const errorMsg = ref("");
 const status = ref("");
@@ -111,13 +113,21 @@ async function handleResetPassword() {
                 ></i>
                 <input
                   v-model="password"
-                  type="password"
+                  :type="showPassword ? 'text' : 'password'"
                   id="password"
                   placeholder="••••••••"
                   required
                   minlength="6"
-                  class="w-full pl-11 pr-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                  class="w-full pl-11 pr-11 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                  :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                >
+                  <i :class="['pi text-sm', showPassword ? 'pi-eye-slash' : 'pi-eye']"></i>
+                </button>
               </div>
             </div>
 
@@ -133,13 +143,21 @@ async function handleResetPassword() {
                 ></i>
                 <input
                   v-model="confirmPassword"
-                  type="password"
+                  :type="showConfirmPassword ? 'text' : 'password'"
                   id="confirmPassword"
                   placeholder="••••••••"
                   required
                   minlength="6"
-                  class="w-full pl-11 pr-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                  class="w-full pl-11 pr-11 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 />
+                <button
+                  type="button"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                  :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                >
+                  <i :class="['pi text-sm', showConfirmPassword ? 'pi-eye-slash' : 'pi-eye']"></i>
+                </button>
               </div>
             </div>
           </div>

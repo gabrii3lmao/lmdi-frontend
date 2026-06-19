@@ -4,10 +4,21 @@ import api from "@/services/api";
 import { useRoute } from "vue-router";
 import Drawer from "primevue/drawer";
 import Avatar from "primevue/avatar";
+import { useToast } from "primevue/usetoast";
 
 const route = useRoute();
+const toast = useToast();
 const name = ref("");
 const isMenuOpen = ref(false);
+
+function showComingSoon() {
+  toast.add({
+    severity: "info",
+    summary: "Em desenvolvimento",
+    detail: "Esta funcionalidade estará disponível em breve!",
+    life: 3000,
+  });
+}
 
 const showSidebar = computed(() => {
   const isPublicPage = route.meta.hideSidebar === true;
@@ -60,6 +71,11 @@ const navItemClass =
   "flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/60 hover:text-slate-900 dark:hover:text-slate-100 group transition-all duration-200 border-l-2 border-transparent";
 
 const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 dark:!bg-emerald-900/30 !border-emerald-500";
+
+const disabledNavItemClass =
+  "flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 dark:text-slate-500 rounded-lg cursor-default transition-all duration-200 border-l-2 border-transparent w-full text-left";
+
+const comingSoonBadge = "ml-auto text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded";
 </script>
 
 <template>
@@ -204,30 +220,28 @@ const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 
               <h3
                 class="px-4 text-[0.6rem] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
               >
-                Análises (Em Breve)
+                Análise
               </h3>
               <ul class="space-y-1">
                 <li>
-                  <RouterLink
-                    to="/reports"
-                    :class="navItemClass"
-                    :active-class="activeNavClass"
-                    @click="closeCallback"
+                  <button
+                    @click="showComingSoon"
+                    :class="disabledNavItemClass"
                   >
                     <i class="pi pi-chart-pie text-base"></i>
                     <span>Desempenho</span>
-                  </RouterLink>
+                    <span :class="comingSoonBadge">Em breve</span>
+                  </button>
                 </li>
                 <li>
-                  <RouterLink
-                    to="/history"
-                    :class="navItemClass"
-                    :active-class="activeNavClass"
-                    @click="closeCallback"
+                  <button
+                    @click="showComingSoon"
+                    :class="disabledNavItemClass"
                   >
                     <i class="pi pi-history text-base"></i>
                     <span>Histórico</span>
-                  </RouterLink>
+                    <span :class="comingSoonBadge">Em breve</span>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -251,15 +265,14 @@ const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 
                   </RouterLink>
                 </li>
                 <li>
-                  <RouterLink
-                    to="/support"
-                    :class="navItemClass"
-                    :active-class="activeNavClass"
-                    @click="closeCallback"
+                  <button
+                    @click="showComingSoon"
+                    :class="disabledNavItemClass"
                   >
                     <i class="pi pi-info-circle text-base"></i>
                     <span>Contato</span>
-                  </RouterLink> 
+                    <span :class="comingSoonBadge">Em breve</span>
+                  </button> 
                 </li>
               </ul>
             </div>
@@ -412,24 +425,24 @@ const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 
           </h3>
           <ul class="space-y-1">
             <li>
-              <RouterLink
-                to="/reports"
-                :class="navItemClass"
-                :active-class="activeNavClass"
+              <button
+                @click="showComingSoon"
+                :class="disabledNavItemClass"
               >
                 <i class="pi pi-chart-pie text-base"></i>
                 <span>Desempenho</span>
-              </RouterLink>
+                <span :class="comingSoonBadge">Em breve</span>
+              </button>
             </li>
             <li>
-              <RouterLink
-                to="/history"
-                :class="navItemClass"
-                :active-class="activeNavClass"
+              <button
+                @click="showComingSoon"
+                :class="disabledNavItemClass"
               >
                 <i class="pi pi-history text-base"></i>
                 <span>Histórico</span>
-              </RouterLink>
+                <span :class="comingSoonBadge">Em breve</span>
+              </button>
             </li>
           </ul>
         </div>
@@ -452,14 +465,14 @@ const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 
               </RouterLink>
             </li>
                 <li>
-                  <RouterLink
-                    to="/support"
-                    :class="navItemClass"
-                    :active-class="activeNavClass"
+                  <button
+                    @click="showComingSoon"
+                    :class="disabledNavItemClass"
                   >
                     <i class="pi pi-info-circle text-base"></i>
                     <span>Contato</span>
-                  </RouterLink> 
+                    <span :class="comingSoonBadge">Em breve</span>
+                  </button> 
                 </li>
               </ul>
             </div>
@@ -528,11 +541,5 @@ const activeNavClass = "!text-emerald-600 dark:!text-emerald-400 !bg-emerald-50 
   background: rgba(0, 0, 0, 0.2); /* Ajustado para tema claro */
 }
 
-/* Garante que o conteúdo das páginas não fique sob a Topbar no mobile */
-:deep(main),
-:deep(.page-container) {
-  @media (max-width: 639px) {
-    padding-top: 4rem; /* h-16 */
-  }
-}
+/* Mobile padding is handled via .page-content in main.css */
 </style>

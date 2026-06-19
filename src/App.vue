@@ -14,6 +14,12 @@ import { isRouteLoading } from "./router";
         <TheAside />
         <Toast />
         <ConfirmDialog />
-        <RouterView />
+        <div class="page-content">
+            <RouterView v-slot="{ Component }">
+                <Transition name="page" mode="out-in">
+                    <component :is="Component" />
+                </Transition>
+            </RouterView>
+        </div>
     </main>
 </template>

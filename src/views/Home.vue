@@ -3,7 +3,8 @@ import { ref, onMounted, computed } from "vue";
 import { RouterLink } from "vue-router";
 import { turmaService } from "@/services/turmas";
 import { submissionService } from "@/services/submissionService";
-import { useQuery } from "@tanstack/vue-query"; // <-- Importado
+import { examService } from "@/services/examService";
+import { useQuery } from "@tanstack/vue-query";
 
 interface Turma {
   _id: string;
@@ -70,6 +71,26 @@ const { data: totalSubmissoes } = useQuery({
   initialData: 0,
 });
 
+const { data: totalExames } = useQuery({
+  queryKey: [
+    "dashboard-exames",
+    computed(() => (turmasData.value || []).map((t: Turma) => t._id).join(",")),
+  ],
+  queryFn: async () => {
+    const list = turmasData.value || [];
+    const promises = list.map((turma: Turma) =>
+      examService.listarGabaritosMestre(turma._id),
+    );
+    const responses = await Promise.all(promises);
+    return responses.reduce((acc, res: any) => {
+      const data = res.data?.data || res.data || [];
+      return acc + data.length;
+    }, 0);
+  },
+  enabled: computed(() => (turmasData.value || []).length > 0),
+  initialData: 0,
+});
+
 const stats = computed(() => [
   {
     label: "Turmas Cadastradas",
@@ -78,7 +99,13 @@ const stats = computed(() => [
     color: "text-emerald-500",
   },
   {
-    label: "Correções Feitas",
+    label: "Gabaritos Mestres",
+    value: totalExames.value.toString(),
+    icon: "pi-file-check",
+    color: "text-emerald-500",
+  },
+  {
+    label: "Correções Realizadas",
     value: totalSubmissoes.value.toString(),
     icon: "pi-book",
     color: "text-emerald-500",
@@ -111,7 +138,7 @@ onMounted(() => {
         </div>
         <RouterLink
           to="/templates"
-          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-lg shadow-emerald-600/10 active:scale-95"
+          class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl hover:bg-emerald-700 dark:hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 shadow-lg shadow-emerald-600/10 active:scale-95"
         >
           <i class="pi pi-plus text-xs"></i>
           Nova Correção
@@ -150,7 +177,7 @@ onMounted(() => {
               v-for="turma in turmas"
               :key="turma._id"
               :to="`/classes/${turma._id}`"
-              class="bg-white dark:bg-slate-800 ring-1 ring-slate-100 dark:ring-slate-700 p-4 rounded-xl flex justify-between items-center hover:ring-emerald-500/30 hover:border-emerald-300 hover:bg-slate-50 dark:hover:bg-slate-700/60 hover:shadow-md transition-all group cursor-pointer border border-slate-400 dark:border-slate-600 w-full"
+              class="bg-white dark:bg-slate-800 ring-1 ring-slate-100 dark:ring-slate-700 p-4 rounded-xl flex justify-between items-center hover:ring-emerald-500/30 hover:border-emerald-300 hover:bg-slate-50 dark:hover:bg-slate-700/60 hover:shadow-md transition-all group cursor-pointer border border-slate-200 dark:border-slate-700 w-full"
             >
               <div class="flex items-center gap-4">
                 <div
@@ -184,26 +211,28 @@ onMounted(() => {
         </section>
 
         <aside class="space-y-6">
-          <div
-            v-for="stat in stats"
-            :key="stat.label"
-            class="bg-white dark:bg-slate-800 ring-1 ring-slate-300 dark:ring-slate-700 p-6 rounded-2xl flex items-center gap-5 hover:shadow-md transition-all"
-          >
+          <div class="grid grid-cols-1 gap-6">
             <div
-              class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400"
+              v-for="stat in stats"
+              :key="stat.label"
+              class="bg-white dark:bg-slate-800 ring-1 ring-slate-300 dark:ring-slate-700 p-6 rounded-2xl flex items-center gap-5 hover:shadow-md transition-all"
             >
-              <i
-                :class="['pi text-3xl', stat.icon]"
-                style="font-size: 1.8rem"
-              ></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                {{ stat.label }}
-              </p>
-              <h3 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                {{ loading ? "-" : stat.value }}
-              </h3>
+              <div
+                class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400"
+              >
+                <i
+                  :class="['pi text-3xl', stat.icon]"
+                  style="font-size: 1.8rem"
+                ></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">
+                  {{ stat.label }}
+                </p>
+                <h3 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+                  {{ loading ? "-" : stat.value }}
+                </h3>
+              </div>
             </div>
           </div>
 

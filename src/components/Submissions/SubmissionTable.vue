@@ -16,7 +16,7 @@ defineEmits(["open"]);
 
 <template>
   <div
-    class="bg-white dark:bg-slate-800 border border-slate-400/60 dark:border-slate-600 rounded-2xl overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700 shadow-sm"
+    class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden ring-1 ring-slate-300 dark:ring-slate-700 shadow-sm"
   >
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">

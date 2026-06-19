@@ -108,6 +108,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   isRouteLoading.value = false;
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 export default router;

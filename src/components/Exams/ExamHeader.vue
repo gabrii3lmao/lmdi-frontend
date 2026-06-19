@@ -1,11 +1,15 @@
 <script setup>
-defineProps({
-  modelValue: String, // O ID da prova selecionada
+import { computed } from "vue";
+
+const props = defineProps({
+  modelValue: String,
   classId: String,
   provas: Array,
 });
 
 const emit = defineEmits(["update:modelValue"]);
+
+const hasProvas = computed(() => props.provas && props.provas.length > 0);
 </script>
 
 <template>
@@ -22,19 +26,24 @@ const emit = defineEmits(["update:modelValue"]);
     <div
       class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3"
     >
-      <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase ml-2"
+      <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase ml-2 whitespace-nowrap"
         >Prova Ativa:</label
       >
-      <select
-        :value="modelValue"
-        @change="emit('update:modelValue', $event.target.value)"
-        class="bg-transparent text-sm font-bold outline-none text-emerald-600 dark:text-emerald-400 min-w-[200px] cursor-pointer"
-      >
-        <option value="" disabled>Selecione uma prova...</option>
-        <option v-for="prova in provas" :key="prova._id" :value="prova._id">
-          {{ prova.title }}
-        </option>
-      </select>
+      <div v-if="hasProvas">
+        <select
+          :value="modelValue"
+          @change="emit('update:modelValue', $event.target.value)"
+          class="bg-transparent text-sm font-bold outline-none text-emerald-600 dark:text-emerald-400 min-w-[200px] cursor-pointer"
+        >
+          <option value="" disabled>Selecione uma prova...</option>
+          <option v-for="prova in provas" :key="prova._id" :value="prova._id">
+            {{ prova.title }}
+          </option>
+        </select>
+      </div>
+      <p v-else class="text-sm text-slate-400 dark:text-slate-500 font-medium px-2 whitespace-nowrap">
+        Nenhuma prova cadastrada
+      </p>
     </div>
   </header>
 </template>

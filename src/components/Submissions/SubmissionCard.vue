@@ -13,7 +13,7 @@ defineProps({
     :class="
       submissao.status === 'pending'
         ? 'border-amber-300 dark:border-amber-700 shadow-amber-500/5'
-        : 'border-slate-400/60 dark:border-slate-600 shadow-slate-100'
+        : 'border-slate-200 dark:border-slate-700 shadow-slate-100'
     "
   >
     <!-- Animação de pulso se estiver pendente -->
@@ -30,7 +30,7 @@ defineProps({
         <span
           :class="[
             'text-[10px] font-bold uppercase px-2 py-0.5 rounded flex items-center gap-1 inline-flex mt-1',
-            submissao.status === 'success'
+            submissao.status === 'graded'
               ? 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800'
               : submissao.status === 'pending'
                 ? 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-800'
@@ -42,13 +42,13 @@ defineProps({
             class="pi pi-spin pi-spinner text-[10px]"
           ></i>
           <i
-            v-else-if="submissao.status === 'success'"
+            v-else-if="submissao.status === 'graded'"
             class="pi pi-check text-[10px]"
           ></i>
           <i v-else class="pi pi-times text-[10px]"></i>
 
           {{
-            submissao.status === "success"
+            submissao.status === "graded"
               ? "Corrigido"
               : submissao.status === "pending"
                 ? "Processando..."
@@ -69,7 +69,7 @@ defineProps({
           v-else
           class="text-2xl font-black"
           :class="
-            submissao.status === 'success' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'
+            submissao.status === 'graded' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'
           "
         >
           {{

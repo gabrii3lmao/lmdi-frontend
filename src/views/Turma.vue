@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed } from "vue";
+import { useRoute, RouterLink } from "vue-router";
 import { examService } from "@/services/examService";
 import { useExams } from "@/composables/useExams";
 import { submissionService } from "@/services/submissionService";
 import { useToast } from "primevue/usetoast";
-import { useQueryClient } from "@tanstack/vue-query"; // Importação importante!
+import { useQueryClient, useQuery } from "@tanstack/vue-query";
+import { turmaService } from "@/services/turmas";
 
 // Componentes Modularizados
 import ExamHeader from "@/components/Exams/ExamHeader.vue";
@@ -17,8 +18,23 @@ import AdicionarAlunoModal from "@/components/Submissions/AdicionarAlunoModal.vu
 
 const route = useRoute();
 const toast = useToast();
-const queryClient = useQueryClient(); // Inicializa o QueryClient
+const queryClient = useQueryClient();
 const classIdAtual = ref(route.params.id);
+
+const { data: turmas } = useQuery({
+  queryKey: ["turmas"],
+  queryFn: async () => {
+    const { data } = await turmaService.getAll(1, 100);
+    return data?.data || data || [];
+  },
+  initialData: [],
+});
+
+const turmaNome = computed(() => {
+  const all = turmas.value || [];
+  const found = all.find((t) => t._id === classIdAtual.value);
+  return found?.name || classIdAtual.value.slice(-5).toUpperCase();
+});
 
 // Note que aqui só extraímos as variáveis reativas, o Vue Query faz o resto!
 const { examIdSelecionado, provasDaTurma, submissoes, enviando, page, totalPages, totalItems, changePage } = useExams(
@@ -132,6 +148,15 @@ const handleProcessarGabaritoAluno = async (dados) => {
   >
     <div class="flex-1 p-6 md:p-10">
       <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto space-y-8">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+          <RouterLink to="/classes" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-semibold">
+            Turmas
+          </RouterLink>
+          <i class="pi pi-chevron-right text-[10px] text-slate-400"></i>
+          <span class="text-slate-800 dark:text-slate-200 font-bold truncate">{{ turmaNome }}</span>
+        </nav>
+
         <ExamHeader
           v-model="examIdSelecionado"
           :class-id="classIdAtual"

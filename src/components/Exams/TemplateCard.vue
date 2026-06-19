@@ -29,7 +29,7 @@ const alternativasLetra = computed(() =>
 
 <template>
   <div
-    class="group bg-white dark:bg-slate-800 border border-slate-600/80 dark:border-slate-600 ring-1 ring-slate-100 dark:ring-slate-700 p-4 rounded-2xl hover:ring-emerald-500/30 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+    class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ring-1 ring-slate-100 dark:ring-slate-700 p-4 rounded-2xl hover:ring-emerald-500/30 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
   >
     <!-- Topo do card (Margem reduzida de mb-6 para mb-3) -->
     <div class="flex justify-between items-start mb-3">

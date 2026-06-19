@@ -6,8 +6,10 @@ import { GoogleLogin } from "vue3-google-login";
 
 const email = ref("");
 const password = ref("");
+const showPassword = ref(false);
 const isLoading = ref(false);
 const errorMessage = ref("");
+const fieldErrors = ref<Record<string, string>>({});
 const router = useRouter();
 
 const callbackGoogle = async (response: any) => {
@@ -31,9 +33,24 @@ const callbackGoogle = async (response: any) => {
   }
 };
 
+function validateForm(): boolean {
+  fieldErrors.value = {};
+  if (!email.value.trim()) {
+    fieldErrors.value.email = "Informe seu e-mail.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    fieldErrors.value.email = "E-mail inválido.";
+  }
+  if (!password.value) {
+    fieldErrors.value.password = "Informe sua senha.";
+  }
+  return Object.keys(fieldErrors.value).length === 0;
+}
+
 async function handleLogin() {
-  isLoading.value = true;
   errorMessage.value = "";
+  if (!validateForm()) return;
+
+  isLoading.value = true;
 
   try {
     const response = await api.post("/auth/signin", {
@@ -158,7 +175,12 @@ onUnmounted(() => {
               placeholder="seu@email.com"
               required
               class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+              :class="fieldErrors.email ? 'border-red-300 dark:border-red-700 focus:ring-red-500/20 focus:border-red-500' : ''"
             />
+            <p v-if="fieldErrors.email" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>
+              {{ fieldErrors.email }}
+            </p>
           </div>
 
           <div class="space-y-1.5">
@@ -173,19 +195,33 @@ onUnmounted(() => {
                 Esqueceu a senha?
               </RouterLink>
             </div>
-            <input
-              v-model="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-            />
+            <div class="relative">
+              <input
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                required
+                class="w-full px-4 py-3 pr-11 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              >
+                <i :class="['pi text-sm', showPassword ? 'pi-eye-slash' : 'pi-eye']"></i>
+              </button>
+            </div>
+            <p v-if="fieldErrors.password" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>
+              {{ fieldErrors.password }}
+            </p>
           </div>
 
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10 active:scale-[0.98] flex items-center justify-center gap-2"
+            class="w-full py-3.5 mt-2 rounded-xl font-bold text-white bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-600/10 active:scale-[0.98] flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
           >
             <i v-if="isLoading" class="pi pi-spin pi-spinner text-sm"></i>
             <span>{{ isLoading ? "Entrando..." : "Entrar na conta" }}</span>

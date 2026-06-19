@@ -7,8 +7,12 @@ import { GoogleLogin } from "vue3-google-login";
 const name = ref("");
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 const loading = ref(false);
 const errorMessage = ref("");
+const fieldErrors = ref<Record<string, string>>({});
 
 const router = useRouter();
 
@@ -33,9 +37,34 @@ const callbackGoogle = async (response: any) => {
   }
 };
 
+function validateForm(): boolean {
+  fieldErrors.value = {};
+  if (!name.value.trim()) {
+    fieldErrors.value.name = "Informe seu nome.";
+  }
+  if (!email.value.trim()) {
+    fieldErrors.value.email = "Informe seu e-mail.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    fieldErrors.value.email = "E-mail inválido.";
+  }
+  if (!password.value) {
+    fieldErrors.value.password = "Crie uma senha.";
+  } else if (password.value.length < 6) {
+    fieldErrors.value.password = "Mínimo de 6 caracteres.";
+  }
+  if (!confirmPassword.value) {
+    fieldErrors.value.confirmPassword = "Confirme sua senha.";
+  } else if (password.value !== confirmPassword.value) {
+    fieldErrors.value.confirmPassword = "As senhas não coincidem.";
+  }
+  return Object.keys(fieldErrors.value).length === 0;
+}
+
 async function handleSignup() {
-  loading.value = true;
   errorMessage.value = "";
+  if (!validateForm()) return;
+
+  loading.value = true;
 
   try {
     await api.post("/auth/signup", {
@@ -184,7 +213,12 @@ async function handleSignup() {
                 placeholder="Ex: Prof. Carlos Silva"
                 required
                 class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                :class="fieldErrors.name ? 'border-red-300 dark:border-red-700 focus:ring-red-500/20' : ''"
               />
+              <p v-if="fieldErrors.name" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+                <i class="pi pi-exclamation-circle text-[10px]"></i>
+                {{ fieldErrors.name }}
+              </p>
             </div>
 
             <div>
@@ -199,7 +233,12 @@ async function handleSignup() {
                 placeholder="carlos.silva@escola.com"
                 required
                 class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                :class="fieldErrors.email ? 'border-red-300 dark:border-red-700 focus:ring-red-500/20' : ''"
               />
+              <p v-if="fieldErrors.email" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+                <i class="pi pi-exclamation-circle text-[10px]"></i>
+                {{ fieldErrors.email }}
+              </p>
             </div>
 
             <div>
@@ -208,13 +247,58 @@ async function handleSignup() {
               >
                 Senha
               </label>
-              <input
-                v-model="password"
-                type="password"
-                placeholder="••••••••"
-                required
-                class="w-full px-4 py-3 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
-              />
+              <div class="relative">
+                <input
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="••••••••"
+                  required
+                  class="w-full px-4 py-3 pr-11 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                  :class="fieldErrors.password ? 'border-red-300 dark:border-red-700 focus:ring-red-500/20' : ''"
+                />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                  :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                >
+                  <i :class="['pi text-sm', showPassword ? 'pi-eye-slash' : 'pi-eye']"></i>
+                </button>
+              </div>
+              <p v-if="fieldErrors.password" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+                <i class="pi pi-exclamation-circle text-[10px]"></i>
+                {{ fieldErrors.password }}
+              </p>
+            </div>
+
+            <div>
+              <label
+                class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 px-1"
+              >
+                Confirmar Senha
+              </label>
+              <div class="relative">
+                <input
+                  v-model="confirmPassword"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  placeholder="••••••••"
+                  required
+                  class="w-full px-4 py-3 pr-11 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+                  :class="fieldErrors.confirmPassword ? 'border-red-300 dark:border-red-700 focus:ring-red-500/20' : ''"
+                />
+                <button
+                  type="button"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                  :aria-label="showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'"
+                >
+                  <i :class="['pi text-sm', showConfirmPassword ? 'pi-eye-slash' : 'pi-eye']"></i>
+                </button>
+              </div>
+              <p v-if="fieldErrors.confirmPassword" class="mt-1.5 text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
+                <i class="pi pi-exclamation-circle text-[10px]"></i>
+                {{ fieldErrors.confirmPassword }}
+              </p>
             </div>
 
             <button

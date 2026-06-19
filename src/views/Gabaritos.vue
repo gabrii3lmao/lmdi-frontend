@@ -196,7 +196,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
           <button
             @click="openModalParaCriar"
             :disabled="!classIdSelecionadaParaNovoGabarito"
-            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed hover:bg-emerald-700 dark:hover:bg-emerald-600 shadow-lg shadow-emerald-600/10 disabled:shadow-none whitespace-nowrap active:scale-95"
+            class="group relative inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed hover:bg-emerald-700 dark:hover:bg-emerald-600 shadow-lg shadow-emerald-600/10 disabled:shadow-none whitespace-nowrap active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
             <i
               class="pi pi-plus text-xs transition-transform group-hover:rotate-90"
