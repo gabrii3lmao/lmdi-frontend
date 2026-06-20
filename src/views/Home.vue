@@ -42,7 +42,7 @@ const { data: turmasData, isLoading: loading } = useQuery({
     const paginated = data as any;
     return (paginated?.data || paginated || []) as Turma[];
   },
-  initialData: [],
+  placeholderData: [],
 });
 
 // Inverte a ordem apenas para a visualização do Dashboard, usando uma cópia para não mutar o cache
@@ -52,7 +52,7 @@ const turmas = computed(() => {
 });
 
 // 2. Busca as submissões APENAS quando as turmas terminarem de carregar (Query Dependente)
-const { data: totalSubmissoes } = useQuery({
+const { data: totalSubmissoes, isFetching: carregandoSubmissoes } = useQuery({
   // A chave da query inclui os IDs das turmas, se criar turma nova, ele recalcula as submissões!
   queryKey: [
     "dashboard-submissoes",
@@ -68,10 +68,10 @@ const { data: totalSubmissoes } = useQuery({
   },
   // O Vue Query só executa essa requisição se existirem turmas
   enabled: computed(() => (turmasData.value || []).length > 0),
-  initialData: 0,
+  placeholderData: 0,
 });
 
-const { data: totalExames } = useQuery({
+const { data: totalExames, isFetching: carregandoExames } = useQuery({
   queryKey: [
     "dashboard-exames",
     computed(() => (turmasData.value || []).map((t: Turma) => t._id).join(",")),
@@ -88,7 +88,7 @@ const { data: totalExames } = useQuery({
     }, 0);
   },
   enabled: computed(() => (turmasData.value || []).length > 0),
-  initialData: 0,
+  placeholderData: 0,
 });
 
 const stats = computed(() => [
@@ -97,18 +97,21 @@ const stats = computed(() => [
     value: turmas.value.length.toString(),
     icon: "pi-users",
     color: "text-emerald-500",
+    loading: false,
   },
   {
     label: "Gabaritos Mestres",
-    value: totalExames.value.toString(),
+    value: (totalExames.value ?? 0).toString(),
     icon: "pi-file-check",
     color: "text-emerald-500",
+    loading: carregandoExames.value,
   },
   {
     label: "Correções Realizadas",
-    value: totalSubmissoes.value.toString(),
+    value: (totalSubmissoes.value ?? 0).toString(),
     icon: "pi-book",
     color: "text-emerald-500",
+    loading: carregandoSubmissoes.value,
   },
 ]);
 
@@ -230,7 +233,7 @@ onMounted(() => {
                   {{ stat.label }}
                 </p>
                 <h3 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                  {{ loading ? "-" : stat.value }}
+                  {{ loading || stat.loading ? "-" : stat.value }}
                 </h3>
               </div>
             </div>

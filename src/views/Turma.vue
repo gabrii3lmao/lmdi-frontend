@@ -13,6 +13,7 @@ import ExamHeader from "@/components/Exams/ExamHeader.vue";
 import ExamActionCards from "@/components/Exams/ExamActionCards.vue";
 import SubmissionsList from "@/components/Submissions/SubmissionsList.vue";
 import Pagination from "@/components/common/Pagination.vue";
+import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 import GabaritoOficialModal from "@/components/Exams/GabaritoOficialModal.vue";
 import AdicionarAlunoModal from "@/components/Submissions/AdicionarAlunoModal.vue";
 
@@ -27,7 +28,7 @@ const { data: turmas } = useQuery({
     const { data } = await turmaService.getAll(1, 100);
     return data?.data || data || [];
   },
-  initialData: [],
+  placeholderData: [],
 });
 
 const turmaNome = computed(() => {
@@ -37,7 +38,7 @@ const turmaNome = computed(() => {
 });
 
 // Note que aqui só extraímos as variáveis reativas, o Vue Query faz o resto!
-const { examIdSelecionado, provasDaTurma, submissoes, enviando, page, totalPages, totalItems, changePage } = useExams(
+const { examIdSelecionado, provasDaTurma, submissoes, enviando, carregandoProvas, carregandoSubmissoes, page, totalPages, totalItems, changePage } = useExams(
   classIdAtual.value,
 );
 
@@ -191,7 +192,18 @@ const handleProcessarGabaritoAluno = async (dados) => {
           @open-aluno="modalAluno = true"
         />
 
-        <SubmissionsList :exam-id="examIdSelecionado" :submissoes="submissoes" />
+        <LoadingSpinner v-if="carregandoProvas" message="Carregando provas..." />
+
+        <LoadingSpinner
+          v-else-if="carregandoSubmissoes"
+          message="Carregando submissões..."
+        />
+
+        <SubmissionsList
+          v-else
+          :exam-id="examIdSelecionado"
+          :submissoes="submissoes"
+        />
       </div>
     </div>
 

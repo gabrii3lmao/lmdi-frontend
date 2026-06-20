@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useQueryClient } from "@tanstack/vue-query"; // <-- Importado para invalidar o cache
 import { useGabaritos } from "@/composables/useGabaritos";
@@ -13,7 +13,9 @@ const confirm = useConfirm();
 const queryClient = useQueryClient(); // <-- Inicializa o client
 
 // 1. Não importamos mais o `carregarDados`
-const { templates, turmas, loading, getTurmaName } = useGabaritos();
+  const { templates, turmas, loading, getTurmaName } = useGabaritos();
+
+  const templatesList = computed(() => templates.value ?? []);
 
 const enviando = ref(false);
 const isModalOpen = ref(false);
@@ -218,7 +220,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
       </div>
 
       <div
-        v-else-if="templates.length === 0"
+        v-else-if="templatesList.length === 0"
         class="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-800 ring-1 ring-slate-200/80 dark:ring-slate-700 rounded-3xl border border-dashed border-slate-300 dark:border-slate-600 shadow-sm text-center px-4"
       >
         <div
@@ -237,7 +239,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
         <TemplateCard
-          v-for="temp in templates"
+          v-for="temp in templatesList"
           :key="temp._id"
           :template="temp"
           :turmaName="getTurmaName(temp.classId)"

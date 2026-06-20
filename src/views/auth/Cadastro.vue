@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/services/api";
+import { useToast } from "primevue/usetoast";
 import { GoogleLogin } from "vue3-google-login";
 
 const name = ref("");
@@ -11,10 +12,12 @@ const confirmPassword = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const loading = ref(false);
+const successMessage = ref("");
 const errorMessage = ref("");
 const fieldErrors = ref<Record<string, string>>({});
 
 const router = useRouter();
+const toast = useToast();
 
 const callbackGoogle = async (response: any) => {
   errorMessage.value = "";
@@ -67,12 +70,19 @@ async function handleSignup() {
   loading.value = true;
 
   try {
-    await api.post("/auth/signup", {
+    const res = await api.post("/auth/signup", {
       name: name.value,
       email: email.value,
       password: password.value,
     });
-    router.push("/signin");
+    successMessage.value = res.data.message || "Conta criada! Verifique seu email antes de fazer login.";
+    toast.add({
+      severity: "success",
+      summary: "Conta criada!",
+      detail: successMessage.value,
+      life: 6000,
+    });
+    setTimeout(() => router.push("/signin"), 2000);
   } catch (error: any) {
     if (error.response?.data) {
       const data = error.response.data;
@@ -188,6 +198,14 @@ async function handleSignup() {
             <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
               Preencha seus dados para começar.
             </p>
+          </div>
+
+          <div
+            v-if="successMessage"
+            class="mb-6 flex items-start gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400"
+          >
+            <i class="pi pi-check-circle mt-0.5 shrink-0 text-emerald-500"></i>
+            <p class="text-sm font-medium">{{ successMessage }}</p>
           </div>
 
           <div

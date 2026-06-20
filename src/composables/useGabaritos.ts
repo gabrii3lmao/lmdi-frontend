@@ -26,7 +26,7 @@ export function useGabaritos() {
       const paginated = resTurmas.data as any;
       return (paginated?.data || paginated || []) as Turma[];
     },
-    initialData: [],
+    placeholderData: [],
   });
 
   // 2. Busca os gabaritos DEPOIS que as turmas forem carregadas (Query Dependente)
@@ -50,7 +50,7 @@ export function useGabaritos() {
     },
     // O fetch só é disparado se existir pelo menos uma turma carregada
     enabled: computed(() => (turmas.value || []).length > 0),
-    initialData: [],
+    placeholderData: [],
   });
 
   // 3. Status global consolidado (verdadeiro se qualquer uma das duas estiver carregando)
@@ -61,7 +61,7 @@ export function useGabaritos() {
   // 4. Função auxiliar agora reativa baseada no cache
   const getTurmaName = (classId: string) => {
     return (
-      turmas.value.find((t: Turma) => t._id === classId)?.name ||
+      (turmas.value ?? []).find((t: Turma) => t._id === classId)?.name ||
       "Turma não encontrada"
     );
   };

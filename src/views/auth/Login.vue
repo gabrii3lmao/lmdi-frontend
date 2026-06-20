@@ -8,6 +8,8 @@ const email = ref("");
 const password = ref("");
 const showPassword = ref(false);
 const isLoading = ref(false);
+const isResending = ref(false);
+const isVerified = ref(true);
 const errorMessage = ref("");
 const fieldErrors = ref<Record<string, string>>({});
 const router = useRouter();
@@ -58,7 +60,13 @@ async function handleLogin() {
       password: password.value,
     });
     const token = response.data.token;
-    const { id, name } = response.data.user;
+    const { id, name, isVerified: verified } = response.data.user;
+
+    if (!verified) {
+      isVerified.value = false;
+      errorMessage.value = "Seu email ainda não foi verificado. Verifique sua caixa de entrada.";
+      return;
+    }
 
     localStorage.setItem("token", token);
     localStorage.setItem("username", name);
@@ -79,6 +87,26 @@ async function handleLogin() {
     }
   } finally {
     isLoading.value = false;
+  }
+}
+
+async function resendVerification() {
+  if (!email.value.trim()) {
+    errorMessage.value = "Informe seu email para reenviar a verificação.";
+    return;
+  }
+
+  isResending.value = true;
+  try {
+    await api.post("/auth/resend-verification", { email: email.value });
+    errorMessage.value = "";
+    isVerified.value = true;
+    alert("Email de verificação reenviado! Verifique sua caixa de entrada.");
+  } catch (error: any) {
+    errorMessage.value =
+      error.response?.data?.message || "Erro ao reenviar. Tente novamente.";
+  } finally {
+    isResending.value = false;
   }
 }
 
@@ -154,6 +182,24 @@ onUnmounted(() => {
           <p class="text-slate-500 dark:text-slate-400 text-sm">
             Insira suas credenciais para acessar o seu painel de gestão.
           </p>
+        </div>
+
+        <div
+          v-if="!isVerified && !errorMessage"
+          class="mb-6 flex flex-col items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 transition-all"
+        >
+          <div class="flex items-start gap-3">
+            <i class="pi pi-exclamation-triangle mt-0.5 shrink-0 text-amber-500"></i>
+            <p class="text-sm font-medium">Seu email ainda não foi verificado. Verifique sua caixa de entrada.</p>
+          </div>
+          <button
+            @click="resendVerification"
+            :disabled="isResending"
+            class="ml-7 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors disabled:opacity-50"
+          >
+            <i v-if="isResending" class="pi pi-spin pi-spinner mr-1"></i>
+            {{ isResending ? "Enviando..." : "Reenviar email de verificação" }}
+          </button>
         </div>
 
         <div

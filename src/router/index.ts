@@ -41,6 +41,12 @@ const routes = [
     meta: { hideSidebar: true}, 
   },
   {
+    path: "/verify-email/:token",
+    name: "verify-email",
+    component: () => import("@/views/auth/VerifyEmail.vue"),
+    meta: { hideSidebar: true },
+  },
+  {
     path: "/classes",
     name: "showclasses",
     component: () => import("@/views/TurmasDashboard.vue"),

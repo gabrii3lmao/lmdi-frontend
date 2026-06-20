@@ -5,6 +5,7 @@ import { useThemeStore } from "@/stores/theme"
 import { useConfirm } from "primevue/useconfirm"
 import { useToast } from "primevue/usetoast"
 import api from "@/services/api"
+import LoadingSpinner from "@/components/common/LoadingSpinner.vue"
 
 const themeStore = useThemeStore()
 const router = useRouter()
@@ -16,12 +17,14 @@ const email = ref("")
 const editingName = ref(false)
 const editingEmail = ref(false)
 
+const carregandoPerfil = ref(true)
 const currentPassword = ref("")
 const newPassword = ref("")
 const confirmNewPassword = ref("")
 const changingPassword = ref(false)
 
 async function loadUser() {
+  carregandoPerfil.value = true
   try {
     const { data } = await api.get("/auth/me")
     name.value = data.name
@@ -29,6 +32,8 @@ async function loadUser() {
   } catch {
     name.value = localStorage.getItem("username") ?? ""
     email.value = ""
+  } finally {
+    carregandoPerfil.value = false
   }
 }
 
@@ -115,6 +120,9 @@ onMounted(loadUser)
         </p>
       </header>
 
+      <LoadingSpinner v-if="carregandoPerfil" message="Carregando perfil..." />
+
+      <template v-else>
       <!-- Perfil -->
       <section class="bg-white dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700 rounded-2xl p-6 md:p-8 space-y-6">
         <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
@@ -294,6 +302,7 @@ onMounted(loadUser)
       </section>
 
       <ConfirmDialog />
+      </template>
     </div>
   </div>
 </template>

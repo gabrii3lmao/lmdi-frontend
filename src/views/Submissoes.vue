@@ -7,6 +7,7 @@ import SubmissionFilters from "@/components/Submissions/SubmissionFilters.vue";
 import SubmissionTable from "@/components/Submissions/SubmissionTable.vue";
 import SubmissionDrawer from "@/components/Submissions/SubmissionDrawer.vue";
 import Pagination from "@/components/common/Pagination.vue";
+import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 import { submissionService } from "@/services/submissionService";
 import { turmaService } from "@/services/turmas";
 import { examService } from "@/services/examService";
@@ -36,7 +37,7 @@ const { data: turmas, isLoading: loadingTurmas } = useQuery({
     const paginated = res.data as any;
     return paginated?.data || paginated || [];
   },
-  initialData: [],
+  placeholderData: [],
 });
 
 // 2. Query das Provas (Dependente da Turma selecionada)
@@ -48,7 +49,7 @@ const { data: exams, isLoading: loadingExams } = useQuery({
     return paginated?.data || paginated || [];
   },
   enabled: computed(() => !!selectedClassId.value), // Só executa se tiver turma
-  initialData: [],
+  placeholderData: [],
 });
 
 // 3. Query das Submissões (Dependente da Prova selecionada)
@@ -69,7 +70,7 @@ const { data: submissions, isLoading: loadingSubmissions } = useQuery({
     return paginated || [];
   },
   enabled: computed(() => !!selectedExamId.value), // Só executa se tiver prova
-  initialData: [],
+  placeholderData: [],
 });
 
 // Limpa a prova selecionada ao trocar de turma
@@ -199,15 +200,20 @@ const openStudentDetails = async (sub: Submission) => {
           </div>
         </div>
 
-        <div
-          v-if="loadingSubmissions"
-          class="p-16 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl ring-1 ring-slate-200/80 dark:ring-slate-700 border border-slate-100 dark:border-slate-700 shadow-sm animate-pulse"
-        >
-          <i class="pi pi-spin pi-spinner text-3xl text-emerald-600 dark:text-emerald-400 mb-4"></i>
-          <span class="text-slate-500 dark:text-slate-400 text-sm font-semibold"
-            >Carregando submissões...</span
-          >
-        </div>
+        <LoadingSpinner
+          v-if="loadingTurmas"
+          message="Carregando turmas..."
+        />
+
+        <LoadingSpinner
+          v-else-if="loadingExams"
+          message="Carregando provas..."
+        />
+
+        <LoadingSpinner
+          v-else-if="loadingSubmissions"
+          message="Carregando submissões..."
+        />
 
         <div v-else-if="submissions.length > 0">
           <SubmissionTable

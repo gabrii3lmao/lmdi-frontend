@@ -30,7 +30,7 @@ const { data: turmas, isLoading: loading } = useQuery({
     }
     return paginated || [];
   },
-  initialData: [], // Garante que comece como um array vazio e não quebre a tela
+  placeholderData: [], // Garante que comece como um array vazio e não quebre a tela
 });
 
 function changePage(p: number) {
