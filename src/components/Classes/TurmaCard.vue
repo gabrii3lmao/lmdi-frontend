@@ -30,7 +30,7 @@ const shortCode = computed(() => props.turma._id.slice(-5).toUpperCase());
 
 <template>
   <div
-    class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ring-1 ring-slate-100 dark:ring-slate-700 rounded-2xl p-4 hover:ring-emerald-500/30 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+  class="aspect-[2/1] w-full group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ring-2 ring-slate-100 dark:ring-slate-700 rounded-2xl p-4 hover:ring-emerald-500/30 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
   >
     <!-- Header -->
     <div class="flex justify-between items-start mb-4">

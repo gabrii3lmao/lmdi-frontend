@@ -127,7 +127,7 @@ const toggleFaq = (index: number) => {
                 </h3>
 
                 <p
-                    class="bg-slate-100 dark:bg-slate-700 text-gray-750 dark:text-slate-300 text-sm mb-6 inline-block px-4 py-1 rounded-lg mt-2"
+                    class=" text-gray-750 dark:text-slate-300 text-sm mb-6 px-4 py-1 mt-2"
                 >
                     Se sua dúvida não foi respondida, nossa equipe técnica pode
                     te ajudar.

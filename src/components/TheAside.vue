@@ -224,14 +224,14 @@ const comingSoonBadge = "ml-auto text-[9px] font-bold uppercase tracking-wider t
               </h3>
               <ul class="space-y-1">
                 <li>
-                  <button
-                    @click="showComingSoon"
-                    :class="disabledNavItemClass"
+                  <RouterLink
+                    to="/analytics"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
                   >
                     <i class="pi pi-chart-pie text-base"></i>
                     <span>Desempenho</span>
-                    <span :class="comingSoonBadge">Em breve</span>
-                  </button>
+                  </RouterLink>
                 </li>
                 <li>
                   <button
@@ -425,45 +425,45 @@ const comingSoonBadge = "ml-auto text-[9px] font-bold uppercase tracking-wider t
           </h3>
           <ul class="space-y-1">
             <li>
-              <button
-                @click="showComingSoon"
-                :class="disabledNavItemClass"
-              >
-                <i class="pi pi-chart-pie text-base"></i>
-                <span>Desempenho</span>
-                <span :class="comingSoonBadge">Em breve</span>
-              </button>
-            </li>
-            <li>
-              <button
-                @click="showComingSoon"
-                :class="disabledNavItemClass"
-              >
-                <i class="pi pi-history text-base"></i>
-                <span>Histórico</span>
-                <span :class="comingSoonBadge">Em breve</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="mb-6">
-          <h3
-            class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
-          >
-            Suporte
-          </h3>
-          <ul class="space-y-1">
-            <li>
               <RouterLink
-                to="/faq"
+                to="/analytics"
                 :class="navItemClass"
                 :active-class="activeNavClass"
               >
-                <i class="pi pi-question-circle text-base"></i>
-                <span>Dúvidas</span>
+                <i class="pi pi-chart-pie text-base"></i>
+                <span>Desempenho</span>
               </RouterLink>
             </li>
+                <li>
+                  <button
+                    @click="showComingSoon"
+                    :class="disabledNavItemClass"
+                  >
+                    <i class="pi pi-history text-base"></i>
+                    <span>Histórico</span>
+                    <span :class="comingSoonBadge">Em breve</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-6">
+              <h3
+                class="px-4 text-[10px] font-bold text-slate-900 dark:text-slate-200 uppercase tracking-widest mb-3"
+              >
+                Suporte
+              </h3>
+              <ul class="space-y-1">
+                <li>
+                  <RouterLink
+                    to="/faq"
+                    :class="navItemClass"
+                    :active-class="activeNavClass"
+                  >
+                    <i class="pi pi-question-circle text-base"></i>
+                    <span>Dúvidas</span>
+                  </RouterLink>
+                </li>
                 <li>
                   <button
                     @click="showComingSoon"

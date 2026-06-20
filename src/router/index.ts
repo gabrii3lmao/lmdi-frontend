@@ -78,6 +78,12 @@ const routes = [
     meta: { requiresAuth: true, title: "Submissões dos Alunos" },
   },
   {
+    path: "/analytics",
+    name: "analytics",
+    component: () => import("@/views/Analytics.vue"),
+    meta: { requiresAuth: true, title: "Análise de Desempenho" },
+  },
+  {
     path: "/settings",
     name: "configuracoes",
     component: () => import("@/views/Configuracoes.vue"),

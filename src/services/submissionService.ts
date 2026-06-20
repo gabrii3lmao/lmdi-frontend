@@ -49,4 +49,10 @@ export const submissionService = {
 
   getSubmissionAnswers: (submissionId: string) =>
     api.get(`/submissions/${submissionId}/answers`),
+
+  exportReport: (examId: string) =>
+    api.get(`/submissions/${examId}/export`, { responseType: "blob" }),
+
+  getAnalytics: (examId: string) =>
+    api.get(`/submissions/${examId}/analytics`),
 };

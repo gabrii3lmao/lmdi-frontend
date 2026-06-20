@@ -16,6 +16,7 @@ import type { Exam } from "@/types/Exam";
 import type { Submission } from "@/types/Submission";
 
 const toast = useToast();
+const exporting = ref(false);
 
 // Estados locais de interface
 const selectedClassId = ref("");
@@ -127,6 +128,41 @@ const openStudentDetails = async (sub: Submission) => {
     loadingAnswers.value = false;
   }
 };
+
+const downloadReport = async () => {
+  if (!selectedExamId.value) return;
+  exporting.value = true;
+  try {
+    const res = await submissionService.exportReport(selectedExamId.value);
+    const blob = new Blob([res.data as BlobPart], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const examTitle = activeExam.value?.title || "relatorio";
+    a.href = url;
+    a.download = `relatorio_${examTitle.replace(/\s+/g, "_")}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.add({
+      severity: "success",
+      summary: "Relatório exportado",
+      detail: "Planilha baixada com sucesso!",
+      life: 3000,
+    });
+  } catch {
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível exportar o relatório.",
+      life: 4000,
+    });
+  } finally {
+    exporting.value = false;
+  }
+};
 </script>
 
 <template>
@@ -197,6 +233,16 @@ const openStudentDetails = async (sub: Submission) => {
                 averageScore
               }}</span>
             </div>
+
+            <button
+              v-if="selectedExamId && submissions.length > 0"
+              @click="downloadReport"
+              :disabled="exporting"
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold text-sm rounded-xl transition-all shadow-sm"
+            >
+              <i class="pi pi-file-excel"></i>
+              <span class="hidden sm:inline">{{ exporting ? "Exportando..." : "Exportar" }}</span>
+            </button>
           </div>
         </div>
 
