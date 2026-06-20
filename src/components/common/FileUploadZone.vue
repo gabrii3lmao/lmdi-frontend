@@ -16,7 +16,7 @@ const props = withDefaults(
     modelValue: UploadItem[];
     accept?: string;
   }>(),
-  { accept: "image/*,application/pdf" },
+  { accept: "image/*" },
 );
 
 const emit = defineEmits<{
@@ -34,11 +34,9 @@ const allowedTypes = [
   "image/png",
   "image/webp",
   "image/heic",
-  "application/pdf",
 ];
 
 function isValidFile(file: File): boolean {
-  if (file.type === "application/pdf") return true;
   if (file.type.startsWith("image/")) return true;
   return allowedTypes.includes(file.type);
 }
@@ -213,7 +211,7 @@ onUnmounted(() => {
           Arraste os arquivos aqui ou clique para selecionar
         </p>
         <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">
-          Imagens (JPG, PNG, WEBP) ou PDF &mdash; múltiplos arquivos
+          Imagens (JPG, PNG, WEBP) &mdash; múltiplos arquivos
         </p>
       </div>
     </div>
@@ -263,9 +261,9 @@ onUnmounted(() => {
           />
           <div
             v-else
-            class="w-full h-full flex items-center justify-center bg-amber-50"
+            class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-700"
           >
-            <i class="pi pi-file-pdf text-lg text-amber-600" />
+            <i class="pi pi-image text-lg text-slate-400" />
           </div>
         </div>
 

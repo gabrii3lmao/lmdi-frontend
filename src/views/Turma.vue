@@ -102,16 +102,38 @@ const handleProcessarGabaritoAluno = async (dados) => {
   let sucessos = 0;
   let erros = 0;
 
-  for (const item of dados.itens) {
-    try {
-      await submissionService.criarSubmissao(examIdSelecionado.value, {
-        nome: item.nome,
-        arquivo: item.arquivo,
-      });
-      sucessos++;
-    } catch {
-      erros++;
+  try {
+    const { data: signature } = await submissionService.getUploadSignature();
+
+    const uploadResults = await Promise.allSettled(
+      dados.itens.map((item) =>
+        submissionService.uploadToCloudinary(item.arquivo, signature),
+      ),
+    );
+
+    const submissions = [];
+
+    uploadResults.forEach((result, index) => {
+      if (result.status === "fulfilled") {
+        submissions.push({
+          studentName: dados.itens[index].nome,
+          imageUrl: result.value,
+        });
+        sucessos++;
+      } else {
+        console.error("Falha no upload para Cloudinary:", result.reason);
+        erros++;
+      }
+    });
+
+    if (submissions.length > 0) {
+      await submissionService.criarSubmissao(
+        examIdSelecionado.value,
+        submissions,
+      );
     }
+  } catch {
+    erros = dados.itens.length;
   }
 
   if (sucessos > 0) {
@@ -133,7 +155,7 @@ const handleProcessarGabaritoAluno = async (dados) => {
     toast.add({
       severity: "error",
       summary: "Erro",
-      detail: `${erros} gabarito${erros !== 1 ? "s" : ""} não pode${erros !== 1 ? "m" : ""} ser enviado${erros !== 1 ? "s" : ""}. Tente novamente.`,
+      detail: `${erros} gabarito${erros !== 1 ? "s" : ""} não pode${erros !== 1 ? "s" : ""} ser enviado${erros !== 1 ? "s" : ""}. Tente novamente.`,
       life: 4000,
     });
   }
