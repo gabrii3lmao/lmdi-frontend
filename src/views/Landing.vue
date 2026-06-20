@@ -75,42 +75,16 @@ function goToSlide(index: number) {
   slideTimer = setInterval(nextSlide, 5000);
 }
 
-const metrics = [
-  { label: "Professores ativos", value: 2000, suffix: "+", icon: "pi-users" },
-  { label: "Provas corrigidas", value: 15000, suffix: "+", icon: "pi-book" },
-  { label: "Precisão na correção", value: 98, suffix: "%", icon: "pi-check-circle" },
-  { label: "Tempo economizado", value: 90, suffix: "%", icon: "pi-clock" },
-];
 
-const counts = ref<number[]>([0, 0, 0, 0]);
-let counting = false;
-let rafId: number | null = null;
-
-function animateMetrics() {
-  if (counting) return;
-  counting = true;
-  const targets = metrics.map((m) => m.value);
-  const start = performance.now();
-  const duration = 2200;
-
-  function tick(now: number) {
-    const t = Math.min((now - start) / duration, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    counts.value = targets.map((v) => Math.floor(v * ease));
-    if (t < 1) rafId = requestAnimationFrame(tick);
-  }
-  rafId = requestAnimationFrame(tick);
-}
 
 let observer: IntersectionObserver | null = null;
 
 function initReveal() {
-  observer = new IntersectionObserver(
+      observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible");
-          if (entry.target.id === "metrics") animateMetrics();
           observer?.unobserve(entry.target);
         }
       });
@@ -146,21 +120,21 @@ const steps = [
     icon: "pi-users",
     title: "Cadastre sua Turma",
     desc: "Adicione seus alunos em poucos cliques. Cada turma mantém seu histórico organizado.",
-    time: "2 min",
+    time: "20 seg",
     img: "/app-screenshot-turma.png",
   },
   {
     icon: "pi-file-check",
     title: "Monte o Gabarito",
     desc: "Defina as questões, alternativas e o gabarito oficial. O sistema guarda tudo automaticamente.",
-    time: "3 min",
+    time: "30 seg",
     img: "/app-screenshot-provas.png",
   },
   {
     icon: "pi-images",
     title: "Fotografe e Pronto",
     desc: "Tire foto dos cartões-resposta. A IA identifica, corrige e gera as notas na hora.",
-    time: "Instantâneo",
+    time: "5 a 10 seg",
     img: "/app-screenshot-alunos.png",
   },
 ];
@@ -180,7 +154,6 @@ onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
   clearInterval(slideTimer);
   clearInterval(screenshotTimer);
-  if (rafId) cancelAnimationFrame(rafId);
   observer?.disconnect();
 });
 </script>
@@ -229,7 +202,7 @@ onUnmounted(() => {
 
     <!-- Hero -->
     <section
-      class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-emerald-50/60 to-white dark:from-slate-800 dark:to-slate-900"
+      class="relative pt-32 pb-8 md:pt-40 md:pb-12 overflow-hidden bg-gradient-to-b from-emerald-50/60 to-white dark:from-slate-800 dark:to-slate-900"
     >
       <div class="hero-glow"></div>
       <div
@@ -289,7 +262,7 @@ onUnmounted(() => {
         </div>
 
         <!-- Screenshot carousel -->
-        <div class="mt-16 max-w-5xl mx-auto hero-fade-in" style="animation-delay: 0.5s">
+        <div class="mt-12 max-w-5xl mx-auto hero-fade-in" style="animation-delay: 0.5s">
           <div
             class="relative rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-slate-950/50 overflow-hidden"
           >
@@ -320,39 +293,85 @@ onUnmounted(() => {
             </div>
           </div>
 
-          <!-- Floating badge -->
-          <div
-            class="absolute -bottom-4 right-4 lg:right-8 bg-emerald-600 text-white rounded-xl px-5 py-3 shadow-lg shadow-emerald-500/30 flex items-center gap-3"
-          >
-            <i class="pi pi-check-circle text-xl"></i>
-            <div>
-              <p class="text-sm font-bold">+2.000 professores</p>
-              <p class="text-xs text-emerald-200">já utilizam</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
 
-    <!-- Metrics -->
-    <section id="metrics" class="reveal py-16 md:py-20 bg-white dark:bg-slate-900">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          <div
-            v-for="(m, i) in metrics"
-            :key="m.label"
-            class="text-center"
-          >
-            <div
-              class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto mb-4"
-            >
-              <i :class="['pi text-2xl', m.icon]"></i>
+    <!-- Trust bar -->
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
+        <div class="flex items-center gap-2 text-emerald-100">
+          <i class="pi pi-money-bill text-emerald-200 text-sm"></i>
+          <span class="text-sm font-semibold text-white">100% gratuito no período de testes</span>
+        </div>
+        <span class="hidden sm:block text-emerald-400 text-xs">|</span>
+        <div class="flex items-center gap-2 text-emerald-100">
+          <i class="pi pi-shield text-emerald-200 text-sm"></i>
+          <span class="text-sm font-semibold text-white">Privacidade garantida</span>
+        </div>
+        <span class="hidden sm:block text-emerald-400 text-xs">|</span>
+        <div class="flex items-center gap-2 text-emerald-100">
+          <i class="pi pi-credit-card text-emerald-200 text-sm"></i>
+          <span class="text-sm font-semibold text-white">Sem cartão de crédito</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Savings -->
+    <section class="reveal py-16 md:py-20 bg-white dark:bg-slate-900">
+      <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-3">
+            Quanto tempo você
+            <span class="text-emerald-600 dark:text-emerald-400">economiza</span>
+          </h2>
+          <p class="text-slate-500 dark:text-slate-400 text-lg">
+            Números reais de uma plataforma feita para professores.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-5 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+              <i class="pi pi-clock text-xl"></i>
             </div>
-            <p class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-1">
-              {{ counts[i] }}{{ m.suffix }}
+            <p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-1">~5 min</p>
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">para corrigir 30 alunos</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Uma prova de 20 questões que levaria de 30 minutos a 1 hora manualmente fica pronta em minutos.
             </p>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
-              {{ m.label }}
+          </div>
+
+          <div class="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-5 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+              <i class="pi pi-file-excel text-xl"></i>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-1">1 clique</p>
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">relatório completo em Excel</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Planilha com notas, acertos por questão e estatísticas da turma gerada automaticamente.
+            </p>
+          </div>
+
+          <div class="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-5 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+              <i class="pi pi-camera text-xl"></i>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-1">Qualquer celular</p>
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">fotografe e pronto</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Funciona com qualquer modelo de cartão-resposta. Basta apontar a câmera e enviar.
+            </p>
+          </div>
+
+          <div class="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-lg transition-all duration-300 group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-5 group-hover:bg-emerald-600 dark:group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+              <i class="pi pi-chart-line text-xl"></i>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mb-1">+10 h/semana</p>
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">de volta para você</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Tempo que professores recuperam ao automatizar correções e relatórios com a plataforma.
             </p>
           </div>
         </div>
@@ -597,7 +616,7 @@ onUnmounted(() => {
           </p>
           <div class="flex items-center gap-4 pt-2">
             <a
-              href="#"
+              href="https://www.instagram.com/letmedoit_ifpi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
               class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all"
               aria-label="Instagram"
             >
