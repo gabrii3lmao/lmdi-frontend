@@ -1,55 +1,59 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-// Se estiver usando PrimeIcons, certifique-se de que está importado no main.ts
 </script>
 
 <template>
   <div class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 font-sans px-6 py-12">
-    <div class="z-10 w-full max-w-5xl bg-white dark:bg-slate-800 p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-      
-      <div class="grid md:grid-cols-2 gap-12 items-center">
-        
-        <div class="relative flex flex-col items-center justify-center">
-          <div class="w-full h-64 md:h-80 rounded-2xl flex items-center justify-center mb-8">
-            <div class="text-center p-6">
-              <img class="rounded-xl border-8 border-slate-200 dark:border-slate-600" src="@/assets/confused_dog.webp" alt="cachorro confuso">
-            </div>
-          </div>
-        </div>
+    <div class="z-10 w-full max-w-2xl bg-white dark:bg-slate-800 p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
 
-        <div class="text-center md:text-left">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800 text-sky-700 dark:text-sky-300 mb-6">
-            <i class="pi pi-question-circle text-sm"></i>
-            <span class="text-xs font-semibold uppercase tracking-wider">Erramos o traço</span>
-          </div>
+      <div class="relative flex items-center justify-center py-6 md:py-10">
+        <span class="select-none text-[12rem] md:text-[18rem] font-black leading-none text-slate-300 dark:text-slate-700/40">
+          404
+        </span>
+        <img class="absolute w-56 md:w-72 confused-cat" src="@/assets/confused-cat.png" alt="gato confuso">
+      </div>
 
-          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tighter text-slate-950 dark:text-slate-100 mb-4 leading-tight">
-            Ops! Essa página saiu de perspectiva.
-          </h2>
-          
-          <p class="text-lg text-slate-600 dark:text-slate-400 mb-12 leading-relaxed max-w-lg mx-auto md:mx-0">
-            Até o nosso doguinho ficou confuso com essa situação. O conteúdo que você busca não foi encontrado no caderno de esboços.
-          </p>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-slate-100 mt-2 mb-3">
+        Página não encontrada
+      </h2>
 
-          <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <RouterLink
-              to="/"
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl hover:bg-emerald-800 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
-            >
-              <i class="pi pi-arrow-left text-xs"></i>
-              Voltar para o Início
-            </RouterLink>
-            
-            <button
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-red-500 border border-red-600 rounded-xl hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:scale-[0.98]"
-            >
-              <i class="pi pi-flag text-xs"></i>
-              Reportar Bug
-            </button>
-          </div>
-        </div>
+      <p class="text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-md mx-auto">
+        Não deixe o nosso gatinho confuso assim novamente!  
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <RouterLink
+          to="/"
+          class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-emerald-600 dark:bg-emerald-500 rounded-xl hover:bg-emerald-800 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 active:scale-[0.98]"
+        >
+          <i class="pi pi-arrow-left text-xs"></i>
+          Voltar para o Início
+        </RouterLink>
+
+        <button
+          class="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 text-sm font-semibold text-white transition-all bg-red-500 border border-red-600 rounded-xl hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 active:scale-[0.98]"
+        >
+          <i class="pi pi-flag text-xs"></i>
+          Reportar Bug
+        </button>
       </div>
 
     </div>
   </div>
 </template>
+
+<style scoped>
+.confused-cat {
+  animation: tilt-wobble 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+}
+
+@keyframes tilt-wobble {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(-3deg) scale(1.02); }
+  30% { transform: rotate(2deg) scale(1.01); }
+  45% { transform: rotate(-1deg) scale(1.02); }
+  60% { transform: rotate(2deg) scale(1); }
+  80% { transform: rotate(-2deg) scale(1.01); }
+}
+</style>
