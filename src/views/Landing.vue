@@ -656,18 +656,18 @@ onUnmounted(() => {
             >
               Entrar
             </RouterLink>
-            <a
-              href="#"
+            <RouterLink
+              to="/pricing"
               class="text-sm text-slate-400 hover:text-white transition-colors"
             >
               Preços
-            </a>
-            <a
-              href="#"
+            </RouterLink>
+            <RouterLink
+              to="/perguntas-frequentes"
               class="text-sm text-slate-400 hover:text-white transition-colors"
             >
               FAQ
-            </a>
+            </RouterLink>
           </nav>
         </div>
 

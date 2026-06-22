@@ -11,6 +11,18 @@ const routes = [
     meta: { hideSidebar: true },
   },
   {
+    path: "/pricing",
+    name: "precos",
+    component: () => import("@/views/Precos.vue"),
+    meta: { hideSidebar: true },
+  },
+  {
+    path: "/perguntas-frequentes",
+    name: "perguntas-frequentes",
+    component: () => import("@/views/LandingFAQ.vue"),
+    meta: { hideSidebar: true },
+  },
+  {
     path: "/dashboard",
     name: "home",
     component: () => import("@/views/Home.vue"),

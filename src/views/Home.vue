@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { RouterLink } from "vue-router";
-import { turmaService } from "@/services/turmas";
-import { submissionService } from "@/services/submissionService";
-import { examService } from "@/services/examService";
 import { useQuery } from "@tanstack/vue-query";
+import { dashboardService } from "@/services/dashboardService";
 
-interface Turma {
-  _id: string;
-  name: string;
-}
-
-// Estados
 const name = ref("Professor");
 
-// Dicas (Transformado em ref para não mudar aleatoriamente quando os dados carregarem)
 const dicas = [
   "Organize seus alunos criando as turmas primeiro. Depois, basta criar um gabarito mestre vinculado a essa turma para iniciar a correção por IA.",
   "Ao criar um gabarito, certifique-se de que o número de questões e o número de alternativas estejam corretos.",
@@ -34,88 +24,45 @@ function carregarNomeUsuario() {
   }
 }
 
-// 1. Busca as turmas usando a mesma chave das outras telas (Cache Compartilhado)
-const { data: turmasData, isLoading: loading } = useQuery({
-  queryKey: ["turmas"],
+const { data: dashboard, isLoading } = useQuery({
+  queryKey: ["dashboard"],
   queryFn: async () => {
-    const { data } = await turmaService.getAll(1, 100);
-    const paginated = data as any;
-    return (paginated?.data || paginated || []) as Turma[];
+    const { data } = await dashboardService.getDashboard();
+    return data;
   },
-  placeholderData: [],
 });
 
-// Inverte a ordem apenas para a visualização do Dashboard, usando uma cópia para não mutar o cache
-const turmas = computed(() => {
-  const list = turmasData.value || [];
-  return [...list].reverse();
+const turmas = computed(() => dashboard.value?.recentClasses ?? []);
+
+const stats = computed(() => {
+  const d = dashboard.value;
+  return [
+    {
+      label: "Turmas Cadastradas",
+      value: d?.stats.totalClasses.toString() ?? "0",
+      icon: "pi-users",
+      color: "text-emerald-500",
+      loading: false,
+    },
+    {
+      label: "Gabaritos Mestres",
+      value: d?.stats.totalExams.toString() ?? "0",
+      icon: "pi-file-check",
+      color: "text-emerald-500",
+      loading: isLoading.value,
+    },
+    {
+      label: "Correções Realizadas",
+      value: d?.stats.totalSubmissions.toString() ?? "0",
+      icon: "pi-book",
+      color: "text-emerald-500",
+      loading: isLoading.value,
+    },
+  ];
 });
 
-// 2. Busca as submissões APENAS quando as turmas terminarem de carregar (Query Dependente)
-const { data: totalSubmissoes, isFetching: carregandoSubmissoes } = useQuery({
-  // A chave da query inclui os IDs das turmas, se criar turma nova, ele recalcula as submissões!
-  queryKey: [
-    "dashboard-submissoes",
-    computed(() => (turmasData.value || []).map((t: Turma) => t._id).join(",")),
-  ],
-  queryFn: async () => {
-    const list = turmasData.value || [];
-    const promises = list.map((turma: Turma) =>
-      submissionService.getSubmissionsByClass(turma._id),
-    );
-    const responses = await Promise.all(promises);
-    return responses.reduce((acc, res) => acc + (res.data?.length || 0), 0);
-  },
-  // O Vue Query só executa essa requisição se existirem turmas
-  enabled: computed(() => (turmasData.value || []).length > 0),
-  placeholderData: 0,
-});
+const recentActivity = computed(() => dashboard.value?.recentActivity ?? []);
 
-const { data: totalExames, isFetching: carregandoExames } = useQuery({
-  queryKey: [
-    "dashboard-exames",
-    computed(() => (turmasData.value || []).map((t: Turma) => t._id).join(",")),
-  ],
-  queryFn: async () => {
-    const list = turmasData.value || [];
-    const promises = list.map((turma: Turma) =>
-      examService.listarGabaritosMestre(turma._id),
-    );
-    const responses = await Promise.all(promises);
-    return responses.reduce((acc, res: any) => {
-      const data = res.data?.data || res.data || [];
-      return acc + data.length;
-    }, 0);
-  },
-  enabled: computed(() => (turmasData.value || []).length > 0),
-  placeholderData: 0,
-});
-
-const stats = computed(() => [
-  {
-    label: "Turmas Cadastradas",
-    value: turmas.value.length.toString(),
-    icon: "pi-users",
-    color: "text-emerald-500",
-    loading: false,
-  },
-  {
-    label: "Gabaritos Mestres",
-    value: (totalExames.value ?? 0).toString(),
-    icon: "pi-file-check",
-    color: "text-emerald-500",
-    loading: carregandoExames.value,
-  },
-  {
-    label: "Correções Realizadas",
-    value: (totalSubmissoes.value ?? 0).toString(),
-    icon: "pi-book",
-    color: "text-emerald-500",
-    loading: carregandoSubmissoes.value,
-  },
-]);
-
-// Ciclo de Vida
 onMounted(() => {
   carregarNomeUsuario();
 });
@@ -167,7 +114,7 @@ onMounted(() => {
             </RouterLink>
           </div>
 
-          <div v-if="loading" class="space-y-3">
+          <div v-if="isLoading" class="space-y-3">
             <div
               v-for="i in 3"
               :key="i"
@@ -188,11 +135,19 @@ onMounted(() => {
                 >
                   <i class="pi pi-users text-sm"></i>
                 </div>
-                <h4
-                  class="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors"
-                >
-                  {{ turma.name }}
-                </h4>
+                <div>
+                  <h4
+                    class="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors"
+                  >
+                    {{ turma.name }}
+                  </h4>
+                  <p class="text-xs text-slate-400 dark:text-slate-500">
+                    {{ turma.examCount }} {{ turma.examCount === 1 ? "gabarito" : "gabaritos" }}
+                    &middot;
+                    {{ turma.submissionCount }}
+                    {{ turma.submissionCount === 1 ? "correção" : "correções" }}
+                  </p>
+                </div>
               </div>
               <div
                 class="text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all"
@@ -210,6 +165,55 @@ onMounted(() => {
             <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
               Nenhuma turma cadastrada ainda.
             </p>
+          </div>
+
+          <div
+            v-if="recentActivity.length > 0"
+            class="border-t border-slate-200 dark:border-slate-700 pt-6"
+          >
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-4"
+            >
+              <i class="pi pi-history text-emerald-500 dark:text-emerald-400"></i>
+              Atividade Recente
+            </h3>
+            <div class="space-y-2">
+              <div
+                v-for="item in recentActivity"
+                :key="item.createdAt"
+                class="bg-white dark:bg-slate-800 ring-1 ring-slate-100 dark:ring-slate-700 p-3 rounded-xl flex items-center gap-3 border border-slate-200 dark:border-slate-700"
+              >
+                <div
+                  class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                  :class="{
+                    'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400': item.status === 'success',
+                    'bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400': item.status === 'pending',
+                    'bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400': item.status === 'error',
+                  }"
+                >
+                  <i
+                    :class="[
+                      'pi text-xs',
+                      item.status === 'success' ? 'pi-check' : item.status === 'pending' ? 'pi-clock' : 'pi-exclamation-triangle',
+                    ]"
+                  ></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">
+                    {{ item.studentName }}
+                    <span class="text-slate-400 dark:text-slate-500 font-normal">
+                      &mdash; {{ item.examTitle }}
+                    </span>
+                  </p>
+                  <p class="text-xs text-slate-400 dark:text-slate-500">
+                    {{ item.className }}
+                    <span v-if="item.score !== null && item.score !== undefined" class="ml-2 font-semibold" :class="item.score >= 6 ? 'text-emerald-500' : 'text-red-400'">
+                      {{ item.score.toFixed(1) }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -233,7 +237,7 @@ onMounted(() => {
                   {{ stat.label }}
                 </p>
                 <h3 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                  {{ loading || stat.loading ? "-" : stat.value }}
+                  {{ isLoading || stat.loading ? "-" : stat.value }}
                 </h3>
               </div>
             </div>
