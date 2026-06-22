@@ -7,10 +7,11 @@ import { RouterLink } from "vue-router";
     <div class="z-10 w-full max-w-2xl bg-white dark:bg-slate-800 p-8 md:p-16 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 text-center">
 
       <div class="relative flex items-center justify-center py-6 md:py-10">
-        <span class="select-none text-[12rem] md:text-[18rem] font-black leading-none text-slate-300 dark:text-slate-700/40">
+        <span class="select-none text-[12rem] md:text-[18rem] font-black leading-none text-slate-300 dark:text-slate-100/20">
           404
         </span>
-        <img class="absolute w-56 md:w-72 confused-cat" src="@/assets/confused-cat.png" alt="gato confuso">
+        <img class="absolute w-56 md:w-72 confused-cat dark:hidden" src="@/assets/confused-cat.png" alt="gato confuso">
+        <img class="absolute w-56 md:w-72 confused-cat hidden dark:block" src="@/assets/confused-car-dark.png" alt="gato confuso escuro">
       </div>
 
       <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-slate-100 mt-2 mb-3">
