@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useToast } from "primevue/usetoast";
-import { useQuery } from "@tanstack/vue-query"; // <-- Importação do TanStack Query
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useConfirm } from "primevue/useconfirm";
 
 import SubmissionFilters from "@/components/Submissions/SubmissionFilters.vue";
 import SubmissionTable from "@/components/Submissions/SubmissionTable.vue";
 import SubmissionDrawer from "@/components/Submissions/SubmissionDrawer.vue";
+import EditSubmissionModal from "@/components/Submissions/EditSubmissionModal.vue";
 import Pagination from "@/components/common/Pagination.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 import { submissionService } from "@/services/submissionService";
@@ -13,9 +15,11 @@ import { turmaService } from "@/services/turmas";
 import { examService } from "@/services/examService";
 import type { Turma } from "@/types/Turma";
 import type { Exam } from "@/types/Exam";
-import type { Submission } from "@/types/Submission";
+import type { Submission, SubmissionDetail } from "@/types/Submission";
 
 const toast = useToast();
+const confirm = useConfirm();
+const queryClient = useQueryClient();
 const exporting = ref(false);
 
 // Estados locais de interface
@@ -24,6 +28,13 @@ const selectedExamId = ref("");
 const selectedSubmission = ref<Submission | null>(null);
 const isDrawerOpen = ref(false);
 const loadingAnswers = ref(false);
+
+// Estados do modal de edição
+const editModalOpen = ref(false);
+const editingSubmission = ref<Submission | null>(null);
+const savingEdit = ref(false);
+
+const selectedStatus = ref("");
 
 const page = ref(1);
 const limit = ref(10);
@@ -55,12 +66,13 @@ const { data: exams, isLoading: loadingExams } = useQuery({
 
 // 3. Query das Submissões (Dependente da Prova selecionada)
 const { data: submissions, isLoading: loadingSubmissions } = useQuery({
-  queryKey: ["submissoes", selectedExamId, page, limit],
+  queryKey: ["submissoes", selectedExamId, selectedStatus, page, limit],
   queryFn: async () => {
     const res = await submissionService.getAllSubmission(
       selectedExamId.value,
       page.value,
       limit.value,
+      selectedStatus.value || undefined,
     );
     const paginated = res.data as any;
     if (paginated?.data) {
@@ -82,11 +94,20 @@ watch(selectedClassId, () => {
 
 watch(selectedExamId, () => {
   page.value = 1;
+  selectedStatus.value = "";
+});
+
+watch(selectedStatus, () => {
+  page.value = 1;
 });
 
 // Variáveis computadas derivadas das Queries
 const activeExam = computed(() => {
   return (exams.value || []).find((e: Exam) => e._id === selectedExamId.value) || null;
+});
+
+const hasErrors = computed(() => {
+  return (submissions.value || []).some((s: Submission) => s.status === "error");
 });
 
 const averageScore = computed(() => {
@@ -129,6 +150,71 @@ const openStudentDetails = async (sub: Submission) => {
   }
 };
 
+const openEditModal = (sub: Submission) => {
+  editingSubmission.value = sub;
+  editModalOpen.value = true;
+};
+
+const handleSaveEdit = async (data: {
+  studentName: string;
+  score: number | undefined;
+  totalCorrect: number | undefined;
+  details: SubmissionDetail[] | undefined;
+}) => {
+  if (!editingSubmission.value) return;
+  savingEdit.value = true;
+  try {
+    await submissionService.atualizarSubmissao(editingSubmission.value._id, data);
+    toast.add({
+      severity: "success",
+      summary: "Sucesso",
+      detail: "Submissão atualizada com sucesso!",
+      life: 3000,
+    });
+    editModalOpen.value = false;
+    queryClient.invalidateQueries({ queryKey: ["submissoes", selectedExamId] });
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível atualizar a submissão.",
+      life: 4000,
+    });
+  } finally {
+    savingEdit.value = false;
+  }
+};
+
+const confirmDelete = (sub: Submission) => {
+  confirm.require({
+    message: `Tem certeza que deseja excluir a submissão de "${sub.studentName}"?`,
+    header: "Confirmar Exclusão",
+    icon: "pi pi-exclamation-triangle",
+    rejectLabel: "Cancelar",
+    acceptLabel: "Excluir",
+    acceptClass: "p-button-danger",
+    accept: async () => {
+      try {
+        await submissionService.deletarSubmissao(sub._id);
+        toast.add({
+          severity: "success",
+          summary: "Excluído",
+          detail: "Submissão excluída com sucesso!",
+          life: 3000,
+        });
+        queryClient.invalidateQueries({ queryKey: ["submissoes", selectedExamId] });
+      } catch {
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível excluir a submissão.",
+          life: 4000,
+        });
+      }
+    },
+  });
+};
+
 const downloadReport = async () => {
   if (!selectedExamId.value) return;
   exporting.value = true;
@@ -163,6 +249,64 @@ const downloadReport = async () => {
     exporting.value = false;
   }
 };
+
+const handleReprocess = async (sub: Submission) => {
+  confirm.require({
+    message: `Deseja reenviar a submissão de "${sub.studentName}" para a IA?`,
+    header: "Reenviar para Análise",
+    icon: "pi pi-refresh",
+    rejectLabel: "Cancelar",
+    acceptLabel: "Reenviar",
+    accept: async () => {
+      try {
+        await submissionService.reprocessarSubmissao(sub._id);
+        toast.add({
+          severity: "success",
+          summary: "Reenviado",
+          detail: "Submissão re-enfileirada para processamento.",
+          life: 3000,
+        });
+        queryClient.invalidateQueries({ queryKey: ["submissoes", selectedExamId] });
+      } catch {
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível reenviar a submissão.",
+          life: 4000,
+        });
+      }
+    },
+  });
+};
+
+const handleBatchReprocess = async () => {
+  confirm.require({
+    message: "Deseja reenviar TODAS as submissões com erro para a IA?",
+    header: "Reenviar Todas com Falha",
+    icon: "pi pi-refresh",
+    rejectLabel: "Cancelar",
+    acceptLabel: "Reenviar Todas",
+    accept: async () => {
+      try {
+        const res = await submissionService.reprocessarEmLote(selectedExamId.value);
+        toast.add({
+          severity: "success",
+          summary: "Reenviadas",
+          detail: (res.data as any)?.message || "Submissões re-enfileiradas.",
+          life: 3000,
+        });
+        queryClient.invalidateQueries({ queryKey: ["submissoes", selectedExamId] });
+      } catch {
+        toast.add({
+          severity: "error",
+          summary: "Erro",
+          detail: "Não foi possível reenviar as submissões.",
+          life: 4000,
+        });
+      }
+    },
+  });
+};
 </script>
 
 <template>
@@ -187,10 +331,12 @@ const downloadReport = async () => {
           :exams="exams"
           :selectedClassId="selectedClassId"
           :selectedExamId="selectedExamId"
+          :selectedStatus="selectedStatus"
           :loadingTurmas="loadingTurmas"
           :loadingExams="loadingExams"
           @update:selectedClassId="selectedClassId = $event"
           @update:selectedExamId="selectedExamId = $event"
+          @update:selectedStatus="selectedStatus = $event"
         />
 
         <div
@@ -235,6 +381,14 @@ const downloadReport = async () => {
             </div>
 
             <button
+              v-if="hasErrors"
+              @click="handleBatchReprocess"
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm"
+            >
+              <i class="pi pi-refresh"></i>
+              <span class="hidden sm:inline">Reenviar com falha</span>
+            </button>
+            <button
               v-if="selectedExamId && submissions.length > 0"
               @click="downloadReport"
               :disabled="exporting"
@@ -265,6 +419,9 @@ const downloadReport = async () => {
           <SubmissionTable
             :submissions="submissions"
             @open="openStudentDetails"
+            @edit="openEditModal"
+            @delete="confirmDelete"
+            @reprocess="handleReprocess"
           />
         </div>
 
@@ -307,6 +464,14 @@ const downloadReport = async () => {
           :exam="activeExam"
           :open="isDrawerOpen"
           @close="isDrawerOpen = false"
+        />
+
+        <EditSubmissionModal
+          :is-open="editModalOpen"
+          :submission="editingSubmission"
+          :saving="savingEdit"
+          @close="editModalOpen = false"
+          @save="handleSaveEdit"
         />
       </div>
     </div>

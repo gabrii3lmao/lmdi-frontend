@@ -45,6 +45,26 @@ defineEmits(["close"]);
           </span>
         </div>
 
+        <div v-if="submission.imageUrl" class="mb-6">
+          <h3
+            class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3 px-1"
+          >
+            Imagem Original
+          </h3>
+          <a
+            :href="submission.imageUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block rounded-xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-700 border border-slate-100 dark:border-slate-700 shadow-sm hover:ring-emerald-400/50 transition-all"
+          >
+            <img
+              :src="submission.imageUrl"
+              alt="Cartão-resposta do aluno"
+              class="w-full h-auto object-contain"
+            />
+          </a>
+        </div>
+
         <h3
           class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3 px-1"
         >

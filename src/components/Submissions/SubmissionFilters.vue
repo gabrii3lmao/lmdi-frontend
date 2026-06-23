@@ -6,11 +6,12 @@ defineProps<{
   exams: Exam[];
   selectedClassId: string;
   selectedExamId: string;
+  selectedStatus: string;
   loadingTurmas: boolean;
   loadingExams: boolean;
 }>();
 
-defineEmits(["update:selectedClassId", "update:selectedExamId"]);
+defineEmits(["update:selectedClassId", "update:selectedExamId", "update:selectedStatus"]);
 </script>
 
 <template>
@@ -49,6 +50,23 @@ defineEmits(["update:selectedClassId", "update:selectedExamId"]);
       <option v-for="e in exams" :key="e._id" :value="e._id">
         {{ e.title }}
       </option>
+    </select>
+
+    <select
+      :value="selectedStatus"
+      @change="
+        $emit(
+          'update:selectedStatus',
+          ($event.target as HTMLSelectElement).value,
+        )
+      "
+      :disabled="!selectedExamId"
+      class="flex-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <option value="">Todas</option>
+      <option value="pending">Pendente</option>
+      <option value="success">Corrigido</option>
+      <option value="error">Erro na Leitura</option>
     </select>
   </div>
 </template>

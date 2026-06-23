@@ -272,6 +272,7 @@ async function downloadReport() {
           :exams="exams || []"
           :selectedClassId="selectedClassId"
           :selectedExamId="selectedExamId"
+          :selectedStatus="''"
           :loadingTurmas="loadingTurmas"
           :loadingExams="loadingExams"
           @update:selectedClassId="selectedClassId = $event"

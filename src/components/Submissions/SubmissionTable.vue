@@ -1,17 +1,16 @@
 <script setup lang="ts">
-// Adicionando a tipagem básica para ter o autocompletar no template
-interface Submission {
-  _id: string;
-  studentName: string;
-  score?: number;
-  status: string;
-}
+import type { Submission } from "@/types/Submission";
 
 defineProps<{
   submissions: Submission[];
 }>();
 
-defineEmits(["open"]);
+defineEmits<{
+  open: [sub: Submission];
+  edit: [sub: Submission];
+  delete: [sub: Submission];
+  reprocess: [sub: Submission];
+}>();
 </script>
 
 <template>
@@ -25,7 +24,9 @@ defineEmits(["open"]);
         >
           <tr>
             <th class="p-4 px-6 font-semibold">Nome do Aluno</th>
+            <th class="p-4 px-6 font-semibold">Status</th>
             <th class="p-4 px-6 text-right font-semibold">Nota</th>
+            <th class="p-4 px-6 text-right font-semibold w-36">Ações</th>
           </tr>
         </thead>
 
@@ -33,13 +34,15 @@ defineEmits(["open"]);
           <tr
             v-for="sub in submissions"
             :key="sub._id"
-            @click="$emit('open', sub)"
-            class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer group"
+            class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors group"
           >
-            <td class="p-4 px-6">
+            <td
+              class="p-4 px-6 cursor-pointer"
+              @click="$emit('open', sub)"
+            >
               <div class="flex items-center gap-4">
                 <div
-                  class="w-9 h-9 rounded-full bg-emerald-50 dark:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm font-bold shrink-0 group-hover:bg-emerald-100/80 dark:group-hover:bg-emerald-900/60 transition-colors"
+                  class="w-9 h-9 rounded-full bg-emerald-50 dark:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm font-bold shrink-0"
                 >
                   {{
                     sub.studentName
@@ -48,11 +51,41 @@ defineEmits(["open"]);
                   }}
                 </div>
                 <span
-                  class="text-slate-700 dark:text-slate-300 font-semibold group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors"
+                  class="text-slate-700 dark:text-slate-300 font-semibold"
                 >
                   {{ sub.studentName }}
                 </span>
               </div>
+            </td>
+
+            <td class="p-4 px-6">
+              <span
+                :class="[
+                  'inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-1 rounded',
+                  sub.status === 'success'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800'
+                    : sub.status === 'pending'
+                      ? 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-800'
+                      : 'bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800',
+                ]"
+              >
+                <i
+                  v-if="sub.status === 'pending'"
+                  class="pi pi-spin pi-spinner text-[10px]"
+                ></i>
+                <i
+                  v-else-if="sub.status === 'success'"
+                  class="pi pi-check text-[10px]"
+                ></i>
+                <i v-else class="pi pi-times text-[10px]"></i>
+                {{
+                  sub.status === "success"
+                    ? "Corrigido"
+                    : sub.status === "pending"
+                      ? "Processando..."
+                      : "Erro na Leitura"
+                }}
+              </span>
             </td>
 
             <td class="p-4 px-6 text-right">
@@ -70,8 +103,35 @@ defineEmits(["open"]);
                 class="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600"
               >
                 <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"
-                  >Corrigindo...</span
+                  >-</span
                 >
+              </div>
+            </td>
+
+            <td class="p-4 px-6 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <button
+                  v-if="sub.status === 'error'"
+                  @click.stop="$emit('reprocess', sub)"
+                  title="Reenviar para IA"
+                  class="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-all"
+                >
+                  <i class="pi pi-refresh text-sm"></i>
+                </button>
+                <button
+                  @click.stop="$emit('edit', sub)"
+                  title="Editar"
+                  class="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-all"
+                >
+                  <i class="pi pi-pencil text-sm"></i>
+                </button>
+                <button
+                  @click.stop="$emit('delete', sub)"
+                  title="Excluir"
+                  class="p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all"
+                >
+                  <i class="pi pi-trash text-sm"></i>
+                </button>
               </div>
             </td>
           </tr>

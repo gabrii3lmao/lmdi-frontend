@@ -1,5 +1,6 @@
 import api from "./api";
 import axios from "axios";
+import type { SubmissionDetail } from "@/types/Submission";
 
 interface UploadSignature {
   signature: string;
@@ -10,9 +11,9 @@ interface UploadSignature {
 }
 
 export const submissionService = {
-  getAllSubmission: (examId: string, page?: number, limit?: number) =>
+  getAllSubmission: (examId: string, page?: number, limit?: number, status?: string) =>
     api.get("/submissions", {
-      params: { examId, page, limit },
+      params: { examId, page, limit, status },
     }),
 
   getSubmissionsByClass: (classId: string, page?: number, limit?: number) =>
@@ -55,4 +56,20 @@ export const submissionService = {
 
   getAnalytics: (examId: string) =>
     api.get(`/submissions/${examId}/analytics`),
+
+  atualizarSubmissao: (
+    id: string,
+    data: Partial<{
+      studentName: string;
+      score: number;
+      totalCorrect: number;
+      details: SubmissionDetail[];
+    }>,
+  ) => api.put(`/submissions/${id}`, data),
+
+  deletarSubmissao: (id: string) => api.delete(`/submissions/${id}`),
+
+  reprocessarSubmissao: (id: string) => api.post(`/submissions/${id}/reprocess`),
+
+  reprocessarEmLote: (examId: string) => api.post(`/submissions/${examId}/batch-reprocess`),
 };
