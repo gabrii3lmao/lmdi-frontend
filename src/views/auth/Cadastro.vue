@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/services/api";
+import { setTermsAcceptance } from "@/services/terms";
 import { useToast } from "primevue/usetoast";
 import { GoogleLogin } from "vue3-google-login";
 
@@ -32,7 +33,7 @@ const callbackGoogle = async (response: any) => {
     localStorage.setItem("username", res.data.user.name);
     localStorage.setItem("userId", res.data.user.id);
     localStorage.setItem("userPhoto", res.data.user.avatarUrl || "");
-    localStorage.setItem("acceptedTermsAt", res.data.user.acceptedTermsAt || "");
+    setTermsAcceptance(res.data.user);
     localStorage.removeItem("supportPromptDismissed");
 
     router.push("/dashboard");

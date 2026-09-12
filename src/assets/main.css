@@ -53,6 +53,22 @@
   }
 }
 
+/* Desktop sidebar offset — acompanha a largura do aside (w-64 / w-16) */
+@media (min-width: 640px) {
+  .page-content {
+    margin-left: 16rem;
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  .page-content.sidebar-collapsed {
+    margin-left: 4rem;
+  }
+
+  .page-content.public-page {
+    margin-left: 0;
+  }
+}
+
 /* Page transition animations */
 .page-enter-active,
 .page-leave-active {

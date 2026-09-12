@@ -162,7 +162,7 @@ const handleSalvarGabaritoOficial = async (dados: any) => {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 p-6 md:p-10 font-sans"
+    class="min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 p-6 md:p-10 font-sans"
   >
     <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto space-y-8">
       <header

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { ref } from "vue";
+import { ensureTermsAccepted } from "@/services/terms";
 
 export const isRouteLoading = ref(false);
 
@@ -126,12 +127,19 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   isRouteLoading.value = true;
   const token = localStorage.getItem("token");
 
   if (to.meta.requiresAuth && !token) {
     return next("/signin");
+  }
+
+  if (token && to.meta.requiresAuth) {
+    const accepted = await ensureTermsAccepted();
+    if (!accepted) {
+      return next({ name: "termos", query: { redirect: to.fullPath } });
+    }
   }
 
   const baseTitle = 'Let Me Do It | Correção de Provas por IA para Escolas e Professores';

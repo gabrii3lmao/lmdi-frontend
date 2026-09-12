@@ -249,7 +249,7 @@ async function downloadReport() {
 </script>
 
 <template>
-  <div class="sm:ml-64 min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 font-sans flex flex-col">
+  <div class="min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 font-sans flex flex-col">
     <div class="flex-1 p-4 md:p-8">
       <div class="max-w-7xl 2xl:max-w-[90rem] mx-auto">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">

@@ -58,7 +58,7 @@ const toggleFaq = (index: number) => {
 </script>
 <template>
     <div
-        class="sm:ml-64 min-h-screen bg-white dark:bg-lousa-900 text-school-800 dark:text-lousa-200 p-8 overflow-y-auto"
+        class="min-h-screen bg-white dark:bg-lousa-900 text-school-800 dark:text-lousa-200 p-8 overflow-y-auto"
     >
         <div class="max-w-3xl 2xl:max-w-4xl mx-auto">
             <!-- HEADER -->

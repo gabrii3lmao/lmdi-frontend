@@ -141,7 +141,7 @@ function handleExcluir(id: string) {
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 font-sans flex flex-col"
+    class="min-h-screen bg-school-50 dark:bg-lousa-900 text-school-700 dark:text-lousa-300 font-sans flex flex-col"
   >
     <div class="flex-1 p-6 md:p-10">
       <div class="max-w-6xl 2xl:max-w-[90rem] mx-auto space-y-8">

@@ -35,6 +35,25 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    if (
+      error.response?.status === 403 &&
+      error.response.data?.code === "TERMS_NOT_ACCEPTED"
+    ) {
+      localStorage.removeItem("acceptedTermsVersion");
+      const termsVersion = error.response.data?.termsVersion;
+      if (termsVersion) {
+        localStorage.setItem("termsVersion", termsVersion);
+      }
+      if (window.location.pathname !== "/termos") {
+        const redirect = encodeURIComponent(
+          window.location.pathname + window.location.search,
+        );
+        window.location.href = `/termos?redirect=${redirect}`;
+      }
+      return Promise.reject(error);
+    }
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&

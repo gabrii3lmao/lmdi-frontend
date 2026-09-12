@@ -223,7 +223,7 @@ onMounted(loadUser)
 
 <template>
   <div
-    class="sm:ml-64 min-h-screen bg-school-50 text-school-700 p-6 md:p-10 font-sans dark:bg-lousa-900 dark:text-lousa-300"
+    class="min-h-screen bg-school-50 text-school-700 p-6 md:p-10 font-sans dark:bg-lousa-900 dark:text-lousa-300"
   >
     <div class="max-w-3xl mx-auto space-y-8">
       <header>

@@ -12,6 +12,7 @@ import "primeicons/primeicons.css";
 import vue3GoogleLogin from "vue3-google-login";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import { useThemeStore } from "@/stores/theme";
+import { useSidebarStore } from "@/stores/sidebar";
 import { connectSocket } from "./services/socket";
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -64,6 +65,9 @@ app.use(router);
 
 const themeStore = useThemeStore();
 themeStore.init();
+
+const sidebarStore = useSidebarStore();
+sidebarStore.init();
 
 const token = localStorage.getItem("token");
 if (token) {
