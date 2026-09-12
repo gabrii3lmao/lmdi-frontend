@@ -21,7 +21,7 @@ const userPhoto = ref("");
 const isMenuOpen = ref(false);
 
 const logoSrc = computed(() =>
-  themeStore.theme === "dark" ? logDark : logLight,
+  themeStore.isDark ? logDark : logLight,
 );
 
 function showComingSoon() {

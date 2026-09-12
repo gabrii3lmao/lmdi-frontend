@@ -18,7 +18,7 @@ const router = useRouter();
 const themeStore = useThemeStore();
 const toast = useToast();
 
-let savedTheme: "light" | "dark" = "light";
+let savedTheme: "light" | "dark" | "system" = "light";
 
 const hasToken = ref(false);
 const alreadyAccepted = ref(false);

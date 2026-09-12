@@ -1,37 +1,50 @@
 import { defineStore } from "pinia"
-import { ref, watch } from "vue"
+import { ref } from "vue"
 
-type Theme = "light" | "dark"
+export type ThemePreference = "light" | "dark" | "system"
+type ResolvedTheme = "light" | "dark"
 
 export const useThemeStore = defineStore("theme", () => {
-  const theme = ref<Theme>("light")
+  const theme = ref<ThemePreference>("system")
+  const isDark = ref(false)
 
-  function applyTheme(t: Theme) {
-    const root = document.documentElement
-    if (t === "dark") {
-      root.classList.add("dark", "my-app-dark")
-    } else {
-      root.classList.remove("dark", "my-app-dark")
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+
+  function resolve(preference: ThemePreference): ResolvedTheme {
+    if (preference === "system") {
+      return mediaQuery.matches ? "dark" : "light"
     }
+    return preference
   }
 
-  function setTheme(t: Theme) {
-    theme.value = t
-    localStorage.setItem("theme", t)
-    applyTheme(t)
+  function applyTheme(preference: ThemePreference = theme.value) {
+    const resolved = resolve(preference)
+    isDark.value = resolved === "dark"
+
+    const root = document.documentElement
+    root.classList.toggle("dark", isDark.value)
+    root.classList.toggle("my-app-dark", isDark.value)
+  }
+
+  function setTheme(preference: ThemePreference) {
+    theme.value = preference
+    localStorage.setItem("theme", preference)
+    applyTheme(preference)
   }
 
   function toggle() {
-    setTheme(theme.value === "light" ? "dark" : "light")
+    setTheme(isDark.value ? "light" : "dark")
   }
 
   function init() {
-    const stored = localStorage.getItem("theme") as Theme | null
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const t = stored ?? (prefersDark ? "dark" : "light")
-    theme.value = t
-    applyTheme(t)
+    const stored = localStorage.getItem("theme") as ThemePreference | null
+    theme.value = stored ?? "system"
+    applyTheme()
+
+    mediaQuery.addEventListener("change", () => {
+      if (theme.value === "system") applyTheme()
+    })
   }
 
-  return { theme, applyTheme, setTheme, toggle, init }
+  return { theme, isDark, applyTheme, setTheme, toggle, init }
 })
