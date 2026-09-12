@@ -115,28 +115,6 @@ const toggleFaq = (index: number) => {
                 </div>
             </div>
 
-            <footer
-                class="mt-16 p-8 bg-indigo-600/10 dark:bg-indigo-900/20 border border-borda-500/20 dark:border-borda-800 rounded-3xl text-center"
-            >
-                <h3 class="font-bold text-lg mb-2 dark:text-lousa-100">
-                    Ainda precisa de suporte?
-                </h3>
-
-                <p
-                    class=" text-school-400 dark:text-lousa-300 text-sm mb-6 px-4 py-1 mt-2"
-                >
-                    Se sua dúvida não foi respondida, nossa equipe técnica pode
-                    te ajudar.
-                </p>
-                <br />
-                <a
-                    href="mailto:noreply@letmedoit.app.br"
-                    class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold text-white transition-all"
-                >
-                    <i class="pi pi-envelope"></i>
-                    Falar com Suporte
-                </a>
-            </footer>
         </div>
     </div>
 </template>
